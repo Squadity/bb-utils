@@ -1,0 +1,28 @@
+# Maven build directory 
+target/**
+target/**/*
+
+# SVN related dir's/files
+.svn/
+.svn/**
+.svn/**/*
+
+# Java related dir'sfiles
+*.class
+*.jar
+*.war
+*.ear
+
+# Eclipse related dir's/files
+.settings/
+.settings/**
+.settings/**/*
+bin/**
+tmp/**
+tmp/**/*
+
+# IntelliJ related dir's/files
+*.iml
+*.ipr
+*.iws
+.idea/
