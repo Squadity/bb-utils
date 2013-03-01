@@ -58,7 +58,7 @@ public final class Slicer {
 	 */
 	public static <T> List<T> sliceTo(final List<T> list, final int page, final int elements) {
 		if (page > 1)
-			return slice(list, (page * elements) - 1, elements);
+			return slice(list, page * elements - 1, elements);
 
 		return slice(list, page, elements);
 	}
