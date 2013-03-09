@@ -27,6 +27,10 @@ public final class NumberUtils {
 		if (second == null)
 			throw new IllegalArgumentException("second argument is null.");
 
+		// if first and second numbers not the same type we use BigDecimal type to compare it's
+		if (!first.getClass().equals(second.getClass()))
+			return new BigDecimal(first.doubleValue()).compareTo(new BigDecimal(second.doubleValue()));
+
 		// if both numbers are the same type
 		// byte
 		if (first instanceof Byte && second instanceof Byte)
@@ -59,7 +63,7 @@ public final class NumberUtils {
 		if (first instanceof BigDecimal && second instanceof BigDecimal)
 			return ((BigDecimal) first).compareTo((BigDecimal) second);
 
-		// if first number and second not the same type or other sub-types of Number we use BigDecimal type to compare it's
+		// if other sub-types of Number we use BigDecimal type to compare it's
 		return new BigDecimal(first.doubleValue()).compareTo(new BigDecimal(second.doubleValue()));
 	}
 

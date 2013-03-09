@@ -2,6 +2,8 @@ package net.bb.utils.math;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -122,7 +124,31 @@ public class NumberUtilsTest {
 		Assert.assertEquals(1, NumberUtils.compare(BigDecimal.valueOf(Float.MIN_VALUE), BigDecimal.valueOf(Double.MIN_VALUE)));
 		Assert.assertEquals(-1, NumberUtils.compare(BigDecimal.valueOf(Float.MAX_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
 
+		// atomic types
+		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(0), new AtomicLong(0)));
+		Assert.assertEquals(1, NumberUtils.compare(new AtomicLong(1), new AtomicInteger(-1)));
+		Assert.assertEquals(-1, NumberUtils.compare(new AtomicLong(-1), new AtomicInteger(1)));
+
 		// there can be any other combinations
+	}
+
+	/**
+	 * Test error cases.
+	 */
+	@Test
+	public void testErrorCases() {
+		try {
+			NumberUtils.compare(null, 0);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue(e.getMessage().contains("first"));
+		}
+		try {
+			NumberUtils.compare(0, null);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue(e.getMessage().contains("second"));
+		}
 	}
 
 }
