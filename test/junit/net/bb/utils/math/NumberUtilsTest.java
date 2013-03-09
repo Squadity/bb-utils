@@ -5,6 +5,9 @@ import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang.mutable.MutableLong;
+import org.apache.commons.lang.mutable.MutableShort;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -125,9 +128,16 @@ public class NumberUtilsTest {
 		Assert.assertEquals(-1, NumberUtils.compare(BigDecimal.valueOf(Float.MAX_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
 
 		// atomic types
+		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(Integer.MAX_VALUE), new AtomicInteger(Integer.MAX_VALUE)));
+		Assert.assertEquals(0, NumberUtils.compare(new AtomicLong(Long.MIN_VALUE), new AtomicLong(Long.MIN_VALUE)));
 		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(0), new AtomicLong(0)));
 		Assert.assertEquals(1, NumberUtils.compare(new AtomicLong(1), new AtomicInteger(-1)));
 		Assert.assertEquals(-1, NumberUtils.compare(new AtomicLong(-1), new AtomicInteger(1)));
+
+		// other types
+		Assert.assertEquals(0, NumberUtils.compare(new MutableInt(Integer.MAX_VALUE), new MutableInt(Integer.MAX_VALUE)));
+		Assert.assertEquals(-1, NumberUtils.compare(new MutableLong(Long.MIN_VALUE), new MutableLong(Long.MAX_VALUE)));
+		Assert.assertEquals(1, NumberUtils.compare(new MutableShort(Short.MAX_VALUE), new MutableShort(Short.MIN_VALUE)));
 
 		// there can be any other combinations
 	}

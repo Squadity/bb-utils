@@ -32,39 +32,29 @@ public final class NumberUtils {
 			return new BigDecimal(first.doubleValue()).compareTo(new BigDecimal(second.doubleValue()));
 
 		// if both numbers are the same type
-		// byte
-		if (first instanceof Byte && second instanceof Byte)
+		if (first instanceof Byte && second instanceof Byte) { // byte
 			return ((Byte) first).compareTo((Byte) second);
-		// short
-		if (first instanceof Short && second instanceof Short)
+		} else if (first instanceof Short && second instanceof Short) { // short
 			return ((Short) first).compareTo((Short) second);
-		// integer
-		if (first instanceof Integer && second instanceof Integer)
+		} else if (first instanceof Integer && second instanceof Integer) { // integer
 			return ((Integer) first).compareTo((Integer) second);
-		// atomic integer
-		if (first instanceof AtomicInteger && second instanceof AtomicInteger)
+		} else if (first instanceof AtomicInteger && second instanceof AtomicInteger) { // atomic integer
 			return ((Integer) first.intValue()).compareTo(second.intValue());
-		// big integer
-		if (first instanceof BigInteger && second instanceof BigInteger)
+		} else if (first instanceof BigInteger && second instanceof BigInteger) { // big integer
 			return ((BigInteger) first).compareTo((BigInteger) second);
-		// long
-		if (first instanceof Long && second instanceof Long)
+		} else if (first instanceof Long && second instanceof Long) { // long
 			return ((Long) first).compareTo((Long) second);
-		// atomic long
-		if (first instanceof AtomicLong && second instanceof AtomicLong)
+		} else if (first instanceof AtomicLong && second instanceof AtomicLong) { // atomic long
 			return ((Long) first.longValue()).compareTo(second.longValue());
-		// float
-		if (first instanceof Float && second instanceof Float)
+		} else if (first instanceof Float && second instanceof Float) { // float
 			return org.apache.commons.lang.math.NumberUtils.compare(first.floatValue(), second.floatValue());
-		// double
-		if (first instanceof Double && second instanceof Double)
+		} else if (first instanceof Double && second instanceof Double) { // double
 			return org.apache.commons.lang.math.NumberUtils.compare(first.doubleValue(), second.doubleValue());
-		// big decimal
-		if (first instanceof BigDecimal && second instanceof BigDecimal)
+		} else if (first instanceof BigDecimal && second instanceof BigDecimal) { // big decimal
 			return ((BigDecimal) first).compareTo((BigDecimal) second);
-
-		// if other sub-types of Number we use BigDecimal type to compare it's
-		return new BigDecimal(first.doubleValue()).compareTo(new BigDecimal(second.doubleValue()));
+		} else {
+			// if other sub-types of Number we use BigDecimal type to compare it's
+			return new BigDecimal(first.doubleValue()).compareTo(new BigDecimal(second.doubleValue()));
+		}
 	}
-
 }
