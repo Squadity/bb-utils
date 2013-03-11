@@ -21,46 +21,50 @@ public final class Slicer {
 	 * Return elements slice from original list. If original list are <code>null</code> or empty - empty {@link ArrayList} will be returned.
 	 * 
 	 * @param list
-	 *            - original list
+	 *            original list
 	 * @param offset
-	 *            - offset
+	 *            offset, minimum offset is '0', if offset less than '0' default will be used
 	 * @param amount
-	 *            - result elements size
-	 * @return {@link List} of {@link T}
+	 *            result elements size
+	 * @return {@link List} of <T>
 	 */
 	public static <T> List<T> slice(final List<T> list, final int offset, final int amount) {
 		if (list == null || list.isEmpty())
 			return new ArrayList<T>();
 
 		int aSize = list.size();
-		int aOffset = offset >= 0 ? offset : 0;
-		int aAmount = amount >= 0 ? amount : 0;
+		int aOffset = offset < 0 ? 0 : offset;
+		int aAmount = amount < 0 ? 0 : amount;
 
-		if (aOffset > aSize || aAmount == 0)
+		if (aAmount == 0 || aOffset > aSize - 1)
 			return new ArrayList<T>();
 
-		int startIndex = aOffset == 0 ? aOffset : aOffset - 1;
-		int endIndex = Math.min(aSize, startIndex + aAmount);
-
-		return list.subList(startIndex, endIndex);
+		int endIndex = Math.min(aSize, aOffset + aAmount);
+		return new ArrayList<T>(list.subList(aOffset, endIndex));
 	}
 
 	/**
 	 * Return elements slice from original list. If original list are <code>null</code> or empty - empty {@link ArrayList} will be returned.
 	 * 
 	 * @param list
-	 *            - original list
+	 *            original list
 	 * @param page
-	 *            - page number
+	 *            page number, minimum page is '0', if page less than '0' default will be used
 	 * @param elements
-	 *            - element on page
-	 * @return {@link List} of {@link T}
+	 *            element on page
+	 * @return {@link List} of <T>
 	 */
 	public static <T> List<T> sliceTo(final List<T> list, final int page, final int elements) {
-		if (page > 1)
-			return slice(list, page * elements - 1, elements);
+		if (elements < 1)
+			return new ArrayList<T>();
 
-		return slice(list, page, elements);
+		int startIndex = 0;
+		if (page == 1)
+			startIndex = elements;
+		if (page > 1)
+			startIndex = elements * (page + 1) - 1;
+
+		return slice(list, startIndex, elements);
 	}
 
 }
