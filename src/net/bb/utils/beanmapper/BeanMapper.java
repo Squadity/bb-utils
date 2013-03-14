@@ -6,11 +6,17 @@ import net.bb.utils.beanmapper.impl.AbstractBeanMapper;
 import net.bb.utils.beanmapper.impl.MapBasedBeanMapper;
 
 /**
- * Utility for automatic bean mapping. It's supports simple property mapping, complex type mapping, recursive mapping, etc.
+ * Utility for automatic bean mapping.<br>
+ * It's supports simple property mapping, complex type mapping, recursive mapping, etc.
  * 
  * @author Alexandr Bolbat
  */
 public final class BeanMapper {
+
+	/**
+	 * Default instance of the {@link BeanMapperConfiguration}.
+	 */
+	private static final BeanMapperConfiguration DEFAULT_BEAN_MAPPER_CONFIGURATION = new BeanMapperConfiguration();
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
@@ -18,11 +24,6 @@ public final class BeanMapper {
 	private BeanMapper() {
 		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
-
-	/**
-	 * Default instance of the {@link BeanMapperConfiguration}.
-	 */
-	private static BeanMapperConfiguration DEFAULT_BEAN_MAPPER_CONFIGURATION = new BeanMapperConfiguration();
 
 	/**
 	 * Map bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc) with parameters from {@link Map}.
