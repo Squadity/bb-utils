@@ -16,7 +16,7 @@ public final class SerializationUtils {
 	 * Default constructor with preventing instantiations of this class.
 	 */
 	private SerializationUtils() {
-		throw new IllegalAccessError();
+		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 
 	/**

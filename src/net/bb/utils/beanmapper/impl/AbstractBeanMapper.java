@@ -19,7 +19,7 @@ public abstract class AbstractBeanMapper {
 	 * Create bean instance from a given type.
 	 * 
 	 * @param beanClass
-	 *            - bean type
+	 *            bean type
 	 * @return bean instance
 	 */
 	public static final <T extends Object> T createInstance(final Class<T> beanClass) {
@@ -36,7 +36,7 @@ public abstract class AbstractBeanMapper {
 	 * Create bean instance from a given type.
 	 * 
 	 * @param collectionClass
-	 *            - collection type
+	 *            collection type
 	 * @return collection instance
 	 */
 	public static final Collection<Object> createCollectionInstance(final Class<?> collectionClass) {
@@ -49,7 +49,7 @@ public abstract class AbstractBeanMapper {
 	 * Get field generic type. If generic type undefined {@link Object} type will be returned.
 	 * 
 	 * @param field
-	 *            - original field type
+	 *            original field type
 	 * @return generic type
 	 */
 	protected static final Class<?> getFieldGenericType(final Field field) {
@@ -67,13 +67,13 @@ public abstract class AbstractBeanMapper {
 	 * Setting field value.
 	 * 
 	 * @param field
-	 *            - field
+	 *            field
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 */
 	protected static final void setFieldValue(final Field field, final Object bean, final Object value, final BeanMapperConfiguration conf) {
 		if (field == null || bean == null || value == null || conf == null)
@@ -95,11 +95,11 @@ public abstract class AbstractBeanMapper {
 	 * Is parameters contains values for given bean scope.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param scope
-	 *            - scope
+	 *            scope
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return <code>true</code> if contains or <code>false</code>
 	 */
 	protected static final boolean isValuesInBeanScope(final Set<String> parameters, final String scope, final BeanMapperConfiguration conf) {
@@ -120,11 +120,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Byte}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Byte}
 	 */
 	protected static final Byte toByte(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -145,11 +145,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Short}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Short}
 	 */
 	protected static final Short toShort(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -170,11 +170,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Integer}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Integer}
 	 */
 	protected static final Integer toInteger(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -195,11 +195,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Long}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Long}
 	 */
 	protected static final Long toLong(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -220,11 +220,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Float}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Float}
 	 */
 	protected static final Float toFloat(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -245,11 +245,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Double}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Double}
 	 */
 	protected static final Double toDouble(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -270,7 +270,7 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Boolean}.
 	 * 
 	 * @param value
-	 *            - value
+	 *            value
 	 * @return {@link Boolean}
 	 */
 	protected static final Boolean toBoolean(final Object value) {
@@ -281,11 +281,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link Character}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Character}
 	 */
 	protected static final Character toCharacter(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -303,11 +303,11 @@ public abstract class AbstractBeanMapper {
 	 * Convert value to {@link String}.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link String}
 	 */
 	protected static final String toString(final String fieldName, final Object value, final BeanMapperConfiguration conf) {
@@ -321,13 +321,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Byte} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Byte} array
 	 */
 	protected static final Byte[] toByteArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -353,13 +353,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Short} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Short} array
 	 */
 	protected static final Short[] toShortArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -385,13 +385,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Integer} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Integer} array
 	 */
 	protected static final Integer[] toIntegerArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -417,13 +417,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Long} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Long} array
 	 */
 	protected static final Long[] toLongArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -449,13 +449,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Float} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Float} array
 	 */
 	protected static final Float[] toFloatArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -481,13 +481,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Double} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Double} array
 	 */
 	protected static final Double[] toDoubleArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -513,13 +513,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Boolean} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Boolean} array
 	 */
 	protected static final Boolean[] toBooleanArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -537,13 +537,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to {@link Character} array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return {@link Character} array
 	 */
 	protected static final Character[] toCharacterArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -564,13 +564,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to byte array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return byte array
 	 */
 	protected static final byte[] toBytePrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -596,13 +596,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to short array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return short array
 	 */
 	protected static final short[] toShortPrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -628,13 +628,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to int array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return int array
 	 */
 	protected static final int[] toIntegerPrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -660,13 +660,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to long array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return long array
 	 */
 	protected static final long[] toLongPrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -692,13 +692,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to float array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return float array
 	 */
 	protected static final float[] toFloatPrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -724,13 +724,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to double array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return double array
 	 */
 	protected static final double[] toDoublePrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -756,13 +756,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to boolean array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return boolean array
 	 */
 	protected static final boolean[] toBooleanPrimitiveArray(final String fieldName, final Object value, final String[] array,
@@ -781,13 +781,13 @@ public abstract class AbstractBeanMapper {
 	 * Convert {@link String} array to char array.
 	 * 
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param array
-	 *            - string array
+	 *            string array
 	 * @param conf
-	 *            - configuration
+	 *            configuration
 	 * @return char array
 	 */
 	protected static final char[] toCharacterPrimitiveArray(final String fieldName, final Object value, final String[] array, final BeanMapperConfiguration conf) {
@@ -808,13 +808,13 @@ public abstract class AbstractBeanMapper {
 	 * Prepare basic type object from parameter value.
 	 * 
 	 * @param fieldClass
-	 *            - field class
+	 *            field class
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - original parameter value
+	 *            original parameter value
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return {@link Object}
 	 */
 	public static final Object toBasicTypeFromValue(final Class<?> fieldClass, final String fieldName, final Object value, final BeanMapperConfiguration conf) {

@@ -10,25 +10,32 @@ import net.bb.utils.beanmapper.impl.MapBasedBeanMapper;
  * 
  * @author Alexandr Bolbat
  */
-public class BeanMapper {
+public final class BeanMapper {
+
+	/**
+	 * Default constructor with preventing instantiations of this class.
+	 */
+	private BeanMapper() {
+		throw new IllegalAccessError("Shouldn't be instantiated.");
+	}
 
 	/**
 	 * Default instance of the {@link BeanMapperConfiguration}.
 	 */
-	private static final BeanMapperConfiguration DEFAULT_BEAN_MAPPER_CONFIGURATION = new BeanMapperConfiguration();
+	private static BeanMapperConfiguration DEFAULT_BEAN_MAPPER_CONFIGURATION = new BeanMapperConfiguration();
 
 	/**
 	 * Map bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc) with parameters from {@link Map}.
 	 * 
 	 * @param params
-	 *            - parameters
+	 *            parameters
 	 * @param type
-	 *            - class of bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc)
+	 *            class of bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc)
 	 * @param key
-	 *            - value key, used for mapping parameter to primitive or basic type
+	 *            value key, used for mapping parameter to primitive or basic type
 	 * @return mapped bean
 	 */
-	public static final <T extends Object> T map(final Map<String, Object> params, final Class<T> type, final String key) {
+	public static <T extends Object> T map(final Map<String, Object> params, final Class<T> type, final String key) {
 		if (params == null)
 			throw new IllegalArgumentException("parameters argument are null");
 		if (type == null)
@@ -41,16 +48,16 @@ public class BeanMapper {
 	 * Map bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc) with parameters from {@link Map}.
 	 * 
 	 * @param params
-	 *            - parameters
+	 *            parameters
 	 * @param type
-	 *            - class of bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc)
+	 *            class of bean or primitive (int, boolean, long, etc) or basic type (String, Long, Char, etc)
 	 * @param key
-	 *            - value key, used for mapping parameter to primitive or basic type
+	 *            value key, used for mapping parameter to primitive or basic type
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped bean
 	 */
-	public static final <T extends Object> T map(final Map<String, Object> params, final Class<T> type, final String key, final BeanMapperConfiguration conf) {
+	public static <T extends Object> T map(final Map<String, Object> params, final Class<T> type, final String key, final BeanMapperConfiguration conf) {
 		if (params == null)
 			throw new IllegalArgumentException("parameters argument are null");
 		if (type == null)
@@ -71,12 +78,12 @@ public class BeanMapper {
 	 * Map bean with parameters from {@link Map}.
 	 * 
 	 * @param params
-	 *            - parameters
+	 *            parameters
 	 * @param type
-	 *            - bean class
+	 *            bean class
 	 * @return mapped bean
 	 */
-	public static final <T extends Object> T map(final Map<String, Object> params, final Class<T> type) {
+	public static <T extends Object> T map(final Map<String, Object> params, final Class<T> type) {
 		if (params == null)
 			throw new IllegalArgumentException("parameters argument are null");
 		if (type == null)
@@ -89,14 +96,14 @@ public class BeanMapper {
 	 * Map bean with parameters from {@link Map}.
 	 * 
 	 * @param params
-	 *            - parameters
+	 *            parameters
 	 * @param type
-	 *            - bean class
+	 *            bean class
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped bean
 	 */
-	public static final <T extends Object> T map(final Map<String, Object> params, final Class<T> type, final BeanMapperConfiguration conf) {
+	public static <T extends Object> T map(final Map<String, Object> params, final Class<T> type, final BeanMapperConfiguration conf) {
 		if (params == null)
 			throw new IllegalArgumentException("parameters argument are null");
 		if (type == null)
@@ -112,12 +119,12 @@ public class BeanMapper {
 	 * Map bean with parameters from {@link Map}.
 	 * 
 	 * @param params
-	 *            - parameters
+	 *            parameters
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @return mapped bean
 	 */
-	public static final <T extends Object> T map(final Map<String, Object> params, final T bean) {
+	public static <T extends Object> T map(final Map<String, Object> params, final T bean) {
 		if (params == null)
 			throw new IllegalArgumentException("parameters argument are null");
 		if (bean == null)
@@ -130,14 +137,14 @@ public class BeanMapper {
 	 * Map bean with parameters from {@link Map}.
 	 * 
 	 * @param params
-	 *            - parameters
+	 *            parameters
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped bean
 	 */
-	public static final <T extends Object> T map(final Map<String, Object> params, final T bean, final BeanMapperConfiguration conf) {
+	public static <T extends Object> T map(final Map<String, Object> params, final T bean, final BeanMapperConfiguration conf) {
 		if (params == null)
 			throw new IllegalArgumentException("parameters argument are null");
 		if (bean == null)

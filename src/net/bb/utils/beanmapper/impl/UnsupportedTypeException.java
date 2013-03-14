@@ -17,7 +17,7 @@ public class UnsupportedTypeException extends RuntimeException {
 	 * Default constructor.
 	 * 
 	 * @param type
-	 *            - type
+	 *            type
 	 */
 	public UnsupportedTypeException(final Class<?> type) {
 		super("Type[" + type + "] is unsupported");

@@ -25,11 +25,11 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Map bean with parameters from {@link Map}.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param configuration
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped bean
 	 */
 	public static <T extends Object> T map(final Map<String, Object> parameters, final T bean, final BeanMapperConfiguration configuration) {
@@ -47,13 +47,13 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Map bean with parameters from {@link Map}.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param scope
-	 *            - scope
+	 *            scope
 	 * @param configuration
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped bean
 	 */
 	private static <T extends Object> T map(final Map<String, Object> parameters, final T bean, final String scope, final BeanMapperConfiguration configuration) {
@@ -95,17 +95,17 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Map as collection.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param field
-	 *            - field
+	 *            field
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param scopePrefix
-	 *            - scope prefix
+	 *            scope prefix
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return <code>true</code> if mapped or <code>false</code>
 	 */
 	private static boolean mapAsCollection(final Map<String, Object> parameters, final Field field, final Object bean, final Object value,
@@ -166,17 +166,17 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Map as array.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param field
-	 *            - field
+	 *            field
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param scopePrefix
-	 *            - scope prefix
+	 *            scope prefix
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return <code>true</code> if mapped or <code>false</code>
 	 */
 	private static boolean mapAsArrayType(final Map<String, Object> parameters, final Field field, final Object bean, final Object value,
@@ -247,13 +247,13 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Map as basic type.
 	 * 
 	 * @param field
-	 *            - field
+	 *            field
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param value
-	 *            - value
+	 *            value
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return <code>true</code> if mapped or <code>false</code>
 	 */
 	private static boolean mapAsBasicType(final Field field, final Object bean, final Object value, final BeanMapperConfiguration conf) {
@@ -270,15 +270,15 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Map as bean.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param field
-	 *            - field
+	 *            field
 	 * @param bean
-	 *            - bean
+	 *            bean
 	 * @param scopePrefix
-	 *            - scope prefix
+	 *            scope prefix
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return <code>true</code> if mapped or <code>false</code>
 	 */
 	private static <T extends Object> boolean mapAsBean(final Map<String, Object> parameters, final Field field, final Object bean, final String scopePrefix,
@@ -298,15 +298,15 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Prepare basic type object from parameter value.
 	 * 
 	 * @param arrayType
-	 *            - array component type
+	 *            array component type
 	 * @param fieldName
-	 *            - field name
+	 *            field name
 	 * @param value
-	 *            - original parameter value
+	 *            original parameter value
 	 * @param strArray
-	 *            - parameter array, constructed from the original parameter value
+	 *            parameter array, constructed from the original parameter value
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return {@link Object} array
 	 */
 	private static Object[] toBasicTypesArrayFromValue(final Class<?> arrayType, final String fieldName, final Object value, final String[] strArray,
@@ -342,13 +342,13 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Prepare beans array from parameters.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param field
-	 *            - field
+	 *            field
 	 * @param scope
-	 *            - bean scope
+	 *            bean scope
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped array of beans
 	 */
 	private static <T extends Object> T[] toBeanArrayFromValue(final Map<String, Object> parameters, final Field field, final Class<T> arrayType,
@@ -378,13 +378,13 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 * Prepare bean object from parameters.
 	 * 
 	 * @param parameters
-	 *            - parameters
+	 *            parameters
 	 * @param type
-	 *            - bean type
+	 *            bean type
 	 * @param scope
-	 *            - bean scope
+	 *            bean scope
 	 * @param conf
-	 *            - mapping configuration
+	 *            mapping configuration
 	 * @return mapped bean
 	 */
 	private static <T extends Object> T toBeanFromValue(final Map<String, Object> parameters, final Class<T> type, final String scope,

@@ -11,7 +11,7 @@ public final class ClassUtil {
 	 * Default constructor with preventing instantiations of this class.
 	 */
 	private ClassUtil() {
-		throw new IllegalAccessError();
+		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 
 	/**

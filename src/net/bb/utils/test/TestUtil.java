@@ -10,10 +10,10 @@ import java.io.File;
 public final class TestUtil {
 
 	/**
-	 * Private constructor for preventing class instantiation.
+	 * Default constructor with preventing instantiations of this class.
 	 */
 	private TestUtil() {
-		throw new IllegalAccessError("Can't instantiate.");
+		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 
 	/**

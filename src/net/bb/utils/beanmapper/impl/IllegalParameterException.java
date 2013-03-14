@@ -16,9 +16,9 @@ public class IllegalParameterException extends IllegalArgumentException {
 	 * Default constructor.
 	 * 
 	 * @param prameter
-	 *            - parameter name
+	 *            parameter name
 	 * @param value
-	 *            - value
+	 *            value
 	 */
 	public IllegalParameterException(final String prameter, final Object value) {
 		super("The parameter[" + prameter + "] have a wrong value[" + value + "]");

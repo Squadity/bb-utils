@@ -2,8 +2,7 @@ package net.bb.utils.reflect;
 
 import java.lang.reflect.Constructor;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**

@@ -2,8 +2,9 @@ package net.bb.utils.test;
 
 import java.lang.reflect.Constructor;
 
-import junit.framework.Assert;
 import net.bb.utils.reflect.Instantiator;
+
+import org.junit.Assert;
 
 /**
  * Utility for common testing approaches, like exception's testing (mostly for code coverage).
@@ -13,10 +14,10 @@ import net.bb.utils.reflect.Instantiator;
 public final class CommonTester {
 
 	/**
-	 * Private constructor for preventing class instantiation.
+	 * Default constructor with preventing instantiations of this class.
 	 */
 	private CommonTester() {
-		throw new IllegalAccessError("Can't instantiate.");
+		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 
 	/**

@@ -14,7 +14,7 @@ public final class Instantiator {
 	 * Default constructor with preventing instantiations of this class.
 	 */
 	private Instantiator() {
-		throw new IllegalAccessError();
+		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 
 	/**

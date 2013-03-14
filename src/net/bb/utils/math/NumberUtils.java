@@ -13,6 +13,13 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class NumberUtils {
 
 	/**
+	 * Default constructor with preventing instantiations of this class.
+	 */
+	private NumberUtils() {
+		throw new IllegalAccessError("Shouldn't be instantiated.");
+	}
+
+	/**
 	 * Compare two instances of {@link Number} between each other.
 	 * 
 	 * @param first
