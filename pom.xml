@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>net.bolbat</groupId>
 		<artifactId>bb-parent</artifactId>
-		<version>4</version>
+		<version>5</version>
 	</parent>
 
 	<dependencies>
