@@ -40,4 +40,18 @@ public class LocaleUtilsTest {
 		LocaleUtils.setCurrentLocale(Locale.getDefault());
 	}
 
+	/**
+	 * Error cases test.
+	 */
+	@Test
+	public void errorCasesTest() {
+		// wrong arguments
+		try {
+			LocaleUtils.setCurrentLocale(null);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue(e.getMessage().contains("locale"));
+		}
+	}
+
 }
