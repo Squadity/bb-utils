@@ -8,8 +8,17 @@ import java.util.Locale;
  * 
  * @author Alexandr Bolbat
  */
-// TODO Finish me
 public final class LocaleUtils {
+
+	/**
+	 * Locale.
+	 */
+	private static final ThreadLocal<Locale> HOLDER = new InheritableThreadLocal<Locale>() {
+		@Override
+		protected Locale initialValue() {
+			return Locale.getDefault();
+		}
+	};
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
@@ -24,7 +33,20 @@ public final class LocaleUtils {
 	 * @return {@link Locale}
 	 */
 	public static Locale getCurrentLocale() {
-		return Locale.getDefault();
+		return HOLDER.get();
+	}
+
+	/**
+	 * Set current {@link Locale}.
+	 * 
+	 * @param locale
+	 *            locale to set
+	 */
+	public static void setCurrentLocale(final Locale locale) {
+		if (locale == null)
+			throw new IllegalArgumentException("locale argument is null.");
+
+		HOLDER.set(locale);
 	}
 
 }

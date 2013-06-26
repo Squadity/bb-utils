@@ -17,6 +17,9 @@ public class MessageUtilsTest {
 	 */
 	@Test
 	public void complexTest() {
+		// clearing context
+		LocaleUtils.setCurrentLocale(Locale.getDefault());
+
 		// basic check
 		Assert.assertEquals("Sample message", MessageUtils.getMessage("i18n-test-module", "sample-message"));
 
@@ -27,6 +30,9 @@ public class MessageUtilsTest {
 		Assert.assertEquals("Message from nested bundle", MessageUtils.getMessage(path, name, key));
 		Assert.assertEquals("Message on the German", MessageUtils.getMessage(path, name, key, new Locale("de")));
 		Assert.assertEquals("Message from the Great Britain", MessageUtils.getMessage(path, name, key, new Locale("en", "GB")));
+
+		// clearing context
+		LocaleUtils.setCurrentLocale(Locale.getDefault());
 	}
 
 	/**
