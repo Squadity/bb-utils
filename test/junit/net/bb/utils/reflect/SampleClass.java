@@ -5,6 +5,7 @@ package net.bb.utils.reflect;
  * 
  * @author Alexandr Bolbat
  */
+@SampleTypeAnnotation
 public class SampleClass {
 
 	/**

@@ -1,16 +1,16 @@
 package net.bb.utils.reflect;
 
 /**
- * {@link Class} utility.
+ * {@link Class} utilities.
  * 
  * @author Alexandr Bolbat
  */
-public final class ClassUtil {
+public final class ClassUtils {
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
 	 */
-	private ClassUtil() {
+	private ClassUtils() {
 		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 

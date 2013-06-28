@@ -7,12 +7,12 @@ import java.io.File;
  * 
  * @author Alexandr Bolbat
  */
-public final class TestUtil {
+public final class TestUtils {
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
 	 */
-	private TestUtil() {
+	private TestUtils() {
 		throw new IllegalAccessError("Shouldn't be instantiated.");
 	}
 
