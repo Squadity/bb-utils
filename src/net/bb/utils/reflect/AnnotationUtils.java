@@ -74,7 +74,7 @@ public final class AnnotationUtils {
 	public static <A extends Annotation> A getClassAnnotation(final Class<A> annotationClass, final Class<?> clazz, final boolean inheritance) {
 		if (annotationClass == null)
 			throw new IllegalArgumentException("annotationClass argument is null.");
-		if (clazz == null)
+		if (clazz == null || clazz.equals(Object.class))
 			return null;
 
 		A annotation = clazz.getAnnotation(annotationClass);
