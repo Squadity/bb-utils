@@ -15,6 +15,11 @@ public class AnnotationUtilsTest {
 	 */
 	@Test
 	public void complexTest() {
+		final Object obj = null;
+		Assert.assertNull(AnnotationUtils.getClassAnnotation(SampleTypeAnnotation.class, obj));
+		final Class<Object> clazz = null;
+		Assert.assertNull(AnnotationUtils.getClassAnnotation(SampleTypeAnnotation.class, clazz));
+
 		Assert.assertNotNull(AnnotationUtils.getClassAnnotation(SampleTypeAnnotation.class, SampleInheritedClass.class));
 		Assert.assertNull(AnnotationUtils.getClassAnnotation(SampleTypeAnnotation.class, SampleInheritedClass.class, false));
 		Assert.assertNotNull(AnnotationUtils.getClassAnnotation(SampleTypeAnnotation.class, SampleInheritedClass.class, true));
