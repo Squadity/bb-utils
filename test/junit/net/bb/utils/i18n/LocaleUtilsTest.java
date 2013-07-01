@@ -2,7 +2,9 @@ package net.bb.utils.i18n;
 
 import java.util.Locale;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -13,13 +15,26 @@ import org.junit.Test;
 public class LocaleUtilsTest {
 
 	/**
+	 * Clearing context before each test.
+	 */
+	@Before
+	public void beforeTest() {
+		LocaleUtils.cleanup();
+	}
+
+	/**
+	 * Clearing context after each test.
+	 */
+	@After
+	public void afterTest() {
+		LocaleUtils.cleanup();
+	}
+
+	/**
 	 * Complex test.
 	 */
 	@Test
 	public void complexTest() {
-		// clearing context
-		LocaleUtils.setCurrentLocale(Locale.getDefault());
-
 		// check default locale
 		Assert.assertEquals(Locale.getDefault(), LocaleUtils.getCurrentLocale());
 		Assert.assertSame(Locale.getDefault(), LocaleUtils.getCurrentLocale());
@@ -35,9 +50,6 @@ public class LocaleUtilsTest {
 		// check current with default locale
 		Assert.assertNotEquals(Locale.getDefault(), LocaleUtils.getCurrentLocale());
 		Assert.assertNotSame(Locale.getDefault(), LocaleUtils.getCurrentLocale());
-
-		// clearing context
-		LocaleUtils.setCurrentLocale(Locale.getDefault());
 	}
 
 	/**
