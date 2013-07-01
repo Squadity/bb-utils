@@ -49,4 +49,11 @@ public final class LocaleUtils {
 		HOLDER.set(locale);
 	}
 
+	/**
+	 * Cleanup current {@link Locale}.
+	 */
+	public static void cleanup() {
+		HOLDER.remove();
+	}
+
 }
