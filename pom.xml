@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>net.bolbat</groupId>
 		<artifactId>bb-parent</artifactId>
-		<version>5</version>
+		<version>6</version>
 	</parent>
 
 	<properties>
@@ -54,7 +54,6 @@
 		<connection>scm:git:ssh://git@stash.infra.bolbat.net:9074/BBUTILS/main.git</connection>
 		<developerConnection>scm:git:ssh://git@stash.infra.bolbat.net:9074/BBUTILS/main.git</developerConnection>
 		<url>http://stash.infra.bolbat.net/scm/BBUTILS/main.git</url>
-		<tag>HEAD</tag>
 	</scm>
 
 </project>
