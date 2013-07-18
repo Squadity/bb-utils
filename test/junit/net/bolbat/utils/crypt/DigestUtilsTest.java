@@ -120,6 +120,13 @@ public class DigestUtilsTest {
 		Assert.assertNotEquals(value, digest2);
 
 		Assert.assertEquals(digest1, digest2);
+
+		String digestWithDoubleSalt = DigestUtils.digest(a, value, salt + salt);
+		LOGGER.info("digest2[" + digestWithDoubleSalt + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
+		Assert.assertNotNull(digestWithDoubleSalt);
+		Assert.assertNotEquals(value, digestWithDoubleSalt);
+		Assert.assertNotEquals(digest1, digestWithDoubleSalt);
+		Assert.assertNotEquals(digest2, digestWithDoubleSalt);
 	}
 
 }

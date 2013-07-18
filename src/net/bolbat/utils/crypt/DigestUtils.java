@@ -33,7 +33,7 @@ public final class DigestUtils {
 	 *            secure salt
 	 * @return {@link String} digest
 	 */
-	public static final String digest(final Algorithm algorithm, final String value, final String salt) {
+	public static String digest(final Algorithm algorithm, final String value, final String salt) {
 		if (algorithm == null)
 			throw new IllegalArgumentException("algorithm argument is null.");
 		if (StringUtils.isEmpty(value))
@@ -132,7 +132,7 @@ public final class DigestUtils {
 		 *            algorithm name, is not case-sensitive
 		 * @return {@link Algorithm}
 		 */
-		public static final Algorithm get(final String aAlgorithmName) {
+		public static Algorithm get(final String aAlgorithmName) {
 			if (StringUtils.isEmpty(aAlgorithmName))
 				throw new IllegalArgumentException("aAlgorithmName argument is empty.");
 
