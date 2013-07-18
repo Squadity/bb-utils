@@ -322,6 +322,10 @@ public class CipherUtilsTest {
 		Assert.assertArrayEquals(CipherUtils.DEFAULT_KEY_SUFFIX.getBytes(CipherUtils.DEFAULT_CHARSET), Algorithm.toRawKey(null, null));
 		Assert.assertArrayEquals(CipherUtils.DEFAULT_KEY_SUFFIX.getBytes(CipherUtils.DEFAULT_CHARSET), Algorithm.toRawKey("", ""));
 
+		final String salt = "123";
+		Assert.assertArrayEquals((CipherUtils.DEFAULT_KEY_SUFFIX + salt).getBytes(CipherUtils.DEFAULT_CHARSET),
+				Algorithm.toRawKey(CipherUtils.DEFAULT_KEY_SUFFIX, salt));
+
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.encode(Algorithm.BLOWFISH, null, null, null));
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.encode(Algorithm.BLOWFISH, "", null, null));
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.encode(Algorithm.BLOWFISH, "     ", null, null));
