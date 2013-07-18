@@ -93,6 +93,7 @@ public class DigestUtilsTest {
 
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, DigestUtils.digest(Algorithm.MD2, null, null));
 		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0], null));
 	}
 
 	/**
