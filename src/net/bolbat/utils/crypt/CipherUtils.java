@@ -521,7 +521,7 @@ public final class CipherUtils {
 				if (a.getAlgorithmName().equalsIgnoreCase(aAlgorithmName))
 					return a;
 
-			throw new IllegalArgumentException("algorithm[" + aAlgorithmName + "] not supported.");
+			throw new CipherRuntimeException("algorithm[" + aAlgorithmName + "] not supported.");
 		}
 
 		/**

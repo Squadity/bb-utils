@@ -104,6 +104,12 @@ public class CipherUtilsTest {
 			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("aAlgorithmName"));
 		}
 		try {
+			Algorithm.get("wrong");
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (CipherRuntimeException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("algorithm[wrong]"));
+		}
+		try {
 			Algorithm.generateSecretKeySpec(null, null, null, 0, 0);
 			Assert.fail("Exception shold be thrown before this step.");
 		} catch (IllegalArgumentException e) {
