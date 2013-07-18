@@ -18,7 +18,7 @@ public class CipherUtilsTest {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(CipherUtils.class);
+	private static final Logger LOGGER = Logger.getLogger(CipherUtilsTest.class);
 
 	/**
 	 * General test.
