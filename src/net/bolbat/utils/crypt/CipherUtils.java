@@ -474,12 +474,12 @@ public final class CipherUtils {
 		 * @return decoded value in byte array
 		 */
 		public byte[] decode(final byte[] toDecode, final String key, final String salt, final AlgorithmParameterSpec paramSpec) {
+			if (toDecode == null || toDecode.length == 0)
+				return EMPTY_BYTE_ARRAY;
 			if (StringUtils.isEmpty(key))
 				throw new IllegalArgumentException("key argument is empty.");
 			if (StringUtils.isEmpty(salt))
 				throw new IllegalArgumentException("salt argument is empty.");
-			if (toDecode == null || toDecode.length == 0)
-				return EMPTY_BYTE_ARRAY;
 
 			try {
 				Cipher cipher = Cipher.getInstance(getAlgorithmName());

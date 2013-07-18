@@ -3,7 +3,9 @@ package net.bolbat.utils.crypt;
 import java.util.Date;
 
 import net.bolbat.utils.crypt.CipherUtils.Algorithm;
+import net.bolbat.utils.test.CommonTester;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -87,6 +89,12 @@ public class CipherUtilsTest {
 		} catch (IllegalArgumentException e) {
 			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
 		}
+		try {
+			CipherUtils.decode(Algorithm.BLOWFISH, "not-valid-hex", "mock", "mock");
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (CipherRuntimeException e) {
+			Assert.assertTrue("Exception should be there.", e.getCause() instanceof DecoderException);
+		}
 
 		// algorithm enumeration
 		try {
@@ -113,6 +121,227 @@ public class CipherUtilsTest {
 		} catch (IllegalArgumentException e) {
 			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("name"));
 		}
+
+		// algorithm: DES
+		try {
+			Algorithm.DES.crateKey(null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("value"));
+		}
+		try {
+			Algorithm.DES.crateKey("mock", null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+
+		// algorithm: DE_SEDE
+		try {
+			Algorithm.DE_SEDE.crateKey(null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("value"));
+		}
+		try {
+			Algorithm.DE_SEDE.crateKey("mock", null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+
+		// algorithm: BLOWFISH
+		try {
+			Algorithm.BLOWFISH.crateKey(null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("value"));
+		}
+		try {
+			Algorithm.BLOWFISH.crateKey("mock", null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.BLOWFISH.encode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.BLOWFISH.encode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.BLOWFISH.decode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.BLOWFISH.decode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+
+		// algorithm: PBE_WITH_MD5_AND_DES
+		try {
+			Algorithm.PBE_WITH_MD5_AND_DES.crateKey(null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("value"));
+		}
+		try {
+			Algorithm.PBE_WITH_MD5_AND_DES.crateKey("mock", null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.PBE_WITH_MD5_AND_DES.encode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.PBE_WITH_MD5_AND_DES.encode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.PBE_WITH_MD5_AND_DES.decode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.PBE_WITH_MD5_AND_DES.decode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+
+		// algorithm: PBE_WITH_SHA1_AND_DE_SEDE
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.crateKey(null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("value"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.crateKey("mock", null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.encode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.encode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.decode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.decode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+
+		// algorithm: PBE_WITH_SHA1_AND_RC2_40
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_RC2_40.crateKey(null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("value"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_RC2_40.crateKey("mock", null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_RC2_40.encode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_RC2_40.encode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_RC2_40.decode(new byte[1], null, null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("key"));
+		}
+		try {
+			Algorithm.PBE_WITH_SHA1_AND_RC2_40.decode(new byte[1], "mock", null, null);
+			Assert.fail("Exception shold be thrown before this step.");
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue("Exception should be there.", e.getMessage().startsWith("salt"));
+		}
+	}
+
+	/**
+	 * Cases mostly for good code coverage.
+	 */
+	@Test
+	public void coverageTest() {
+		CommonTester.checkExceptionInstantiation(CipherRuntimeException.class);
+
+		Assert.assertEquals(Algorithm.BLOWFISH, Algorithm.get(Algorithm.BLOWFISH.getAlgorithmName()));
+		Assert.assertEquals(Algorithm.PBE_WITH_MD5_AND_DES, Algorithm.get(Algorithm.PBE_WITH_MD5_AND_DES.getAlgorithmName()));
+
+		Assert.assertArrayEquals(CipherUtils.DEFAULT_KEY_SUFFIX.getBytes(CipherUtils.DEFAULT_CHARSET), Algorithm.toRawKey(null, null));
+		Assert.assertArrayEquals(CipherUtils.DEFAULT_KEY_SUFFIX.getBytes(CipherUtils.DEFAULT_CHARSET), Algorithm.toRawKey("", ""));
+
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.encode(Algorithm.BLOWFISH, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.encode(Algorithm.BLOWFISH, "", null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.encode(Algorithm.BLOWFISH, "     ", null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.decode(Algorithm.BLOWFISH, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.decode(Algorithm.BLOWFISH, "", null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, CipherUtils.decode(Algorithm.BLOWFISH, "     ", null, null));
+
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.BLOWFISH.encode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.BLOWFISH.encode(new byte[0], null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.BLOWFISH.decode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.BLOWFISH.decode(new byte[0], null, null, null));
+
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_MD5_AND_DES.encode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_MD5_AND_DES.encode(new byte[0], null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_MD5_AND_DES.decode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_MD5_AND_DES.decode(new byte[0], null, null, null));
+
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.encode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.encode(new byte[0], null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.decode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_DE_SEDE.decode(new byte[0], null, null, null));
+
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_RC2_40.encode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_RC2_40.encode(new byte[0], null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_RC2_40.decode(null, null, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.PBE_WITH_SHA1_AND_RC2_40.decode(new byte[0], null, null, null));
 	}
 
 	/**
