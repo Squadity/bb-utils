@@ -8,6 +8,11 @@ package net.bolbat.utils.lang;
 public final class StringUtils {
 
 	/**
+	 * Empty {@link String} constant.
+	 */
+	public static final String EMPTY = "";
+
+	/**
 	 * Default constructor with preventing instantiations of this class.
 	 */
 	private StringUtils() {
