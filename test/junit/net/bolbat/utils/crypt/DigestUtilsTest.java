@@ -5,9 +5,10 @@ import java.util.Date;
 import net.bolbat.utils.crypt.DigestUtils.Algorithm;
 import net.bolbat.utils.test.CommonTester;
 
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link DigestUtils} test.
@@ -19,7 +20,7 @@ public class DigestUtilsTest {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(DigestUtilsTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DigestUtilsTest.class);
 
 	/**
 	 * General test.

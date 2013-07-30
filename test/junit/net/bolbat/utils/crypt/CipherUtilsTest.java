@@ -6,9 +6,10 @@ import net.bolbat.utils.crypt.CipherUtils.Algorithm;
 import net.bolbat.utils.test.CommonTester;
 
 import org.apache.commons.codec.DecoderException;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link CipherUtils} test.
@@ -20,7 +21,7 @@ public class CipherUtilsTest {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(CipherUtilsTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CipherUtilsTest.class);
 
 	/**
 	 * General test.

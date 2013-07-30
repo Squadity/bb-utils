@@ -6,7 +6,8 @@ import java.util.ResourceBundle;
 
 import net.bolbat.utils.lang.StringUtils;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility for loading localized messages by it's keys in various ways.
@@ -18,7 +19,7 @@ public final class MessageUtils {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MessageUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MessageUtils.class);
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
