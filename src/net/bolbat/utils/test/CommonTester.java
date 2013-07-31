@@ -4,8 +4,6 @@ import java.lang.reflect.Constructor;
 
 import net.bolbat.utils.reflect.Instantiator;
 
-import org.junit.Assert;
-
 /**
  * Utility for common testing approaches, like exception's testing (mostly for code coverage).
  * 
@@ -36,9 +34,11 @@ public final class CommonTester {
 				@SuppressWarnings("unchecked")
 				T instance = (T) Instantiator.instantiate(constructor);
 				// message validation
-				Assert.assertNull("Exception message should be null", instance.getMessage());
+				if (instance.getMessage() != null)
+					throw new AssertionError("Exception[" + instance + "] message should be null.");
 				// cause validation
-				Assert.assertNull("Exception cause should be null", instance.getCause());
+				if (instance.getCause() != null)
+					throw new AssertionError("Exception[" + instance + "] cause should be null.");
 				continue;
 			}
 
@@ -46,21 +46,28 @@ public final class CommonTester {
 				@SuppressWarnings("unchecked")
 				T instance = (T) Instantiator.instantiate(constructor, exceptionMessage);
 				// message validation
-				Assert.assertNotNull("Exception message should be not null", instance.getMessage());
-				Assert.assertEquals(exceptionMessage, instance.getMessage());
+				if (instance.getMessage() == null)
+					throw new AssertionError("Exception[" + instance + "] message shouldn't be null.");
+				if (!exceptionMessage.equals(instance.getMessage()))
+					throw new AssertionError("Exception[" + instance + "] message should be equal with [" + exceptionMessage + "].");
 				// cause validation
-				Assert.assertNull("Exception cause should be null", instance.getCause());
+				if (instance.getCause() != null)
+					throw new AssertionError("Exception[" + instance + "] cause should be null.");
 				continue;
 			}
 			if (constructor.getParameterTypes().length == 1 && constructor.getParameterTypes()[0] == Throwable.class) {
 				@SuppressWarnings("unchecked")
 				T instance = (T) Instantiator.instantiate(constructor, exceptionCause);
 				// message validation
-				Assert.assertNotNull("Exception message should be null", instance.getMessage());
-				Assert.assertEquals(exceptionCause.toString(), instance.getMessage());
+				if (instance.getMessage() == null)
+					throw new AssertionError("Exception[" + instance + "] message shouldn't be null.");
+				if (!exceptionCause.toString().equals(instance.getMessage()))
+					throw new AssertionError("Exception[" + instance + "] message should be equal with [" + exceptionCause.toString() + "].");
 				// cause validation
-				Assert.assertNotNull("Exception cause should be not null", instance.getCause());
-				Assert.assertEquals(exceptionCause.getMessage(), instance.getCause().getMessage());
+				if (instance.getCause() == null)
+					throw new AssertionError("Exception[" + instance + "] cause shouldn't be null.");
+				if (!exceptionCause.getMessage().equals(instance.getCause().getMessage()))
+					throw new AssertionError("Exception[" + instance + "] cause message should be equal with [" + exceptionCause.getMessage() + "].");
 				continue;
 			}
 			if (constructor.getParameterTypes().length == 2 && constructor.getParameterTypes()[0] == String.class
@@ -68,11 +75,15 @@ public final class CommonTester {
 				@SuppressWarnings("unchecked")
 				T instance = (T) Instantiator.instantiate(constructor, exceptionMessage, exceptionCause);
 				// message validation
-				Assert.assertNotNull("Exception message should be null", instance.getMessage());
-				Assert.assertEquals(exceptionMessage, instance.getMessage());
+				if (instance.getMessage() == null)
+					throw new AssertionError("Exception[" + instance + "] message shouldn't be null.");
+				if (!exceptionMessage.equals(instance.getMessage()))
+					throw new AssertionError("Exception[" + instance + "] message should be equal with [" + exceptionMessage + "].");
 				// cause validation
-				Assert.assertNotNull("Exception cause should be not null", instance.getCause());
-				Assert.assertEquals(exceptionCause.getMessage(), instance.getCause().getMessage());
+				if (instance.getCause() == null)
+					throw new AssertionError("Exception[" + instance + "] cause shouldn't be null.");
+				if (!exceptionCause.getMessage().equals(instance.getCause().getMessage()))
+					throw new AssertionError("Exception[" + instance + "] cause message should be equal with [" + exceptionCause.getMessage() + "].");
 				continue;
 			}
 		}

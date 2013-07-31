@@ -112,19 +112,19 @@ public class DigestUtilsTest {
 
 		long startTimestamp = System.currentTimeMillis();
 		String digest1 = DigestUtils.digest(a, value, salt);
-		LOGGER.info("digest1[" + digest1 + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
+		LOGGER.info("first[" + digest1 + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
 		Assert.assertNotNull(digest1);
 		Assert.assertNotEquals(value, digest1);
 
 		String digest2 = DigestUtils.digest(a, value, salt);
-		LOGGER.info("digest2[" + digest2 + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
+		LOGGER.info("second[" + digest2 + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
 		Assert.assertNotNull(digest2);
 		Assert.assertNotEquals(value, digest2);
 
 		Assert.assertEquals(digest1, digest2);
 
 		String digestWithDoubleSalt = DigestUtils.digest(a, value, salt + salt);
-		LOGGER.info("digestWithDoubleSalt[" + digestWithDoubleSalt + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
+		LOGGER.info("thirdWithDoubleSalt[" + digestWithDoubleSalt + "], time[" + (System.currentTimeMillis() - startTimestamp) + "ms]");
 		Assert.assertNotNull(digestWithDoubleSalt);
 		Assert.assertNotEquals(value, digestWithDoubleSalt);
 		Assert.assertNotEquals(digest1, digestWithDoubleSalt);

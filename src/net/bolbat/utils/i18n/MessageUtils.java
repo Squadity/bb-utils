@@ -97,17 +97,14 @@ public final class MessageUtils {
 			final String bundleName = StringUtils.isNotEmpty(path) ? path + "." + module : module;
 			bundle = ResourceBundle.getBundle(bundleName, locale != null ? locale : LocaleUtils.getCurrentLocale());
 		} catch (MissingResourceException e) {
-			String message = "getMessage(" + module + "," + key + ") bundle not found. Skipping.";
-			LOGGER.error(message);
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(message, e);
+			LOGGER.warn("Bundle[" + module + "] not found.");
 		}
 
 		if (bundle != null)
 			try {
 				return bundle.getString(key);
 			} catch (MissingResourceException e) {
-				LOGGER.warn("getMessage(" + module + "," + key + ") message not found. Skipping.");
+				LOGGER.warn("Bundle[" + module + "] message[" + key + "] not found.");
 			}
 
 		return "!" + key + "!";
