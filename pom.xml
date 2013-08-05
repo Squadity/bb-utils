@@ -16,6 +16,10 @@
 		<!-- Common Dependencies Versions -->
 		<configureme.version>2.0.1</configureme.version>
 		<reflections.version>0.9.9-RC1</reflections.version>
+
+		<!-- general configuration properties -->
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
 
 	<dependencies>
