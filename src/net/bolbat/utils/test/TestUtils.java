@@ -2,6 +2,8 @@ package net.bolbat.utils.test;
 
 import java.io.File;
 
+import net.bolbat.utils.lang.StringUtils;
+
 /**
  * Utility with some helping functionality.
  * 
@@ -24,20 +26,30 @@ public final class TestUtils {
 	 * @return {@link String} path
 	 */
 	public static String getTemporaryFolder(final Class<?> clazz) {
-		String result;
+		return getTemporaryFolder(clazz.getName());
+	}
 
-		result = System.getProperty("java.io.tmpdir"); // trying to obtain current system user temporary directory
-
-		if (result == null || result.trim().length() == 0) // if temporary directory not exist/configured
+	/**
+	 * Get path to folder where test can store some temporary data. Path always ends with path separator.
+	 * 
+	 * @param suffix
+	 *            some path suffix
+	 * @return {@link String} path
+	 */
+	public static String getTemporaryFolder(final String suffix) {
+		String result = System.getProperty("java.io.tmpdir"); // trying to obtain current system user temporary directory
+		if (StringUtils.isEmpty(result)) // if temporary directory not exist/configured
 			result = System.getProperty("user.home"); // trying to obtain current system user home directory
+		if (StringUtils.isEmpty(result)) // if home directory not exist/configured
+			result = File.separator + "tmp";
+		if (StringUtils.isEmpty(suffix)) // if suffix is empty
+			return result + File.separator;
 
-		if (result == null || result.trim().length() == 0) // if home directory not exist/configured
-			return File.separator + "tmp" + File.separator + clazz.getName() + File.separator;
-
+		result += suffix.startsWith(File.separator) ? suffix : File.separator + suffix; // adding suffix
 		if (!result.endsWith(File.separator)) // checking is path ends with path separator
 			result += File.separator;
 
-		return result + clazz.getName() + File.separator;
+		return result;
 	}
 
 }
