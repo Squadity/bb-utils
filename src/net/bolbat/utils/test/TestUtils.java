@@ -19,21 +19,23 @@ public final class TestUtils {
 	}
 
 	/**
-	 * Get path to folder where test can store some temporary data. Path always ends with path separator.
+	 * Get path to folder where temporary data can be stored.<br>
+	 * Path always ends with path separator.
 	 * 
 	 * @param clazz
-	 *            test class name
+	 *            class, used to construct path suffix from class name, optional
 	 * @return {@link String} path
 	 */
 	public static String getTemporaryFolder(final Class<?> clazz) {
-		return getTemporaryFolder(clazz.getName());
+		return getTemporaryFolder(clazz != null ? clazz.getName() : StringUtils.EMPTY);
 	}
 
 	/**
-	 * Get path to folder where test can store some temporary data. Path always ends with path separator.
+	 * Get path to folder where test can store some temporary data.<br>
+	 * Path always ends with path separator.
 	 * 
 	 * @param suffix
-	 *            some path suffix
+	 *            path suffix, optional
 	 * @return {@link String} path
 	 */
 	public static String getTemporaryFolder(final String suffix) {
