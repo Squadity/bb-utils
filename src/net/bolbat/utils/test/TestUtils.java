@@ -43,13 +43,10 @@ public final class TestUtils {
 		if (StringUtils.isEmpty(result)) // if home directory not exist/configured
 			result = File.separator + "tmp";
 		if (StringUtils.isEmpty(suffix)) // if suffix is empty
-			return result + File.separator;
+			return result.endsWith(File.separator) ? result : result + File.separator;
 
 		result += suffix.startsWith(File.separator) ? suffix : File.separator + suffix; // adding suffix
-		if (!result.endsWith(File.separator)) // checking is path ends with path separator
-			result += File.separator;
-
-		return result;
+		return result.endsWith(File.separator) ? result : result + File.separator;
 	}
 
 }
