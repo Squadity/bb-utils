@@ -14,7 +14,7 @@
 
 	<properties>
 		<!-- Common Dependencies Versions -->
-		<configureme.version>2.0.1</configureme.version>
+		<configureme.version>2.3.0</configureme.version>
 		<reflections.version>0.9.9-RC1</reflections.version>
 
 		<!-- general configuration properties -->
