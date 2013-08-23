@@ -88,8 +88,15 @@ public final class IdBasedLockManagerTest {
 	@Test
 	public void lockTest() {
 		IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<String>();
+		Assert.assertNotNull(lockManager.getLocksIds());
+		Assert.assertEquals(0, lockManager.getLocksIds().size());
+
 		IdBasedLock<String> lock = lockManager.obtainLock(LOCK_ID);
 		Assert.assertNotNull(lock);
+		Assert.assertNotNull(lockManager.getLocksIds());
+		Assert.assertEquals(1, lockManager.getLocksIds().size());
+		Assert.assertNotNull(lockManager.getLocksIds().get(0));
+		Assert.assertEquals(LOCK_ID, lockManager.getLocksIds().get(0));
 
 		lock.lock();
 		try {
@@ -99,6 +106,9 @@ public final class IdBasedLockManagerTest {
 		} finally {
 			lock.unlock();
 		}
+
+		Assert.assertNotNull(lockManager.getLocksIds());
+		Assert.assertEquals(0, lockManager.getLocksIds().size());
 	}
 
 	/**
@@ -111,6 +121,8 @@ public final class IdBasedLockManagerTest {
 
 		// checking results
 		Assert.assertEquals(0, lockManager.getLocksCount());
+		Assert.assertNotNull(lockManager.getLocksIds());
+		Assert.assertEquals(0, lockManager.getLocksIds().size());
 		Assert.assertEquals(1, MAX_ACTIVE_CALLS.get()); // should not more then 1
 		Assert.assertEquals(THREADS * CALLS_PER_THREAD, PROCESSED_CALLS.get());
 	}
