@@ -13,10 +13,6 @@
 	</parent>
 
 	<properties>
-		<!-- Common Dependencies Versions -->
-		<configureme.version>2.3.0</configureme.version>
-		<reflections.version>0.9.9-RC1</reflections.version>
-
 		<!-- general configuration properties -->
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
@@ -40,16 +36,7 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>net.anotheria</groupId>
-			<artifactId>configureme</artifactId>
-			<version>${configureme.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>${reflections.version}</version>
-		</dependency>
+
 
 		<!-- Testing dependencies -->
 		<dependency>
