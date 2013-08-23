@@ -28,7 +28,7 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 	/**
 	 * Synchronization lock.
 	 */
-	private final Object SYN_LOCK = new Object();
+	private final Object synchLock = new Object();
 
 	@Override
 	public List<T> getLocksIds() {
@@ -45,7 +45,7 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 		if (id == null)
 			throw new IllegalArgumentException("id argument is null.");
 
-		synchronized (SYN_LOCK) {
+		synchronized (synchLock) {
 			IdBasedLock<T> lock = locks.get(id);
 			if (lock == null) {
 				lock = new IdBasedLock<T>(id, this);
@@ -62,7 +62,7 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 		if (lock == null)
 			throw new IllegalArgumentException("lock argument is null.");
 
-		synchronized (SYN_LOCK) {
+		synchronized (synchLock) {
 			if (lock.getReferencesCount() == 1)
 				locks.remove(lock.getId());
 
