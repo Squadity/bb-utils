@@ -83,6 +83,25 @@ public final class IdBasedLockManagerTest {
 	}
 
 	/**
+	 * {@link IdBasedLock} test.
+	 */
+	@Test
+	public void lockTest() {
+		IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<String>();
+		IdBasedLock<String> lock = lockManager.obtainLock(LOCK_ID);
+		Assert.assertNotNull(lock);
+
+		lock.lock();
+		try {
+			Assert.assertEquals(LOCK_ID, lock.getId());
+			Assert.assertEquals(1, lock.getReferencesCount());
+			Assert.assertNotNull(lock.toString());
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	/**
 	 * {@link SafeIdBasedLockManager} test.
 	 */
 	@Test

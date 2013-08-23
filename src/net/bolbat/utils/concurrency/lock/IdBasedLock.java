@@ -77,13 +77,6 @@ public class IdBasedLock<T> implements Serializable {
 	}
 
 	/**
-	 * Unlock without release lock from manager.
-	 */
-	protected void unlockWithoutRelease() {
-		lock.unlock();
-	}
-
-	/**
 	 * Increase references count.
 	 */
 	protected void increaseReferences() {
