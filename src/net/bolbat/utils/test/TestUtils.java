@@ -47,6 +47,9 @@ public final class TestUtils {
 		if (StringUtils.isEmpty(suffix)) // if suffix is empty
 			return result.endsWith(File.separator) ? result : result + File.separator;
 
+		if (result.endsWith(File.separator)) // removing redundant separator
+			result = result.substring(0, result.length() - 1);
+
 		result += suffix.startsWith(File.separator) ? suffix : File.separator + suffix; // adding suffix
 		return result.endsWith(File.separator) ? result : result + File.separator;
 	}
