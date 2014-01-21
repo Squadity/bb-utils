@@ -45,6 +45,7 @@ public final class StringMatchUtils {
 
 	/**
 	 * Return true if text matches with entered wildcard pattern.
+	 * Symbols that filters by wildcard is characters, numbers, underline symbol, dot symbol, space symbol and hyphen symbol.
 	 *
 	 * @param text
 	 * 		{@link String} under investigation text
@@ -52,21 +53,18 @@ public final class StringMatchUtils {
 	 * 		{@link String} wildcard for text check
 	 * @return true if text match with pattern
 	 */
-	public static boolean wildCardMatch(final String text, final String wildcard) {
+	public static boolean wildcardMatch(final String text, final String wildcard) {
 		if (text == null && wildcard == null)
 			return true;
-		if (wildcard == null)
-			return false;
-		if (text == null)
-			return false;
 
-		String wildcardValidator = wildcard;
+		String wildcardRegex = wildcard;
+		if (wildcard != null) {
+			wildcardRegex = wildcardRegex.replaceAll(ANY_SYMBOL, ANY_SYMBOL_REGEXP_REPLACEMENT);
+			wildcardRegex = wildcardRegex.replaceAll(ANY_DOT_SYMBOLS, ANY_DOT_SYMBOL_REGEXP_REPLACEMENT);
+			wildcardRegex = wildcardRegex.replaceAll(ANY_SYMBOLS_SET, ANY_SYMBOLS_SET_REGEXP_REPLACEMENT);
+		}
 
-		wildcardValidator = wildcardValidator.replaceAll(ANY_SYMBOL, ANY_SYMBOL_REGEXP_REPLACEMENT);
-		wildcardValidator = wildcardValidator.replaceAll(ANY_DOT_SYMBOLS, ANY_DOT_SYMBOL_REGEXP_REPLACEMENT);
-		wildcardValidator = wildcardValidator.replaceAll(ANY_SYMBOLS_SET, ANY_SYMBOLS_SET_REGEXP_REPLACEMENT);
-
-		return text.matches(wildcardValidator);
+		return regexMatch(text, wildcardRegex);
 	}
 
 	/**
@@ -74,19 +72,15 @@ public final class StringMatchUtils {
 	 *
 	 * @param text
 	 * 		{@link String} under investigation text
-	 * @param reqExp
-	 * 		{@link String} reqExp for text check
+	 * @param reqex
+	 * 		{@link String} reqex for text check
 	 * @return true if text match with pattern
 	 */
-	public static boolean regExpMatch(final String text, final String reqExp) {
-		if (text == null && reqExp == null)
+	public static boolean regexMatch(final String text, final String reqex) {
+		if (text == null && reqex == null)
 			return true;
-		if (reqExp == null)
-			return false;
-		if (text == null)
-			return false;
 
-		return text.matches(reqExp);
+		return text != null && reqex != null && text.matches(reqex);
 	}
 
 }

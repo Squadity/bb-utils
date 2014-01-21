@@ -1,6 +1,8 @@
 package net.bolbat.utils.lang;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -50,6 +52,30 @@ public final class ToStringUtils {
 	 */
 	private ToStringUtils() {
 		throw new IllegalAccessError("Can't be instantiated.");
+	}
+
+	/**
+	 * Create string representation for any array with default elements limit.
+	 *
+	 * @param array
+	 *            array, can be <code>null</code> or empty
+	 * @return {@link String}
+	 */
+	public static String toString(final Object[] array) {
+		return toString(array, DEFAULT_LIMIT);
+	}
+
+	/**
+	 * Create string representation for any array with default elements limit.
+	 *
+	 * @param array
+	 *            array, can be <code>null</code> or empty
+	 * @param maxLen
+	 *            elements limit used in representation
+	 * @return {@link String}
+	 */
+	public static String toString(final Object[] array, final int maxLen) {
+		return toString(array == null || array.length == 0 ? Collections.emptyList() : Arrays.asList(array), maxLen);
 	}
 
 	/**
