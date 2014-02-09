@@ -272,16 +272,8 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 			return true;
 
 		Map map = null;
-		if (fieldClass.isInterface()) {
+		if (fieldClass.isInterface())
 			map =  createInstance(HashMap.class);
-
-			if (map == null) {
-				if (conf.getErrorStrategy() == ErrorStrategy.THROW_EXCEPTIONS)
-					throw new UnsupportedTypeException(fieldClass);
-
-				return true; // if not created because of unsupported interface we are saying about completed mapping
-			}
-		}
 
 		if (map == null)
 			map = Map.class.cast(createInstance(fieldClass));
