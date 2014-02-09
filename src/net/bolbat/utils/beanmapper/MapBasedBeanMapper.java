@@ -15,13 +15,20 @@ import java.util.TreeSet;
 
 import net.bolbat.utils.beanmapper.BeanMapperConfiguration.ErrorStrategy;
 import net.bolbat.utils.lang.StringUtils;
+import net.bolbat.utils.logging.LoggingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mapper implementation for map properties from {@link Map} to bean.
  * 
- * @author Alexandr Bolbat
+ * @author Alexandr Bolbat, rkapushchak
  */
 public class MapBasedBeanMapper extends AbstractBeanMapper {
+	/**
+	 * {@link Logger} instance.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MapBasedBeanMapper.class);
 
 	/**
 	 * Map bean with parameters from {@link Map}.
@@ -167,6 +174,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 			} catch (IllegalAccessException e) {
 				//can't read field skipp
+				LoggingUtils.warn(LOGGER, "Can't read object field[" + field.getName() + "].", e);
 			}
 		}
 
@@ -556,8 +564,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 		if (fieldValue == null)
 			return propertyMap;
 
-		if (Array.getLength(fieldValue) > 0)
-			if (isBasicType(Array.get(fieldValue, 0))) {
+		if (Array.getLength(fieldValue) > 0 && isBasicType(Array.get(fieldValue, 0))) {
 				StringBuilder arrayRepr = new StringBuilder();
 				for (int i = 0; i < Array.getLength(fieldValue); i++) {
 					if (i != 0)
