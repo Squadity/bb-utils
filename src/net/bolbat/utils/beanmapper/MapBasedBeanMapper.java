@@ -3,8 +3,10 @@ package net.bolbat.utils.beanmapper;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +74,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 				continue;
 
 			// Map as map, should be implemented in next releases
-			if (Map.class.isAssignableFrom(field.getType()))
+			if (mapAsMap(parameters, field, bean, value, scopePrefix, configuration))
 				continue;
 
 			// Map as array
@@ -113,8 +115,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 		if (!Collection.class.isAssignableFrom(fieldClass)) // if this field not collection we are skipping this mapping
 			return false;
 
-		if (value == null) // if value are null we are saying about completed mapping
-			return true;
+		//TODO: add correct check of null for not custom type and correct custom type field name check
 
 		String[] strArray = String.valueOf(value).split(conf.getListDelimiter());
 		if (strArray == null || strArray.length == 0) // if source array are null or empty we are saying about completed mapping
@@ -239,6 +240,75 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 		arrayValue = toBeanArrayFromValue(parameters, field, fieldClass.getComponentType(), scopePrefix, conf);
 		setFieldValue(field, bean, arrayValue, conf);
+		return true;
+	}
+
+	/**
+	 * Map as Map.
+	 *
+	 * @param parameters
+	 *            parameters
+	 * @param field
+	 *            field
+	 * @param bean
+	 *            bean
+	 * @param value
+	 *            value
+	 * @param scopePrefix
+	 *            scope prefix
+	 * @param conf
+	 *            mapping configuration
+	 * @return <code>true</code> if mapped or <code>false</code>
+	 */
+	private static boolean mapAsMap(final Map<String, Object> parameters, final Field field, final Object bean, final Object value,
+										   final String scopePrefix, final BeanMapperConfiguration conf) {
+		// TODO: change this by correct mapping for custom map key/value objects
+		Class<?> fieldClass = field.getType(); // field type
+		if (!Map.class.isAssignableFrom(fieldClass)) // if this field not map we are skipping this mapping
+			return false;
+
+		String[] strArray = String.valueOf(value).split(conf.getMapElementsDelimiter());
+		if (strArray == null || strArray.length == 0) // if source array are null or empty we are saying about completed mapping
+			return true;
+
+		Map map = null;
+		if (fieldClass.isInterface()) {
+			map =  createInstance(HashMap.class);
+
+			if (map == null) {
+				if (conf.getErrorStrategy() == ErrorStrategy.THROW_EXCEPTIONS)
+					throw new UnsupportedTypeException(fieldClass);
+
+				return true; // if not created because of unsupported interface we are saying about completed mapping
+			}
+		}
+
+		if (map == null)
+			map = Map.class.cast(createInstance(fieldClass));
+
+		ParameterizedType genericType = null;
+		if(!(field.getGenericType() instanceof ParameterizedType))
+			return false;
+
+		genericType = ParameterizedType.class.cast(field.getGenericType());
+
+		// Map as basic types collection
+		for(String elements: strArray){
+			if(elements == null || !elements.contains(conf.getMapKeyValueDelimiter()))
+				continue; //if element is null or do not contain delimiter we are skipping this mapping
+
+			String[] entry = elements.split(conf.getMapKeyValueDelimiter());
+			if(entry.length > 2)
+				continue; //if there more than one key and one value elements we are skipping this mapping
+
+			map.put(toBasicTypeFromValue(Class.class.cast(genericType.getActualTypeArguments()[0]), field.getName(), entry[0], conf),
+					toBasicTypeFromValue(Class.class.cast(genericType.getActualTypeArguments()[1]), field.getName(), entry[1], conf));
+		}
+
+		if(map.entrySet().size() < 1)
+			return true; //if empty map we should consider as already mapped
+
+		setFieldValue(field, bean, map, conf);
 		return true;
 	}
 

@@ -6,11 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import net.bolbat.utils.beanmapper.BeanMapper;
-import net.bolbat.utils.beanmapper.BeanMapperConfiguration;
-import net.bolbat.utils.beanmapper.MapBasedBeanMapper;
 import net.bolbat.utils.beanmapper.BeanMapperConfiguration.ErrorStrategy;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -133,6 +129,50 @@ public class BeanMapperTest {
 		Assert.assertEquals(0, bean.getBeanA()[2].getIntV());
 		Assert.assertEquals("beanA 3 string", bean.getBeanA()[2].getStringV());
 		Assert.assertNull(bean.getBeanA()[2].getBean());
+
+		// checking list of the bean's
+		Assert.assertNotNull(bean.getBeanL());
+		Assert.assertEquals(2, bean.getBeanL().size());
+		// validation of first bean in array
+		Assert.assertEquals(1, bean.getBeanL().get(0).getIntV());
+		Assert.assertNotNull(bean.getBeanL().get(0).getBeanL());
+		Assert.assertEquals(2, bean.getBeanL().get(0).getBeanL().size());
+		Assert.assertEquals(11, bean.getBeanL().get(0).getBeanL().get(0).getIntV());
+		Assert.assertEquals("beanL_1.beanL_2 = stringV", bean.getBeanL().get(0).getBeanL().get(1).getStringV());
+		// validation of second bean in array
+		Assert.assertEquals(2, bean.getBeanL().get(1).getIntV());
+		Assert.assertEquals("beanL_2 = stringV", bean.getBeanL().get(1).getStringV());
+		Assert.assertNotNull(bean.getBeanL().get(1).getBeanS());
+		Assert.assertEquals(1, bean.getBeanL().get(1).getBeanS().size());
+		SampleBean bL2S1 = bean.getBeanL().get(1).getBeanS().iterator().next();
+		Assert.assertEquals(21, bL2S1.getIntV());
+		Assert.assertEquals("beanL_2.beanS_1 = stringV", bL2S1.getStringV());
+
+		// checking set of the bean's
+		Assert.assertNotNull(bean.getBeanS());
+		Assert.assertEquals(2, bean.getBeanS().size());
+		// validation of second bean in set
+		SampleBean[] bSArray = bean.getBeanS().toArray(new SampleBean[bean.getBeanS().size()]);
+		if(bSArray[0].getIntV() == 1){
+			Assert.assertEquals(2, bSArray[1].getIntV());
+			Assert.assertEquals("beanS_1 = stringV", bSArray[0].getStringV());
+		}
+
+		if(bSArray[0].getIntV() == 2){
+			Assert.assertEquals(1, bSArray[1].getIntV());
+			Assert.assertEquals("beanS_1 = stringV", bSArray[1].getStringV());
+		}
+
+		// checking map of the bean's
+		Assert.assertNotNull(bean.getStringToIntM());
+		Assert.assertEquals(3, bean.getStringToIntM().entrySet().size());
+		// validation of first bean in array
+		Assert.assertTrue(bean.getStringToIntM().containsKey("key1"));
+		Assert.assertTrue(bean.getStringToIntM().containsKey("key2"));
+		Assert.assertTrue(bean.getStringToIntM().containsKey("key3"));
+		Assert.assertTrue(bean.getStringToIntM().containsValue(1));
+		Assert.assertTrue(bean.getStringToIntM().containsValue(2));
+		Assert.assertTrue(bean.getStringToIntM().containsValue(3));
 	}
 
 	/**
