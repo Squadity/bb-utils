@@ -153,4 +153,36 @@ public final class BeanMapper {
 		return MapBasedBeanMapper.map(params, bean, conf);
 	}
 
+	/**
+	 * Map parameters {@link Map} from bean.
+	 *
+	 * @param bean
+	 *            bean
+	 * @return mapped bean
+	 */
+	public static <T extends Object> Map<String, Object> map(final T bean) {
+		if (bean == null)
+			throw new IllegalArgumentException("bean argument are null");
+		return MapBasedBeanMapper.map(bean, DEFAULT_BEAN_MAPPER_CONFIGURATION);
+	}
+
+	/**
+	 * Map parameters {@link Map} from bean.
+	 *
+	 * @param bean
+	 *            bean
+	 * @param conf
+	 *            mapping configuration
+	 * @return mapped bean
+	 */
+	public static <T extends Object> Map<String, Object> map(final T bean, final BeanMapperConfiguration conf) {
+		if (bean == null)
+			throw new IllegalArgumentException("bean argument are null");
+		if (conf == null)
+			throw new IllegalArgumentException("configuration argument are null");
+
+		return MapBasedBeanMapper.map(bean, conf);
+	}
+
+
 }

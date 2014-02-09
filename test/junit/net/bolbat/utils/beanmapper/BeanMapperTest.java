@@ -1,7 +1,9 @@
 package net.bolbat.utils.beanmapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,6 +25,11 @@ public class BeanMapperTest {
 	 * Parameters for testing {@link MapBasedBeanMapper}.
 	 */
 	private static final Map<String, Object> PARAMS_MAP = new TreeMap<String, Object>();
+
+	/**
+	 * Parameters for testing {@link MapBasedBeanMapper}.
+	 */
+	private static SampleBean bean;
 
 	/**
 	 * Initialization executed before each test.
@@ -65,7 +72,62 @@ public class BeanMapperTest {
 		// TODO: implement next functional
 		PARAMS_MAP.put("stringToIntM", "key1=1,key2=2,key3=3");
 
-		// System.out.println(PARAMS_MAP);
+		bean = new SampleBean();
+		bean.setIntV(1);
+		bean.setStringV("string 1");
+		bean.setIntA(new int[] {1, 2, 3, 4, 5});
+		bean.setBooleanA(new Boolean[] {true, true, false, false, false, true});
+
+		SampleBean bean2 = new SampleBean();
+		bean2.setIntV(2);
+		bean2.setStringV("string 2");
+
+		SampleBean bean3 = new SampleBean();
+		bean3.setIntV(3);
+		bean3.setStringV( "string 3");
+
+		bean2.setBean(bean3);
+		bean.setBean(bean2);
+		bean.setShortL(Arrays.asList(new Short[] {1, 2, 3}));
+
+		SampleBean arrayBean1 = new SampleBean();
+		arrayBean1.setIntV(11);
+		arrayBean1.setStringV("beanA 1 string");
+		SampleBean arrayBean2= new SampleBean();
+		arrayBean2.setIntV(12);
+		SampleBean arrayBean3 = new SampleBean();
+		arrayBean3.setStringV("beanA 3 string");
+		bean.setBeanA(new SampleBean[]{arrayBean1, arrayBean2, arrayBean3});
+
+		SampleBean listBean1 = new SampleBean();
+		listBean1.setIntV(1);
+		SampleBean listBeanList1 = new SampleBean();
+		listBeanList1.setIntV(11);
+		SampleBean listBeanList2 = new SampleBean();
+		listBeanList2.setStringV("beanL_1.beanL_2 = stringV");
+		SampleBean listBean2 = new SampleBean();
+		listBean2.setIntV(2);
+		listBean2.setStringV("beanL_2 = stringV");
+		SampleBean listBeanSet1 = new SampleBean();
+		listBeanSet1.setIntV(21);
+		listBeanSet1.setStringV("beanL_2.beanS_1 = stringV");
+
+		listBean1.setBeanL(Arrays.asList(listBeanList1, listBeanList2));
+		listBean2.setBeanS(new LinkedHashSet<SampleBean>(Arrays.asList(listBeanSet1)));
+		bean.setBeanL(Arrays.asList(listBean1, listBean2));
+
+		SampleBean setBean1 = new SampleBean();
+		setBean1.setIntV(1);
+		setBean1.setStringV("beanS_1 = stringV");
+		SampleBean setBean2 = new SampleBean();
+		setBean2.setIntV(2);
+		bean.setBeanS(new LinkedHashSet<SampleBean>(Arrays.asList(setBean1, setBean2)));
+
+		Map<String, Integer> beanMap = new TreeMap<String, Integer>();
+		beanMap.put("key1", 1);
+		beanMap.put("key2", 2);
+		beanMap.put("key3", 3);
+		bean.setStringToIntM(beanMap);
 	}
 
 	/**
@@ -74,6 +136,7 @@ public class BeanMapperTest {
 	@After
 	public void after() {
 		PARAMS_MAP.clear();
+		bean = null;
 	}
 
 	/**
@@ -204,4 +267,35 @@ public class BeanMapperTest {
 		Assert.assertEquals(new Float(333.789), floatValue);
 	}
 
+
+	/**
+	 * Test for testing bean based mapping.
+	 */
+	@Test
+	public void testBeanBasedMapping() {
+		// configuration for throwing exception on wrong parameter's in mapping's
+		// by default mapper skipping mapping of fields if parameter's for this field's are wrong
+		BeanMapperConfiguration cfg = new BeanMapperConfiguration();
+		cfg.setErrorStrategy(BeanMapperConfiguration.ErrorStrategy.THROW_EXCEPTIONS);
+
+		Map<String, Object> propertyMap = BeanMapper.map(bean);
+		//System.out.println(propertyMap.toString());
+		Object mappedBack = BeanMapper.map(propertyMap, bean.getClass());
+
+		SampleBean mappedBean = SampleBean.class.cast(mappedBack);
+		Assert.assertEquals(bean.getIntV(), mappedBean.getIntV());
+		Assert.assertEquals(bean.getStringV(), mappedBean.getStringV());
+		Assert.assertEquals(bean.getShortL(), mappedBean.getShortL());
+		Assert.assertEquals(bean.getBean(), mappedBean.getBean());
+		Assert.assertTrue(Arrays.equals(bean.getBeanA(), mappedBean.getBeanA()));
+		Assert.assertTrue(Arrays.equals(bean.getBooleanA(), mappedBean.getBooleanA()));
+		Assert.assertEquals(bean.getBeanL(), mappedBean.getBeanL());
+		Assert.assertEquals(bean.getBeanS(), mappedBean.getBeanS());
+
+		if (bean.getStringToIntM() != null)
+			for (Object entry : bean.getStringToIntM().entrySet())
+				Assert.assertTrue(mappedBean.getStringToIntM().entrySet().contains(entry));
+
+		//TODO: create more clearly for reading test
+	}
 }

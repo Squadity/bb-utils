@@ -3,6 +3,8 @@ package net.bolbat.utils.beanmapper;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.bolbat.utils.beanmapper.BeanMapperConfiguration.ErrorStrategy;
@@ -845,6 +847,97 @@ public abstract class AbstractBeanMapper {
 			return toString(fieldName, value, conf);
 
 		return null;
+	}
+
+	/**
+	 * Check is field of simple type.
+	 *
+	 * @param field
+	 * 		{@link Object} field
+	 * @return {@code true} if field of simple type
+	 */
+	public static boolean isBasicType(final Object field) {
+		if (field == null)
+			return false;
+
+		Class<?> fieldClass = field.getClass();
+
+		if (fieldClass == byte.class || fieldClass == Byte.class)
+			return true;
+
+		if (fieldClass == short.class || fieldClass == Short.class)
+			return true;
+
+		if (fieldClass == int.class || fieldClass == Integer.class)
+			return true;
+
+		if (fieldClass == long.class || fieldClass == Long.class)
+			return true;
+
+		if (fieldClass == float.class || fieldClass == Float.class)
+			return true;
+
+		if (fieldClass == double.class || fieldClass == Double.class)
+			return true;
+
+		if (fieldClass == boolean.class || fieldClass == Boolean.class)
+			return true;
+
+		if (fieldClass == char.class || fieldClass == Character.class)
+			return true;
+
+		if (fieldClass == String.class)
+			return true;
+
+		return false;
+	}
+
+	/**
+	 * Check is field is array.
+	 *
+	 * @param field
+	 * 		{@link Object} field
+	 * @return {@code true} if field is array
+	 */
+	public static boolean isArrayType(final Object field) {
+		return field != null && field.getClass().isArray();
+
+	}
+
+	/**
+	 * Check is field is {@link java.util.List}.
+	 *
+	 * @param field
+	 * 		{@link Field} field
+	 * @return {@code true} if field is {@link java.util.List}
+	 */
+	public static boolean isListType(final Object field) {
+		return field != null && field instanceof List;
+
+	}
+
+	/**
+	 * Check is field is {@link Set}.
+	 *
+	 * @param field
+	 * 		{@link Object} field
+	 * @return {@code true} if field is {@link Set}
+	 */
+	public static boolean isSetType(final Object field) {
+		return field != null && field instanceof Set;
+
+	}
+
+	/**
+	 * Check is field is {@link java.util.Map}.
+	 *
+	 * @param field
+	 * 		{@link Object} field
+	 * @return {@code true} if field is {@link java.util.Map}
+	 */
+	public static boolean isMapType(final Object field) {
+		return field != null && field instanceof Map;
+
 	}
 
 }

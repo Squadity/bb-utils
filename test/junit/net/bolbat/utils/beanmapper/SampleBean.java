@@ -118,4 +118,39 @@ public class SampleBean implements Serializable {
 		return builder.toString();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SampleBean that = (SampleBean) o;
+
+		if (intV != that.intV) return false;
+		if (bean != null ? !bean.equals(that.bean) : that.bean != null) return false;
+		if (!Arrays.equals(beanA, that.beanA)) return false;
+		if (beanL != null ? !beanL.equals(that.beanL) : that.beanL != null) return false;
+		if (beanS != null ? !beanS.equals(that.beanS) : that.beanS != null) return false;
+		if (!Arrays.equals(booleanA, that.booleanA)) return false;
+		if (!Arrays.equals(intA, that.intA)) return false;
+		if (shortL != null ? !shortL.equals(that.shortL) : that.shortL != null) return false;
+		if (stringToIntM != null ? !stringToIntM.equals(that.stringToIntM) : that.stringToIntM != null) return false;
+		if (stringV != null ? !stringV.equals(that.stringV) : that.stringV != null) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = intV;
+		result = 31 * result + (stringV != null ? stringV.hashCode() : 0);
+		result = 31 * result + (bean != null ? bean.hashCode() : 0);
+		result = 31 * result + (beanA != null ? Arrays.hashCode(beanA) : 0);
+		result = 31 * result + (beanL != null ? beanL.hashCode() : 0);
+		result = 31 * result + (beanS != null ? beanS.hashCode() : 0);
+		result = 31 * result + (intA != null ? Arrays.hashCode(intA) : 0);
+		result = 31 * result + (booleanA != null ? Arrays.hashCode(booleanA) : 0);
+		result = 31 * result + (shortL != null ? shortL.hashCode() : 0);
+		result = 31 * result + (stringToIntM != null ? stringToIntM.hashCode() : 0);
+		return result;
+	}
 }
