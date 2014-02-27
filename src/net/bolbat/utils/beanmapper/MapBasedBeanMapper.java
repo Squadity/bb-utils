@@ -16,6 +16,7 @@ import java.util.TreeSet;
 import net.bolbat.utils.beanmapper.BeanMapperConfiguration.ErrorStrategy;
 import net.bolbat.utils.lang.StringUtils;
 import net.bolbat.utils.logging.LoggingUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,11 +103,11 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Map parameters {@link Map} from bean.
-	 *
+	 * 
 	 * @param bean
-	 * 		{@link Object} instance that should be stored
+	 *            {@link Object} instance that should be stored
 	 * @param configuration
-	 * 		mapping configuration
+	 *            mapping configuration
 	 * @return {@link Map} of properties and values
 	 */
 	public static <T extends Object> Map<String, Object> map(final T bean, final BeanMapperConfiguration configuration) {
@@ -115,16 +116,16 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 		if (configuration == null)
 			throw new IllegalArgumentException("configuration argument are null");
 
-		return map(bean, configuration.getRootScope(),configuration);
+		return map(bean, configuration.getRootScope(), configuration);
 	}
 
 	/**
 	 * Map parameters {@link Map} from bean.
-	 *
+	 * 
 	 * @param bean
-	 * 		{@link Object} instance that should be stored
+	 *            {@link Object} instance that should be stored
 	 * @param configuration
-	 * 		mapping configuration
+	 *            mapping configuration
 	 * @return {@link Map} of properties and values
 	 */
 	private static <T extends Object> Map<String, Object> map(final T bean, final String scope, final BeanMapperConfiguration configuration) {
@@ -137,8 +138,9 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 				final String fieldName = field.getName(); // field name
 				final Object fieldValue = field.get(bean);
 
-				//create current scope
-				StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
+				// create current scope
+				StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+						!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
 				if (isBasicType(fieldValue)) {
 					propertyMap.put(currScope.toString(), fieldValue);
 
@@ -173,7 +175,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 					propertyMap.putAll(map(fieldValue, currScope.toString(), configuration));
 
 			} catch (IllegalAccessException e) {
-				//can't read field skipp
+				// can't read field skipp
 				LoggingUtils.warn(LOGGER, "Can't read object field[" + field.getName() + "].", e);
 			}
 		}
@@ -204,7 +206,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 		if (!Collection.class.isAssignableFrom(fieldClass)) // if this field not collection we are skipping this mapping
 			return false;
 
-		//TODO: add correct check of null for not custom type and correct custom type field name check
+		// TODO: add correct check of null for not custom type and correct custom type field name check
 
 		String[] strArray = String.valueOf(value).split(conf.getListDelimiter());
 		if (strArray == null || strArray.length == 0) // if source array are null or empty we are saying about completed mapping
@@ -334,7 +336,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Map as Map.
-	 *
+	 * 
 	 * @param parameters
 	 *            parameters
 	 * @param field
@@ -349,8 +351,9 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	 *            mapping configuration
 	 * @return <code>true</code> if mapped or <code>false</code>
 	 */
+	@SuppressWarnings({ "unchecked" })
 	private static boolean mapAsMapType(final Map<String, Object> parameters, final Field field, final Object bean, final Object value,
-										final String scopePrefix, final BeanMapperConfiguration conf) {
+			final String scopePrefix, final BeanMapperConfiguration conf) {
 		// TODO: change this by correct mapping for custom map key/value objects
 		Class<?> fieldClass = field.getType(); // field type
 		if (!Map.class.isAssignableFrom(fieldClass)) // if this field not map we are skipping this mapping
@@ -360,34 +363,34 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 		if (strArray == null || strArray.length == 0) // if source array are null or empty we are saying about completed mapping
 			return true;
 
-		Map map = null;
+		Map<Object, Object> map = null;
 		if (fieldClass.isInterface())
-			map =  createInstance(HashMap.class);
+			map = createInstance(HashMap.class);
 
 		if (map == null)
 			map = Map.class.cast(createInstance(fieldClass));
 
 		ParameterizedType genericType = null;
-		if(!(field.getGenericType() instanceof ParameterizedType))
+		if (!(field.getGenericType() instanceof ParameterizedType))
 			return false;
 
 		genericType = ParameterizedType.class.cast(field.getGenericType());
 
 		// Map as basic types collection
-		for(String elements: strArray){
-			if(elements == null || !elements.contains(conf.getMapKeyValueDelimiter()))
-				continue; //if element is null or do not contain delimiter we are skipping this mapping
+		for (String elements : strArray) {
+			if (elements == null || !elements.contains(conf.getMapKeyValueDelimiter()))
+				continue; // if element is null or do not contain delimiter we are skipping this mapping
 
 			String[] entry = elements.split(conf.getMapKeyValueDelimiter());
-			if(entry.length > 2)
-				continue; //if there more than one key and one value elements we are skipping this mapping
+			if (entry.length > 2)
+				continue; // if there more than one key and one value elements we are skipping this mapping
 
 			map.put(toBasicTypeFromValue(Class.class.cast(genericType.getActualTypeArguments()[0]), field.getName(), entry[0], conf),
 					toBasicTypeFromValue(Class.class.cast(genericType.getActualTypeArguments()[1]), field.getName(), entry[1], conf));
 		}
 
-		if(map.entrySet().size() < 1)
-			return true; //if empty map we should consider as already mapped
+		if (map.entrySet().size() < 1)
+			return true; // if empty map we should consider as already mapped
 
 		setFieldValue(field, bean, map, conf);
 		return true;
@@ -546,18 +549,19 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Method for mapping array map from field value.
-	 *
+	 * 
 	 * @param field
-	 * 		{@link Field} that should be converted
+	 *            {@link Field} that should be converted
 	 * @param fieldValue
-	 * 		{@link Object} field value
+	 *            {@link Object} field value
 	 * @param scope
-	 * 		{@link String} current field scope
+	 *            {@link String} current field scope
 	 * @param configuration
-	 * 		{@link BeanMapperConfiguration} instance
+	 *            {@link BeanMapperConfiguration} instance
 	 * @return {@link java.util.Map} converted from field
 	 */
-	private static Map<String, Object> mapFromArrayType(final Field field, final Object fieldValue, final String scope, final BeanMapperConfiguration configuration) {
+	private static Map<String, Object> mapFromArrayType(final Field field, final Object fieldValue, final String scope,
+			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
 		Map<String, Object> propertyMap = new HashMap<String, Object>();
 
@@ -565,20 +569,21 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 			return propertyMap;
 
 		if (Array.getLength(fieldValue) > 0 && isBasicType(Array.get(fieldValue, 0))) {
-				StringBuilder arrayRepr = new StringBuilder();
-				for (int i = 0; i < Array.getLength(fieldValue); i++) {
-					if (i != 0)
-						arrayRepr.append(configuration.getArrayDelimiter());
+			StringBuilder arrayRepr = new StringBuilder();
+			for (int i = 0; i < Array.getLength(fieldValue); i++) {
+				if (i != 0)
+					arrayRepr.append(configuration.getArrayDelimiter());
 
-					arrayRepr.append(Array.get(fieldValue, i));
-				}
-
-				//create current scope
-				StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
-				propertyMap.put(currScope.toString(), arrayRepr.toString());
-
-				return propertyMap;
+				arrayRepr.append(Array.get(fieldValue, i));
 			}
+
+			// create current scope
+			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+					!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
+			propertyMap.put(currScope.toString(), arrayRepr.toString());
+
+			return propertyMap;
+		}
 
 		for (int i = 0; i < Array.getLength(fieldValue); i++) {
 			String currScope = StringUtils.isEmpty(scope) ? fieldName : scope + configuration.getScopeDelimiter() + fieldName;
@@ -590,18 +595,20 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Method for list mapping to map from field value.
-	 *
+	 * 
 	 * @param field
-	 * 		{@link Field} that should be converted
+	 *            {@link Field} that should be converted
 	 * @param fieldValue
-	 * 		{@link Object} field value
+	 *            {@link Object} field value
 	 * @param scope
-	 * 		{@link String} current field scope
+	 *            {@link String} current field scope
 	 * @param configuration
-	 * 		{@link BeanMapperConfiguration} instance
+	 *            {@link BeanMapperConfiguration} instance
 	 * @return {@link java.util.Map} converted from field
 	 */
-	private static Map<String, Object> mapFromListType(final Field field, final Object fieldValue, final String scope, final BeanMapperConfiguration configuration) {
+	@SuppressWarnings("rawtypes")
+	private static Map<String, Object> mapFromListType(final Field field, final Object fieldValue, final String scope,
+			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
 		Map<String, Object> propertyMap = new HashMap<String, Object>();
 		List valueList = List.class.cast(fieldValue);
@@ -618,17 +625,18 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 				arrayRepr.append(valueList.get(i));
 			}
 
-			//create current scope
-			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
+			// create current scope
+			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+					!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
 			propertyMap.put(currScope.toString(), arrayRepr.toString());
 
 			return propertyMap;
 		}
 
 		for (int i = 0; i < valueList.toArray().length; i++) {
-			//create current scope
-			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null,
-					fieldName, configuration.getBeanListDelimiter(), i + 1);
+			// create current scope
+			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+					!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName, configuration.getBeanListDelimiter(), i + 1);
 
 			propertyMap.putAll(map(valueList.get(i), currScope.toString(), configuration));
 		}
@@ -638,18 +646,20 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Method for set mapping to map from field value.
-	 *
+	 * 
 	 * @param field
-	 * 		{@link Field} that should be converted
+	 *            {@link Field} that should be converted
 	 * @param fieldValue
-	 * 		{@link Object} field value
+	 *            {@link Object} field value
 	 * @param scope
-	 * 		{@link String} current field scope
+	 *            {@link String} current field scope
 	 * @param configuration
-	 * 		{@link BeanMapperConfiguration} instance
+	 *            {@link BeanMapperConfiguration} instance
 	 * @return {@link java.util.Map} converted from field
 	 */
-	private static Map<String, Object> mapFromSetType(final Field field, final Object fieldValue, final String scope, final BeanMapperConfiguration configuration) {
+	@SuppressWarnings("rawtypes")
+	private static Map<String, Object> mapFromSetType(final Field field, final Object fieldValue, final String scope,
+			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
 		Map<String, Object> propertyMap = new HashMap<String, Object>();
 		Set valueSet = Set.class.cast(fieldValue);
@@ -666,15 +676,16 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 				arrayRepr.append(valueSet.toArray()[i]);
 			}
 
-			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
+			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+					!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
 			propertyMap.put(currScope.toString(), arrayRepr);
 
 			return propertyMap;
 		}
 
 		for (int i = 0; i < valueSet.toArray().length; i++) {
-			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null,
-					fieldName, configuration.getBeanListDelimiter(), i + 1);
+			StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+					!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName, configuration.getBeanListDelimiter(), i + 1);
 			propertyMap.putAll(map(valueSet.toArray()[i], currScope.toString(), configuration));
 		}
 
@@ -683,18 +694,20 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Method for map mapping to map from field value.
-	 *
+	 * 
 	 * @param field
-	 * 		{@link Field} that should be converted
+	 *            {@link Field} that should be converted
 	 * @param fieldValue
-	 * 		{@link Object} field value
+	 *            {@link Object} field value
 	 * @param scope
-	 * 		{@link String} current field scope
+	 *            {@link String} current field scope
 	 * @param configuration
-	 * 		{@link BeanMapperConfiguration} instance
+	 *            {@link BeanMapperConfiguration} instance
 	 * @return {@link java.util.Map} converted from field
 	 */
-	private static Map<String, Object> mapFromMapType(final Field field, final Object fieldValue, final String scope, final BeanMapperConfiguration configuration) {
+	@SuppressWarnings("rawtypes")
+	private static Map<String, Object> mapFromMapType(final Field field, final Object fieldValue, final String scope,
+			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
 		Map<String, Object> propertyMap = new HashMap<String, Object>();
 		Map valueMap = Map.class.cast(fieldValue);
@@ -713,7 +726,8 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 			mapRepr.append(mapElement.getValue());
 		}
 
-		StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null, !StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
+		StringBuilder currScope = makeStringFromArgs(!StringUtils.isEmpty(scope) ? scope : null,
+				!StringUtils.isEmpty(scope) ? configuration.getScopeDelimiter() : null, fieldName);
 		propertyMap.put(currScope.toString(), mapRepr.toString());
 
 		return propertyMap;
@@ -721,9 +735,9 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 
 	/**
 	 * Prepare {@link StringBuilder} from multi parameters.
-	 *
+	 * 
 	 * @param params
-	 * 		{@link Object}'s array
+	 *            {@link Object}'s array
 	 * @return {@link StringBuilder} instance
 	 */
 	private static StringBuilder makeStringFromArgs(final Object... params) {
