@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>net.bolbat</groupId>
 		<artifactId>bb-parent</artifactId>
-		<version>7</version>
+		<version>8</version>
 	</parent>
 
 	<properties>
