@@ -1,5 +1,7 @@
 package net.bolbat.utils.slicer;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,16 +57,34 @@ public final class Slicer {
 	 * @return {@link List} of <T>
 	 */
 	public static <T> List<T> sliceTo(final List<T> list, final int page, final int elements) {
-		if (elements < 1)
+		if (list == null || list.isEmpty() || elements < 1)
+			return new ArrayList<T>();
+		if (list.size() <= elements && page > 0)
 			return new ArrayList<T>();
 
-		int startIndex = 0;
-		if (page == 1)
-			startIndex = elements;
-		if (page > 1)
-			startIndex = elements * (page + 1) - 1;
-
+		final int startIndex = page == 0 ? 0 : elements * page;
 		return slice(list, startIndex, elements);
+	}
+
+	/**
+	 * Divide original list to sub-lists with elements limit.
+	 * 
+	 * @param list
+	 *            original list
+	 * @param elements
+	 *            elements per sub-list
+	 * @return {@link List} of {@link List} of <T>
+	 */
+	public static <T> List<List<T>> divide(final List<T> list, final int elements) {
+		if (list == null || list.isEmpty() || elements < 1)
+			return new ArrayList<List<T>>();
+
+		final int pages = new BigDecimal(list.size()).divide(new BigDecimal(elements), RoundingMode.UP).intValue();
+		final List<List<T>> result = new ArrayList<List<T>>();
+		for (int current = 0; current < pages; current++)
+			result.add(sliceTo(list, current, elements));
+
+		return result;
 	}
 
 }

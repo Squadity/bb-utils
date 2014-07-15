@@ -105,4 +105,83 @@ public class SlicerTest {
 		Assert.assertEquals("test3", Slicer.sliceTo(originalList, 1, 2).get(0));
 	}
 
+	/**
+	 * Testing pages.
+	 */
+	@Test
+	public void testPages() {
+		final List<String> list = new ArrayList<String>();
+		for (int i = 0; i < 4999; i++)
+			list.add(String.valueOf(i));
+
+		final int perPage = 1000;
+		// first page
+		List<String> slice = Slicer.sliceTo(list, 0, perPage);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(v), slice.get(v));
+		// second page
+		slice = Slicer.sliceTo(list, 1, perPage);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(1000 + v), slice.get(v));
+		// third page
+		slice = Slicer.sliceTo(list, 2, perPage);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(2000 + v), slice.get(v));
+		// fourth page
+		slice = Slicer.sliceTo(list, 3, perPage);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(3000 + v), slice.get(v));
+		// fifth page
+		slice = Slicer.sliceTo(list, 4, perPage);
+		Assert.assertEquals(999, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(4000 + v), slice.get(v));
+	}
+
+	/**
+	 * Testing dividing list to sub-lists with elements limit.
+	 */
+	@Test
+	public void testDividing() {
+		final List<String> list = new ArrayList<String>();
+		for (int i = 0; i < 4999; i++)
+			list.add(String.valueOf(i));
+
+		final int perPage = 1000;
+		final List<List<String>> divided = Slicer.divide(list, perPage);
+
+		Assert.assertEquals(5, divided.size());
+
+		// first page
+		List<String> slice = divided.get(0);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(v), slice.get(v));
+		// second page
+		slice = divided.get(1);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(1000 + v), slice.get(v));
+		// third page
+		slice = divided.get(2);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(2000 + v), slice.get(v));
+		// fourth page
+		slice = divided.get(3);
+		Assert.assertEquals(perPage, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(3000 + v), slice.get(v));
+		// fifth page
+		slice = divided.get(4);
+		Assert.assertEquals(999, slice.size());
+		for (int v = 0; v < 999; v++)
+			Assert.assertEquals(String.valueOf(4000 + v), slice.get(v));
+
+	}
+
 }
