@@ -1,7 +1,5 @@
 package net.bolbat.utils.reflect;
 
-import net.bolbat.utils.reflect.ClassUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,6 +36,22 @@ public class ClassUtilsTest {
 		Assert.assertEquals(char.class, ClassUtils.convertNotPrimitive(Character.class));
 
 		Assert.assertEquals(boolean.class, ClassUtils.convertNotPrimitive(boolean.class));
+	}
+
+	/**
+	 * Test for reading all types meta data for given type.
+	 */
+	@Test
+	public void getAllTypesTest() {
+		// TODO Implement me
+	}
+
+	/**
+	 * Test for reading all fields meta data for given type.
+	 */
+	@Test
+	public void getAllFieldsTest() {
+		// TODO Implement me
 	}
 
 	/**

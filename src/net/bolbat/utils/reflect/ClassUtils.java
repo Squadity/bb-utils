@@ -1,5 +1,10 @@
 package net.bolbat.utils.reflect;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
  * {@link Class} utilities.
  * 
@@ -12,6 +17,42 @@ public final class ClassUtils {
 	 */
 	private ClassUtils() {
 		throw new IllegalAccessError("Shouldn't be instantiated.");
+	}
+
+	/**
+	 * Get all class types (self, super classes and interfaces).
+	 * 
+	 * @param type
+	 *            class
+	 * @return {@link Set} of {@link Class}
+	 */
+	public static Set<Class<?>> getAllTypes(final Class<?> type) {
+		final Set<Class<?>> result = new LinkedHashSet<Class<?>>();
+
+		if (type != null && !type.equals(Object.class)) {
+			result.add(type);
+			result.addAll(getAllTypes(type.getSuperclass()));
+			for (final Class<?> ifc : type.getInterfaces())
+				result.addAll(getAllTypes(ifc));
+		}
+
+		return result;
+	}
+
+	/**
+	 * Get all class fields.
+	 * 
+	 * @param type
+	 *            class
+	 * @return {@link Set} of {@link Field}
+	 */
+	public static Set<Field> getAllFields(final Class<?> type) {
+		final Set<Field> result = new LinkedHashSet<Field>();
+
+		for (final Class<?> t : getAllTypes(type))
+			result.addAll(Arrays.asList(t.getDeclaredFields()));
+
+		return result;
 	}
 
 	/**
