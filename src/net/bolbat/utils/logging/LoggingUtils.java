@@ -22,6 +22,16 @@ public final class LoggingUtils {
 	public static final Marker FATAL = MarkerFactory.getMarker(FATAL_NAME);
 
 	/**
+	 * {@link Marker} name for 'EVENT' error case.
+	 */
+	public static final String EVENT_NAME = "EVENT";
+
+	/**
+	 * {@link Marker} for 'FATAL' error case.
+	 */
+	public static final Marker EVENT = MarkerFactory.getMarker(EVENT_NAME);
+
+	/**
 	 * Default constructor with preventing instantiations of this class.
 	 */
 	private LoggingUtils() {
