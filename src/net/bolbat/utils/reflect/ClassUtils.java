@@ -1,9 +1,20 @@
 package net.bolbat.utils.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import javax.annotation.PreDestroy;
+
+import net.bolbat.utils.logging.LoggingUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link Class} utilities.
@@ -11,6 +22,11 @@ import java.util.Set;
  * @author Alexandr Bolbat
  */
 public final class ClassUtils {
+
+	/**
+	 * {@link Logger} instance.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtils.class);
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
@@ -123,6 +139,72 @@ public final class ClassUtils {
 			return char.class;
 
 		return clazz;
+	}
+
+	/**
+	 * Execute 'pre-destroy' for given instance.<br>
+	 * Rules for marked methods:<br>
+	 * - MUST be void;<br>
+	 * - MUST NOT have any parameters;<br>
+	 * - MUST NOT be static;<br>
+	 * - MUST NOT throw a checked exception;<br>
+	 * - MAY be final;<br>
+	 * - MAY be public, protected, package private or private;<br>
+	 * - excludes inherited methods;<br>
+	 * - unchecked exceptions ignored, cause logged with 'DEBUG' level.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 */
+	public static void executePreDestroy(final Object instance) {
+		if (instance == null)
+			throw new IllegalArgumentException("instance argument is null.");
+
+		for (final Method m : instance.getClass().getDeclaredMethods()) {
+			final Annotation a = m.getAnnotation(PreDestroy.class);
+			if (a == null)
+				continue;
+
+			// The return type MUST be void
+			if (!m.getReturnType().equals(Void.TYPE)) {
+				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST be void]");
+				continue;
+			}
+
+			// The method MUST NOT have any parameters
+			if (m.getParameterTypes().length > 0) {
+				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST NOT have any parameters]");
+				continue;
+			}
+
+			// The method MUST NOT be static
+			if (Modifier.isStatic(m.getModifiers())) {
+				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST NOT be static]");
+				continue;
+			}
+
+			boolean isBreak = false;
+			// The method MUST NOT throw a checked exception
+			for (final Class<?> exception : m.getExceptionTypes())
+				if (!RuntimeException.class.isAssignableFrom(exception)) {
+					isBreak = true;
+					break;
+				}
+
+			if (isBreak) {
+				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
+				continue;
+			}
+
+			// processing
+			try {
+				m.setAccessible(true);
+				m.invoke(instance);
+			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
+				// If the method throws an exception it is ignored
+				LoggingUtils.debug(LOGGER, "Can't execute @PreDestroy method[" + m + "]", e);
+			}
+		}
 	}
 
 }
