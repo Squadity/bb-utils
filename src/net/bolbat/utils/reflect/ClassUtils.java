@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import net.bolbat.utils.logging.LoggingUtils;
@@ -142,6 +143,75 @@ public final class ClassUtils {
 	}
 
 	/**
+	 * Execute 'post-construct' for given instance.<br>
+	 * Rules for marked methods:<br>
+	 * - MUST be void;<br>
+	 * - MUST NOT have any parameters;<br>
+	 * - MUST NOT be static;<br>
+	 * - MUST NOT throw a checked exception;<br>
+	 * - MAY be final;<br>
+	 * - MAY be public, protected, package private or private;<br>
+	 * - excludes inherited methods;<br>
+	 * - unchecked exceptions are not ignored.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 */
+	public static void executePostConstruct(final Object instance) {
+		if (instance == null)
+			throw new IllegalArgumentException("instance argument is null.");
+
+		for (final Method m : instance.getClass().getDeclaredMethods()) {
+			final Annotation a = m.getAnnotation(PostConstruct.class);
+			if (a == null)
+				continue;
+
+			// The return type MUST be void
+			if (!m.getReturnType().equals(Void.TYPE)) {
+				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST be void]");
+				continue;
+			}
+
+			// The method MUST NOT have any parameters
+			if (m.getParameterTypes().length > 0) {
+				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST NOT have any parameters]");
+				continue;
+			}
+
+			// The method MUST NOT be static
+			if (Modifier.isStatic(m.getModifiers())) {
+				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST NOT be static]");
+				continue;
+			}
+
+			boolean isBreak = false;
+			// The method MUST NOT throw a checked exception
+			for (final Class<?> exception : m.getExceptionTypes())
+				if (!RuntimeException.class.isAssignableFrom(exception)) {
+					isBreak = true;
+					break;
+				}
+
+			if (isBreak) {
+				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
+				continue;
+			}
+
+			// processing
+			try {
+				m.setAccessible(true);
+				m.invoke(instance);
+				// CHECKSTYLE:OFF
+			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
+				final String message = "Can't execute @PostConstruct method[" + m + "]";
+				LoggingUtils.error(LOGGER, message, e);
+				throw new RuntimeException(message, e); // Maybe should be some other exception?
+				// CHECKSTYLE:ON
+			}
+		}
+	}
+
+	/**
 	 * Execute 'pre-destroy' for given instance.<br>
 	 * Rules for marked methods:<br>
 	 * - MUST be void;<br>
@@ -200,7 +270,9 @@ public final class ClassUtils {
 			try {
 				m.setAccessible(true);
 				m.invoke(instance);
+				// CHECKSTYLE:OFF
 			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
+				// CHECKSTYLE:ON
 				// If the method throws an exception it is ignored
 				LoggingUtils.debug(LOGGER, "Can't execute @PreDestroy method[" + m + "]", e);
 			}
