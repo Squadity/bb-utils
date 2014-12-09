@@ -23,7 +23,7 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 	/**
 	 * Locks storage.
 	 */
-	private final Map<T, IdBasedLock<T>> locks = new HashMap<T, IdBasedLock<T>>();
+	private final Map<T, IdBasedLock<T>> locks = new HashMap<>();
 
 	/**
 	 * Synchronization lock.
@@ -32,7 +32,7 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 
 	@Override
 	public List<T> getLocksIds() {
-		return new ArrayList<T>(locks.keySet());
+		return new ArrayList<>(locks.keySet());
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 		synchronized (synchLock) {
 			IdBasedLock<T> lock = locks.get(id);
 			if (lock == null) {
-				lock = new IdBasedLock<T>(id, this);
+				lock = new IdBasedLock<>(id, this);
 				locks.put(id, lock);
 			}
 

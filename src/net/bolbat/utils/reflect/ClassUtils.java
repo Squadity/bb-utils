@@ -44,7 +44,7 @@ public final class ClassUtils {
 	 * @return {@link Set} of {@link Class}
 	 */
 	public static Set<Class<?>> getAllTypes(final Class<?> type) {
-		final Set<Class<?>> result = new LinkedHashSet<Class<?>>();
+		final Set<Class<?>> result = new LinkedHashSet<>();
 
 		if (type != null && !type.equals(Object.class)) {
 			result.add(type);
@@ -64,7 +64,7 @@ public final class ClassUtils {
 	 * @return {@link Set} of {@link Field}
 	 */
 	public static Set<Field> getAllFields(final Class<?> type) {
-		final Set<Field> result = new LinkedHashSet<Field>();
+		final Set<Field> result = new LinkedHashSet<>();
 
 		for (final Class<?> t : getAllTypes(type))
 			result.addAll(Arrays.asList(t.getDeclaredFields()));

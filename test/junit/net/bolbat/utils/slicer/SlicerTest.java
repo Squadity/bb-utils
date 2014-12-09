@@ -18,7 +18,7 @@ public class SlicerTest {
 	 */
 	@Test
 	public void testSlicing() {
-		List<String> originalList = new ArrayList<String>();
+		List<String> originalList = new ArrayList<>();
 
 		// checking default values on wrong arguments
 		Assert.assertEquals(0, Slicer.slice(null, 1, 10).size());
@@ -67,7 +67,7 @@ public class SlicerTest {
 	 */
 	@Test
 	public void testPaging() {
-		List<String> originalList = new ArrayList<String>();
+		List<String> originalList = new ArrayList<>();
 
 		// checking default values on wrong arguments
 		Assert.assertEquals(0, Slicer.sliceTo(null, 1, 10).size());
@@ -110,7 +110,7 @@ public class SlicerTest {
 	 */
 	@Test
 	public void testPages() {
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		for (int i = 0; i < 4999; i++)
 			list.add(String.valueOf(i));
 
@@ -147,7 +147,7 @@ public class SlicerTest {
 	 */
 	@Test
 	public void testDividing() {
-		final List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<>();
 		for (int i = 0; i < 4999; i++)
 			list.add(String.valueOf(i));
 

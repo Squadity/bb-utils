@@ -131,7 +131,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	private static <T extends Object> Map<String, Object> map(final T bean, final String scope, final BeanMapperConfiguration configuration) {
 		Class<?> clazz = bean.getClass();
 
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
+		Map<String, Object> propertyMap = new HashMap<>();
 		for (Field field : clazz.getDeclaredFields()) {
 			try {
 				field.setAccessible(true);
@@ -507,7 +507,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	private static <T extends Object> T[] toBeanArrayFromValue(final Map<String, Object> parameters, final Field field, final Class<T> arrayType,
 			final String scope, final BeanMapperConfiguration conf) {
 
-		Set<String> beansInSet = new TreeSet<String>();
+		Set<String> beansInSet = new TreeSet<>();
 		String arrayScopePrefix = scope + field.getName() + conf.getBeanArrayDelimiter();
 		for (String key : parameters.keySet())
 			if (key.startsWith(arrayScopePrefix)) {
@@ -518,7 +518,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 		if (beansInSet.size() == 0)
 			return null;
 
-		List<String> beansInList = new ArrayList<String>(beansInSet);
+		List<String> beansInList = new ArrayList<>(beansInSet);
 		@SuppressWarnings("unchecked")
 		T[] result = (T[]) Array.newInstance(arrayType, beansInSet.size());
 		for (int i = 0; i < beansInSet.size(); i++)
@@ -563,7 +563,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	private static Map<String, Object> mapFromArrayType(final Field field, final Object fieldValue, final String scope,
 			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
+		Map<String, Object> propertyMap = new HashMap<>();
 
 		if (fieldValue == null)
 			return propertyMap;
@@ -610,7 +610,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	private static Map<String, Object> mapFromListType(final Field field, final Object fieldValue, final String scope,
 			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
+		Map<String, Object> propertyMap = new HashMap<>();
 		List valueList = List.class.cast(fieldValue);
 
 		if (fieldValue == null)
@@ -661,7 +661,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	private static Map<String, Object> mapFromSetType(final Field field, final Object fieldValue, final String scope,
 			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
+		Map<String, Object> propertyMap = new HashMap<>();
 		Set valueSet = Set.class.cast(fieldValue);
 
 		if (fieldValue == null)
@@ -709,7 +709,7 @@ public class MapBasedBeanMapper extends AbstractBeanMapper {
 	private static Map<String, Object> mapFromMapType(final Field field, final Object fieldValue, final String scope,
 			final BeanMapperConfiguration configuration) {
 		final String fieldName = field.getName(); // field name
-		Map<String, Object> propertyMap = new HashMap<String, Object>();
+		Map<String, Object> propertyMap = new HashMap<>();
 		Map valueMap = Map.class.cast(fieldValue);
 
 		if (fieldValue == null)

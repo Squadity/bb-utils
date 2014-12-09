@@ -30,7 +30,7 @@ public final class SerializationUtils {
 		if (toClone == null)
 			throw new IllegalArgumentException("toClone argument is null.");
 
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<>();
 		for (T obj : toClone)
 			result.add(clone(obj));
 

@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.bolbat.utils.lang.SerializationUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,7 +35,7 @@ public class SerializationUtilsTest {
 	 */
 	@Test
 	public void testCollectionClone() {
-		List<SerializableBean> toClone = new ArrayList<SerializableBean>();
+		List<SerializableBean> toClone = new ArrayList<>();
 		for (int i = 0; i < 10; i++)
 			toClone.add(new SerializableBean("testing_" + i));
 

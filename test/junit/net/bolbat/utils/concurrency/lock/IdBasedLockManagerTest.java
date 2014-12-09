@@ -67,7 +67,7 @@ public final class IdBasedLockManagerTest {
 	@Test
 	public void errorCasesTest() {
 		// safe lock manager testing
-		IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<String>();
+		IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<>();
 		try {
 			lockManager.obtainLock(null);
 			Assert.fail();
@@ -87,7 +87,7 @@ public final class IdBasedLockManagerTest {
 	 */
 	@Test
 	public void lockTest() {
-		IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<String>();
+		IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<>();
 		Assert.assertNotNull(lockManager.getLocksIds());
 		Assert.assertEquals(0, lockManager.getLocksIds().size());
 
@@ -116,7 +116,7 @@ public final class IdBasedLockManagerTest {
 	 */
 	@Test
 	public void safeLockManagerTest() {
-		final IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<String>();
+		final IdBasedLockManager<String> lockManager = new SafeIdBasedLockManager<>();
 		lockManagerTestExecutor(lockManager);
 
 		// checking results

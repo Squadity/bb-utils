@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import net.bolbat.utils.beanmapper.BeanMapperConfiguration.ErrorStrategy;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class BeanMapperTest {
 	/**
 	 * Parameters for testing {@link MapBasedBeanMapper}.
 	 */
-	private static final Map<String, Object> PARAMS_MAP = new TreeMap<String, Object>();
+	private static final Map<String, Object> PARAMS_MAP = new TreeMap<>();
 
 	/**
 	 * Parameters for testing {@link MapBasedBeanMapper}.
@@ -113,7 +114,7 @@ public class BeanMapperTest {
 		listBeanSet1.setStringV("beanL_2.beanS_1 = stringV");
 
 		listBean1.setBeanL(Arrays.asList(listBeanList1, listBeanList2));
-		listBean2.setBeanS(new LinkedHashSet<SampleBean>(Arrays.asList(listBeanSet1)));
+		listBean2.setBeanS(new LinkedHashSet<>(Arrays.asList(listBeanSet1)));
 		bean.setBeanL(Arrays.asList(listBean1, listBean2));
 
 		SampleBean setBean1 = new SampleBean();
@@ -121,9 +122,9 @@ public class BeanMapperTest {
 		setBean1.setStringV("beanS_1 = stringV");
 		SampleBean setBean2 = new SampleBean();
 		setBean2.setIntV(2);
-		bean.setBeanS(new LinkedHashSet<SampleBean>(Arrays.asList(setBean1, setBean2)));
+		bean.setBeanS(new LinkedHashSet<>(Arrays.asList(setBean1, setBean2)));
 
-		Map<String, Integer> beanMap = new TreeMap<String, Integer>();
+		Map<String, Integer> beanMap = new TreeMap<>();
 		beanMap.put("key1", 1);
 		beanMap.put("key2", 2);
 		beanMap.put("key3", 3);
@@ -171,7 +172,7 @@ public class BeanMapperTest {
 		Assert.assertEquals("string 3", bean.getBean().getBean().getStringV());
 
 		// checking list of short's
-		List<Short> expectedShortsList = new ArrayList<Short>();
+		List<Short> expectedShortsList = new ArrayList<>();
 		expectedShortsList.add((short) 1);
 		expectedShortsList.add((short) 2);
 		expectedShortsList.add((short) 3);
@@ -249,7 +250,7 @@ public class BeanMapperTest {
 		cfg.setErrorStrategy(ErrorStrategy.THROW_EXCEPTIONS);
 
 		// mapping bean with predefined parameter's
-		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<>();
 		params.put("intValue", 666);
 		params.put("booleanValue", "true");
 		params.put("floatValue", 333.789);

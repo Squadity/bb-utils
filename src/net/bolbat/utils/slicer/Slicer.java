@@ -32,17 +32,17 @@ public final class Slicer {
 	 */
 	public static <T> List<T> slice(final List<T> list, final int offset, final int amount) {
 		if (list == null || list.isEmpty())
-			return new ArrayList<T>();
+			return new ArrayList<>();
 
 		int aSize = list.size();
 		int aOffset = offset < 0 ? 0 : offset;
 		int aAmount = amount < 0 ? 0 : amount;
 
 		if (aAmount == 0 || aOffset > aSize - 1)
-			return new ArrayList<T>();
+			return new ArrayList<>();
 
 		int endIndex = Math.min(aSize, aOffset + aAmount);
-		return new ArrayList<T>(list.subList(aOffset, endIndex));
+		return new ArrayList<>(list.subList(aOffset, endIndex));
 	}
 
 	/**
@@ -58,9 +58,9 @@ public final class Slicer {
 	 */
 	public static <T> List<T> sliceTo(final List<T> list, final int page, final int elements) {
 		if (list == null || list.isEmpty() || elements < 1)
-			return new ArrayList<T>();
+			return new ArrayList<>();
 		if (list.size() <= elements && page > 0)
-			return new ArrayList<T>();
+			return new ArrayList<>();
 
 		final int startIndex = page == 0 ? 0 : elements * page;
 		return slice(list, startIndex, elements);
@@ -77,10 +77,10 @@ public final class Slicer {
 	 */
 	public static <T> List<List<T>> divide(final List<T> list, final int elements) {
 		if (list == null || list.isEmpty() || elements < 1)
-			return new ArrayList<List<T>>();
+			return new ArrayList<>();
 
 		final int pages = new BigDecimal(list.size()).divide(new BigDecimal(elements), RoundingMode.UP).intValue();
-		final List<List<T>> result = new ArrayList<List<T>>();
+		final List<List<T>> result = new ArrayList<>();
 		for (int current = 0; current < pages; current++)
 			result.add(sliceTo(list, current, elements));
 
