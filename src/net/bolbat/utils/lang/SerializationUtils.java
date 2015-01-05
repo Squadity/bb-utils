@@ -46,7 +46,7 @@ public final class SerializationUtils {
 
 		final List<T> result = new ArrayList<>();
 		for (final T obj : toClone)
-			result.add(obj != null ? clone(obj) : obj);
+			result.add(obj != null ? clone(obj) : null);
 
 		return result;
 	}
