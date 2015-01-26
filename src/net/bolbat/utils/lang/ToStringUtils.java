@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Utilities for <code>toString</code>.
@@ -154,13 +155,15 @@ public final class ToStringUtils {
 
 		final StringBuilder builder = new StringBuilder(FIRST_CHAR);
 		int i = 0;
-		for (final Iterator<?> iterator = map.keySet().iterator(); iterator.hasNext() && i < maxLen; i++) {
+		for (final Entry<?, ?> entry : map.entrySet()) {
 			if (i > 0)
 				builder.append(DELIMITER);
 
-			final Object key = iterator.next();
-			final Object value = map.get(key);
+			final Object key = entry.getKey();
+			final Object value = entry.getValue();
 			builder.append(key).append(MAP_VALUE_DELIMITER).append(value instanceof Collection ? toString(Collection.class.cast(value), maxLen) : value);
+			if (++i >= maxLen) // increment and break if limit exceeded
+				break;
 		}
 
 		if (map.size() > maxLen)
