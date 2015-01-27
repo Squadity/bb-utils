@@ -7,12 +7,12 @@ import java.util.Calendar;
  *
  * @author Vasyl Zarva
  */
-public final class TimeUtil {
+public final class TimeUtils {
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
 	 */
-	private TimeUtil() {
+	private TimeUtils() {
 		throw new IllegalAccessError("Can't be instantiated.");
 	}
 
