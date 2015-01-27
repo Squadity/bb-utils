@@ -191,30 +191,12 @@ public final class TimeUtils {
 	 * @return rounded time in millis
 	 */
 	public static long roundDayTime(final long time, final Rounding mode) {
-		if (time < 0)
-			throw new IllegalArgumentException("argument time in millis can't be less than 0.");
 		if (mode == null || Rounding.NONE == mode)
 			return time;
 
-		Calendar cal = Calendar.getInstance();
+		final Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				break;
-			case MIN:
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				break;
-			case NONE:
-			default:
-				break;
-		}
+		roundDayTime(cal, mode);
 		return cal.getTimeInMillis();
 	}
 
