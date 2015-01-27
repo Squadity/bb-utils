@@ -1,20 +1,11 @@
 package net.bolbat.utils.lang;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 /**
  * {@link TimeUtilsTest} test.
  * 
  * @author Alexandr Bolbat
  */
+// TODO : Test facility REQUIRED!!! Create please!
 public class TimeUtilsTest {
-
-	//TODO : Test facility REQUIRED!!! Create please!
 
 }
