@@ -28,10 +28,8 @@ public final class TimeUtils {
 	public static long getYearsFromNow(final int years, final Rounding mode) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, years);
-
 		if (mode == null || Rounding.NONE == mode)
 			return cal.getTimeInMillis();
-
 		roundYearTime(cal, mode);
 		return cal.getTimeInMillis();
 	}
@@ -48,10 +46,8 @@ public final class TimeUtils {
 	public static long getMonthFromNow(final int months, final Rounding mode) {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, months);
-
 		if (mode == null || Rounding.NONE == mode)
 			return cal.getTimeInMillis();
-
 		roundMonthTime(cal, mode);
 		return cal.getTimeInMillis();
 	}
@@ -68,10 +64,8 @@ public final class TimeUtils {
 	public static long getDaysFromNow(final int days, final Rounding mode) {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, days);
-
 		if (mode == null || Rounding.NONE == mode)
 			return cal.getTimeInMillis();
-
 		roundDayTime(cal, mode);
 		return cal.getTimeInMillis();
 	}
@@ -88,11 +82,27 @@ public final class TimeUtils {
 	public static long getHoursFromNow(final int hours, final Rounding mode) {
 		final Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, hours);
-
 		if (mode == null || Rounding.NONE == mode)
 			return cal.getTimeInMillis();
-
 		roundHourTime(cal, mode);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * Rounding incoming time to seconds, up/down rounding defined by {@link Rounding}.
+	 *
+	 * @param time
+	 * 		time in millis
+	 * @param mode
+	 * 		rounding mode
+	 * @return rounded time in millis
+	 */
+	public static long roundTimeToSecondTime(final long time, final Rounding mode) {
+		if (mode == null || Rounding.NONE == mode)
+			return time;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		roundSecondTime(cal, mode);
 		return cal.getTimeInMillis();
 	}
 
@@ -123,6 +133,24 @@ public final class TimeUtils {
 	}
 
 	/**
+	 * Rounding incoming time to minutes, up/down rounding defined by {@link Rounding}.
+	 *
+	 * @param time
+	 * 		time in millis
+	 * @param mode
+	 * 		rounding mode
+	 * @return rounded time in millis
+	 */
+	public static long roundTimeToMinuteTime(final long time, final Rounding mode) {
+		if (mode == null || Rounding.NONE == mode)
+			return time;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		roundMinuteTime(cal, mode);
+		return cal.getTimeInMillis();
+	}
+
+	/**
 	 * Round date to maximum or minimum in minute, depending of rounding mode.
 	 *
 	 * @param cal
@@ -135,7 +163,6 @@ public final class TimeUtils {
 			throw new IllegalArgumentException("cal argument is null.");
 		if (mode == null || Rounding.NONE == mode)
 			return;
-
 		switch (mode) {
 			case MAX:
 				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
@@ -149,6 +176,24 @@ public final class TimeUtils {
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * Rounding incoming time to hour, up/down rounding defined by {@link Rounding}.
+	 *
+	 * @param time
+	 * 		time in millis
+	 * @param mode
+	 * 		rounding mode
+	 * @return rounded time in millis
+	 */
+	public static long roundTimeToHourTime(final long time, final Rounding mode) {
+		if (mode == null || Rounding.NONE == mode)
+			return time;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		roundHourTime(cal, mode);
+		return cal.getTimeInMillis();
 	}
 
 	/**
@@ -182,7 +227,7 @@ public final class TimeUtils {
 	}
 
 	/**
-	 * Round time in millis to maximum or minimum in day, depending of rounding mode.
+	 * Rounding incoming time to day, up/down rounding defined by {@link Rounding}.
 	 *
 	 * @param time
 	 * 		time in millis
@@ -190,10 +235,9 @@ public final class TimeUtils {
 	 * 		rounding mode
 	 * @return rounded time in millis
 	 */
-	public static long roundDayTime(final long time, final Rounding mode) {
+	public static long roundTimeToDayTime(final long time, final Rounding mode) {
 		if (mode == null || Rounding.NONE == mode)
 			return time;
-
 		final Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
 		roundDayTime(cal, mode);
@@ -232,6 +276,25 @@ public final class TimeUtils {
 		}
 	}
 
+
+	/**
+	 * Rounding incoming time to Month, up/down rounding defined by {@link Rounding}.
+	 *
+	 * @param time
+	 * 		time in millis
+	 * @param mode
+	 * 		rounding mode
+	 * @return rounded time in millis
+	 */
+	public static long roundTimeToMonthTime(final long time, final Rounding mode) {
+		if (mode == null || Rounding.NONE == mode)
+			return time;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		roundMonthTime(cal, mode);
+		return cal.getTimeInMillis();
+	}
+
 	/**
 	 * Round date to maximum or minimum in month, depending of rounding mode.
 	 *
@@ -264,6 +327,24 @@ public final class TimeUtils {
 			default:
 				break;
 		}
+	}
+
+	/**
+	 * Rounding incoming time to Year, up/down rounding defined by {@link Rounding}.
+	 *
+	 * @param time
+	 * 		time in millis
+	 * @param mode
+	 * 		rounding mode
+	 * @return rounded time in millis
+	 */
+	public static long roundTimeToYearTime(final long time, final Rounding mode) {
+		if (mode == null || Rounding.NONE == mode)
+			return time;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		roundYearTime(cal, mode);
+		return cal.getTimeInMillis();
 	}
 
 	/**
