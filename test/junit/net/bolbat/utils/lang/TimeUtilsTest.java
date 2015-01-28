@@ -7,8 +7,6 @@ import org.junit.Test;
 
 /**
  * {@link TimeUtilsTest} test.
- * <p/>
- * Related to task BBUTILS-9 - TimeUtils refactoring.
  *
  * @author Alexandr Bolbat
  */
@@ -124,9 +122,9 @@ public class TimeUtilsTest {
 	 * Check method 'round'.
 	 *
 	 * @param timeUnit
-	 * 		{@link TimeUtils.TimeUnit}
+	 *            {@link TimeUtils.TimeUnit}
 	 * @param rounding
-	 * 		{@link TimeUtils.Rounding}
+	 *            {@link TimeUtils.Rounding}
 	 */
 	private void checkRound(TimeUtils.TimeUnit timeUnit, TimeUtils.Rounding rounding) {
 		Calendar calendar = Calendar.getInstance();
@@ -140,9 +138,9 @@ public class TimeUtilsTest {
 	 * Check method 'from now'.
 	 *
 	 * @param amount
-	 * 		amount of time units from now
+	 *            amount of time units from now
 	 * @param timeUnit
-	 * 		{@link TimeUtils.TimeUnit}
+	 *            {@link TimeUtils.TimeUnit}
 	 */
 	private void checkFromNow(int amount, TimeUtils.TimeUnit timeUnit) {
 		Calendar calendar = Calendar.getInstance();
@@ -166,11 +164,11 @@ public class TimeUtilsTest {
 	 * Round calendar manually.
 	 *
 	 * @param cal
-	 * 		{@link Calendar}
+	 *            {@link Calendar}
 	 * @param timeUnit
-	 * 		{@link TimeUtils.TimeUnit}
+	 *            {@link TimeUtils.TimeUnit}
 	 * @param rounding
-	 * 		{@link TimeUtils.Rounding}
+	 *            {@link TimeUtils.Rounding}
 	 */
 	private void roundCalendarManually(Calendar cal, TimeUtils.TimeUnit timeUnit, TimeUtils.Rounding rounding) {
 		if (rounding == null || TimeUtils.Rounding.NONE.equals(rounding))
