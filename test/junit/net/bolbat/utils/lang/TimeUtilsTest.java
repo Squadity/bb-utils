@@ -10,14 +10,11 @@ import org.junit.Test;
  *
  * @author Alexandr Bolbat
  */
-
 public class TimeUtilsTest {
 
 	@Test
 	public void generalTest() {
-
 		// check TimeUnit values
-
 		Assert.assertEquals("Should be equal.", Calendar.YEAR, TimeUtils.TimeUnit.YEAR.getMappedCalendarField());
 		Assert.assertEquals("Should be equal.", Calendar.MONTH, TimeUtils.TimeUnit.MONTH.getMappedCalendarField());
 		Assert.assertEquals("Should be equal.", Calendar.DAY_OF_MONTH, TimeUtils.TimeUnit.DAY.getMappedCalendarField());
@@ -26,7 +23,6 @@ public class TimeUtilsTest {
 		Assert.assertEquals("Should be equal.", Calendar.SECOND, TimeUtils.TimeUnit.SECOND.getMappedCalendarField());
 
 		// check rounding
-
 		checkRound(TimeUtils.TimeUnit.SECOND, TimeUtils.Rounding.DOWN);
 		checkRound(TimeUtils.TimeUnit.SECOND, TimeUtils.Rounding.UP);
 
@@ -46,7 +42,6 @@ public class TimeUtilsTest {
 		checkRound(TimeUtils.TimeUnit.YEAR, TimeUtils.Rounding.UP);
 
 		// check 'from now'
-
 		checkFromNow(1, TimeUtils.TimeUnit.YEAR);
 		checkFromNow(-1, TimeUtils.TimeUnit.YEAR);
 
@@ -66,7 +61,6 @@ public class TimeUtilsTest {
 		checkFromNow(-1, TimeUtils.TimeUnit.SECOND);
 
 		// check 'from now' with no rounding param
-
 		int fromNow = 1;
 		TimeUtils.TimeUnit timeUnit = TimeUtils.TimeUnit.DAY;
 		Calendar calendar = Calendar.getInstance();
