@@ -29,6 +29,21 @@ public final class TimeUtils {
 	 *            {@link Rounding}
 	 * @return timeStamp in millis
 	 */
+	public static long fromNow(final int amount, final TimeUnit unit) {
+		return fromNow(amount, unit, Rounding.NONE);
+	}
+
+	/**
+	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to current time, with further rounding call. See {@link #round}.
+	 *
+	 * @param amount
+	 *            value/amount specified
+	 * @param unit
+	 *            {@link TimeUnit}
+	 * @param roundingMode
+	 *            {@link Rounding}
+	 * @return timeStamp in millis
+	 */
 	public static long fromNow(final int amount, final TimeUnit unit, final Rounding roundingMode) {
 		if (unit == null)
 			throw new IllegalArgumentException("'unit' argument is null");
@@ -38,6 +53,30 @@ public final class TimeUtils {
 			cal.add(unit.getMappedCalendarField(), amount);
 		if (roundingMode == null || Rounding.NONE == roundingMode)
 			return cal.getTimeInMillis();
+		round(cal, unit, roundingMode);
+		return cal.getTimeInMillis();
+	}
+
+	/**
+	 * Allow to round incoming 'timeStamp' in context of selected {@link TimeUnit}, using selected {@link Rounding}.<br>
+	 * In case if incoming 'unit' will be {@code null}, {@link IllegalArgumentException} will be thrown.<br>
+	 * In case if 'roundingMode' will be set to {@code null} or will be equals to {@link Rounding#NONE} - operation won't be performed at all.
+	 *
+	 * @param timeStamp
+	 *            incoming timestamp in millis
+	 * @param unit
+	 *            {@link TimeUnit}
+	 * @param roundingMode
+	 *            {@link Rounding}
+	 * @return time rounded using selected {@link Rounding}, in context of {@link TimeUnit}
+	 */
+	public static long round(final long timeStamp, final TimeUnit unit, final Rounding roundingMode) {
+		if (unit == null)
+			throw new IllegalArgumentException("'unit' argument is null.");
+		if (roundingMode == null || Rounding.NONE == roundingMode)
+			return timeStamp;
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timeStamp);
 		round(cal, unit, roundingMode);
 		return cal.getTimeInMillis();
 	}
@@ -75,30 +114,6 @@ public final class TimeUtils {
 					break;
 			}
 		}
-	}
-
-	/**
-	 * Allow to round incoming 'timeStamp' in context of selected {@link TimeUnit}, using selected {@link Rounding}.<br>
-	 * In case if incoming 'unit' will be {@code null}, {@link IllegalArgumentException} will be thrown.<br>
-	 * In case if 'roundingMode' will be set to {@code null} or will be equals to {@link Rounding#NONE} - operation won't be performed at all.
-	 *
-	 * @param timeStamp
-	 *            incoming timestamp in ms
-	 * @param unit
-	 *            {@link TimeUnit}
-	 * @param roundingMode
-	 *            {@link Rounding}
-	 * @return time rounded using selected {@link Rounding}, in context of {@link TimeUnit}
-	 */
-	public static long round(final long timeStamp, final TimeUnit unit, final Rounding roundingMode) {
-		if (unit == null)
-			throw new IllegalArgumentException("'unit' argument is null.");
-		if (roundingMode == null || Rounding.NONE == roundingMode)
-			return timeStamp;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timeStamp);
-		round(cal, unit, roundingMode);
-		return cal.getTimeInMillis();
 	}
 
 	/**
