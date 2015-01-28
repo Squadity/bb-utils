@@ -1,6 +1,9 @@
 package net.bolbat.utils.lang;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Time utils.
@@ -17,379 +20,95 @@ public final class TimeUtils {
 	}
 
 	/**
-	 * Get timestamp for X years ago from now.
+	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to current time, with further rounding call. See {@link #round}.
 	 *
-	 * @param years
-	 * 		years, can't be <code>null</code>
-	 * @param mode
-	 * 		rounding mode
-	 * @return timestamp
+	 * @param amount
+	 * 		value/amount specified
+	 * @param unit
+	 * 		{@link TimeUnit}
+	 * @param roundingMode
+	 * 		{@link Rounding}
+	 * @return timeStamp in millis
 	 */
-	public static long getYearsFromNow(final int years, final Rounding mode) {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, years);
-		if (mode == null || Rounding.NONE == mode)
+	public static long fromNow(final int amount, final TimeUnit unit, final Rounding roundingMode) {
+		if (unit == null)
+			throw new IllegalArgumentException("'unit' argument is null");
+		final Calendar cal = Calendar.getInstance();
+		//there is no need to roll in case if we have 0-amount
+		if (amount != 0)
+			cal.add(unit.getMappedCalendarField(), amount);
+		if (roundingMode == null || Rounding.NONE == roundingMode)
 			return cal.getTimeInMillis();
-		roundYearTime(cal, mode);
+		round(cal, unit, roundingMode);
 		return cal.getTimeInMillis();
 	}
 
 	/**
-	 * Get timestamp from now for given months.
+	 * Allow to round incoming 'calendar' instance, in context of selected {@link TimeUnit}, using selected {@link Rounding}.<br>
+	 * In case if incoming 'unit' or 'calendar' will be {@code null},  {@link IllegalArgumentException} will be thrown.<br>
+	 * In case if 'roundingMode' will be set to {@code null} or will be equals to {@link Rounding#NONE} - operation won't be performed at all.
 	 *
-	 * @param months
-	 * 		days count
-	 * @param mode
-	 * 		rounding mode
-	 * @return timestamp
+	 * @param calendar
+	 * 		{@link Calendar} instance
+	 * @param unit
+	 * 		{@link TimeUnit}
+	 * @param roundingMode
+	 * 		{@link Rounding}
 	 */
-	public static long getMonthFromNow(final int months, final Rounding mode) {
-		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, months);
-		if (mode == null || Rounding.NONE == mode)
-			return cal.getTimeInMillis();
-		roundMonthTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
+	public static void round(final Calendar calendar, final TimeUnit unit, final Rounding roundingMode) {
+		if (calendar == null)
+			throw new IllegalArgumentException("'calendar' argument is null.");
+		if (unit == null)
+			throw new IllegalArgumentException("'unit' argument is null.");
 
-	/**
-	 * Get timestamp from now for given days.
-	 *
-	 * @param days
-	 * 		days count
-	 * @param mode
-	 * 		rounding mode
-	 * @return timestamp
-	 */
-	public static long getDaysFromNow(final int days, final Rounding mode) {
-		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_MONTH, days);
-		if (mode == null || Rounding.NONE == mode)
-			return cal.getTimeInMillis();
-		roundDayTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Get timestamp from now for given hours.
-	 *
-	 * @param hours
-	 * 		days count
-	 * @param mode
-	 * 		rounding mode
-	 * @return timestamp
-	 */
-	public static long getHoursFromNow(final int hours, final Rounding mode) {
-		final Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR_OF_DAY, hours);
-		if (mode == null || Rounding.NONE == mode)
-			return cal.getTimeInMillis();
-		roundHourTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Rounding incoming time to seconds, up/down rounding defined by {@link Rounding}.
-	 *
-	 * @param time
-	 * 		time in millis
-	 * @param mode
-	 * 		rounding mode
-	 * @return rounded time in millis
-	 */
-	public static long roundTimeToSecondTime(final long time, final Rounding mode) {
-		if (mode == null || Rounding.NONE == mode)
-			return time;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		roundSecondTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Round date to maximum or minimum in second, depending of rounding mode.
-	 *
-	 * @param cal
-	 * 		{@link Calendar} with configured date
-	 * @param mode
-	 * 		rounding mode
-	 */
-	public static void roundSecondTime(final Calendar cal, final Rounding mode) {
-		if (cal == null)
-			throw new IllegalArgumentException("cal argument is null.");
-		if (mode == null || Rounding.NONE == mode)
+		if (roundingMode == null || Rounding.NONE == roundingMode)
 			return;
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				break;
-			case MIN:
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				break;
-			case NONE:
-			default:
-				break;
+		for (final int field : unit.getDependingCalendarFields()) {
+			switch (roundingMode) {
+				case DOWN:
+					calendar.set(field, calendar.getActualMinimum(field));
+					break;
+				case UP:
+					calendar.set(field, calendar.getActualMaximum(field));
+					break;
+				case NONE:
+				default:
+					break;
+			}
 		}
 	}
 
 	/**
-	 * Rounding incoming time to minutes, up/down rounding defined by {@link Rounding}.
+	 * Allow to round incoming 'timeStamp' in context of selected {@link TimeUnit}, using selected {@link Rounding}.<br>
+	 * In case if incoming 'unit' will be {@code null},  {@link IllegalArgumentException} will be thrown.<br>
+	 * In case if 'roundingMode' will be set to {@code null} or will be equals to {@link Rounding#NONE} - operation won't be performed at all.
 	 *
-	 * @param time
-	 * 		time in millis
-	 * @param mode
-	 * 		rounding mode
-	 * @return rounded time in millis
+	 * @param timeStamp
+	 * 		incoming timestamp in ms
+	 * @param unit
+	 * 		{@link TimeUnit}
+	 * @param roundingMode
+	 * 		{@link Rounding}
+	 * @return time rounded using selected {@link Rounding}, in context of  {@link TimeUnit}
 	 */
-	public static long roundTimeToMinuteTime(final long time, final Rounding mode) {
-		if (mode == null || Rounding.NONE == mode)
-			return time;
+	public static long round(final long timeStamp, final TimeUnit unit, final Rounding roundingMode) {
+		if (unit == null)
+			throw new IllegalArgumentException("'unit' argument is null.");
+		if (roundingMode == null || Rounding.NONE == roundingMode)
+			return timeStamp;
 		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		roundMinuteTime(cal, mode);
+		cal.setTimeInMillis(timeStamp);
+		round(cal, unit, roundingMode);
 		return cal.getTimeInMillis();
 	}
 
-	/**
-	 * Round date to maximum or minimum in minute, depending of rounding mode.
-	 *
-	 * @param cal
-	 * 		{@link Calendar} with configured date
-	 * @param mode
-	 * 		rounding mode
-	 */
-	public static void roundMinuteTime(final Calendar cal, final Rounding mode) {
-		if (cal == null)
-			throw new IllegalArgumentException("cal argument is null.");
-		if (mode == null || Rounding.NONE == mode)
-			return;
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				break;
-			case MIN:
-				cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				break;
-			case NONE:
-			default:
-				break;
-		}
-	}
-
-	/**
-	 * Rounding incoming time to hour, up/down rounding defined by {@link Rounding}.
-	 *
-	 * @param time
-	 * 		time in millis
-	 * @param mode
-	 * 		rounding mode
-	 * @return rounded time in millis
-	 */
-	public static long roundTimeToHourTime(final long time, final Rounding mode) {
-		if (mode == null || Rounding.NONE == mode)
-			return time;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		roundHourTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Round date to maximum or minimum in hour, depending of rounding mode.
-	 *
-	 * @param cal
-	 * 		{@link Calendar} with configured date
-	 * @param mode
-	 * 		rounding mode
-	 */
-	public static void roundHourTime(final Calendar cal, final Rounding mode) {
-		if (cal == null)
-			throw new IllegalArgumentException("cal argument is null.");
-		if (mode == null || Rounding.NONE == mode)
-			return;
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				break;
-			case MIN:
-				cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				break;
-			case NONE:
-			default:
-				break;
-		}
-	}
-
-	/**
-	 * Rounding incoming time to day, up/down rounding defined by {@link Rounding}.
-	 *
-	 * @param time
-	 * 		time in millis
-	 * @param mode
-	 * 		rounding mode
-	 * @return rounded time in millis
-	 */
-	public static long roundTimeToDayTime(final long time, final Rounding mode) {
-		if (mode == null || Rounding.NONE == mode)
-			return time;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		roundDayTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Round date to maximum or minimum in day, depending of rounding mode.
-	 *
-	 * @param cal
-	 * 		{@link Calendar} with configured date
-	 * @param mode
-	 * 		rounding mode
-	 */
-	public static void roundDayTime(final Calendar cal, final Rounding mode) {
-		if (cal == null)
-			throw new IllegalArgumentException("cal argument is null.");
-		if (mode == null)
-			return;
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				return;
-			case MIN:
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				return;
-			case NONE:
-			default:
-				break;
-		}
-	}
-
-
-	/**
-	 * Rounding incoming time to Month, up/down rounding defined by {@link Rounding}.
-	 *
-	 * @param time
-	 * 		time in millis
-	 * @param mode
-	 * 		rounding mode
-	 * @return rounded time in millis
-	 */
-	public static long roundTimeToMonthTime(final long time, final Rounding mode) {
-		if (mode == null || Rounding.NONE == mode)
-			return time;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		roundMonthTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Round date to maximum or minimum in month, depending of rounding mode.
-	 *
-	 * @param cal
-	 * 		{@link Calendar} with configured date
-	 * @param mode
-	 * 		rounding mode
-	 */
-	public static void roundMonthTime(final Calendar cal, final Rounding mode) {
-		if (cal == null)
-			throw new IllegalArgumentException("cal argument is null.");
-		if (mode == null || Rounding.NONE == mode)
-			return;
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				break;
-			case MIN:
-				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				break;
-			case NONE:
-			default:
-				break;
-		}
-	}
-
-	/**
-	 * Rounding incoming time to Year, up/down rounding defined by {@link Rounding}.
-	 *
-	 * @param time
-	 * 		time in millis
-	 * @param mode
-	 * 		rounding mode
-	 * @return rounded time in millis
-	 */
-	public static long roundTimeToYearTime(final long time, final Rounding mode) {
-		if (mode == null || Rounding.NONE == mode)
-			return time;
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-		roundYearTime(cal, mode);
-		return cal.getTimeInMillis();
-	}
-
-	/**
-	 * Round date to maximum or minimum in year, depending of rounding mode.
-	 *
-	 * @param cal
-	 * 		{@link Calendar} with configured date
-	 * @param mode
-	 * 		rounding mode
-	 */
-	public static void roundYearTime(final Calendar cal, final Rounding mode) {
-		if (cal == null)
-			throw new IllegalArgumentException("cal argument is null.");
-		if (mode == null || Rounding.NONE == mode)
-			return;
-
-		switch (mode) {
-			case MAX:
-				cal.set(Calendar.MONTH, cal.getActualMaximum(Calendar.MONTH));
-				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMaximum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMaximum(Calendar.MILLISECOND));
-				break;
-			case MIN:
-				cal.set(Calendar.MONTH, cal.getActualMinimum(Calendar.MONTH));
-				cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-				cal.set(Calendar.HOUR_OF_DAY, cal.getActualMinimum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.MINUTE, cal.getActualMinimum(Calendar.MINUTE));
-				cal.set(Calendar.SECOND, cal.getActualMinimum(Calendar.SECOND));
-				cal.set(Calendar.MILLISECOND, cal.getActualMinimum(Calendar.MILLISECOND));
-				break;
-			case NONE:
-			default:
-				break;
-		}
-	}
 
 	/**
 	 * Rounding mode.
 	 *
 	 * @author Alexandr Bolbat
 	 */
-	public enum Rounding {
+	public static enum Rounding {
 
 		/**
 		 * No rounding.
@@ -397,19 +116,113 @@ public final class TimeUtils {
 		NONE,
 
 		/**
-		 * Round to min time.
-		 */
-		MAX,
-
-		/**
 		 * Round to max time.
 		 */
-		MIN;
+		UP,
 
 		/**
-		 * Default {@link Rounding}.
+		 * Round to min time.
 		 */
-		public static final Rounding DEFAULT = NONE;
+		DOWN;
+	}
+
+	/**
+	 * Time unit measure.
+	 */
+	public static enum TimeUnit {
+		/**
+		 * Represent 'second'.
+		 */
+		SECOND(Calendar.MILLISECOND) {
+			@Override
+			public int getMappedCalendarField() {
+				return Calendar.SECOND;
+			}
+		},
+		/**
+		 * Represent 'minute'.
+		 */
+		MINUTE(Calendar.SECOND, TimeUnit.SECOND) {
+			@Override
+			public int getMappedCalendarField() {
+				return Calendar.MINUTE;
+			}
+		},
+		/**
+		 * Represent 'hour'.
+		 */
+		HOUR(Calendar.MINUTE, TimeUnit.MINUTE) {
+			@Override
+			public int getMappedCalendarField() {
+				return Calendar.HOUR_OF_DAY;
+			}
+		},
+		/**
+		 * Represent 'day'.
+		 */
+		DAY(Calendar.HOUR_OF_DAY, TimeUnit.HOUR) {
+			@Override
+			public int getMappedCalendarField() {
+				return Calendar.DAY_OF_MONTH;
+			}
+		},
+		/**
+		 * Represent 'month'.
+		 */
+		MONTH(Calendar.DAY_OF_MONTH, TimeUnit.DAY) {
+			@Override
+			public int getMappedCalendarField() {
+				return Calendar.MONTH;
+			}
+		},
+		/**
+		 * Represent 'year'.
+		 */
+		YEAR(Calendar.MONTH, TimeUnit.MONTH) {
+			@Override
+			public int getMappedCalendarField() {
+				return Calendar.YEAR;
+			}
+		};
+		/**
+		 * TimeUnit 'dependingCalendarFields'.
+		 */
+		private Set<Integer> dependingCalendarFields;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param calendarField
+		 * 		mapped calendar fields
+		 */
+		private TimeUnit(final int calendarField) {
+			dependingCalendarFields = new HashSet<>(Arrays.asList(calendarField));
+		}
+
+		/**
+		 * Constructor.
+		 *
+		 * @param biggestDependingField
+		 * 		biggest calendar field, on which current entry has dependency
+		 * @param dependingUnit
+		 * 		{@link TimeUnit} linked depending unit
+		 */
+		private TimeUnit(final int biggestDependingField, final TimeUnit dependingUnit) {
+			this(biggestDependingField);
+			dependingCalendarFields.addAll(dependingUnit.getDependingCalendarFields());
+		}
+
+		public Set<Integer> getDependingCalendarFields() {
+			return dependingCalendarFields;
+		}
+
+		/**
+		 * Return {@link Calendar} field, to which current entity is mapped.
+		 *
+		 * @return field in value
+		 */
+		public abstract int getMappedCalendarField();
+
 
 	}
 
