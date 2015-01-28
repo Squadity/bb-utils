@@ -25,8 +25,6 @@ public final class TimeUtils {
 	 *            value/amount specified
 	 * @param unit
 	 *            {@link TimeUnit}
-	 * @param roundingMode
-	 *            {@link Rounding}
 	 * @return timeStamp in millis
 	 */
 	public static long fromNow(final int amount, final TimeUnit unit) {
