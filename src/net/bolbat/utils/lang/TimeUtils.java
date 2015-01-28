@@ -1,12 +1,11 @@
 package net.bolbat.utils.lang;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Time utils.
+ * Utilities for manipulating with time.
  *
  * @author Vasyl Zarva
  */
@@ -23,18 +22,18 @@ public final class TimeUtils {
 	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to current time, with further rounding call. See {@link #round}.
 	 *
 	 * @param amount
-	 * 		value/amount specified
+	 *            value/amount specified
 	 * @param unit
-	 * 		{@link TimeUnit}
+	 *            {@link TimeUnit}
 	 * @param roundingMode
-	 * 		{@link Rounding}
+	 *            {@link Rounding}
 	 * @return timeStamp in millis
 	 */
 	public static long fromNow(final int amount, final TimeUnit unit, final Rounding roundingMode) {
 		if (unit == null)
 			throw new IllegalArgumentException("'unit' argument is null");
 		final Calendar cal = Calendar.getInstance();
-		//there is no need to roll in case if we have 0-amount
+		// there is no need to roll in case if we have 0-amount
 		if (amount != 0)
 			cal.add(unit.getMappedCalendarField(), amount);
 		if (roundingMode == null || Rounding.NONE == roundingMode)
@@ -45,15 +44,15 @@ public final class TimeUtils {
 
 	/**
 	 * Allow to round incoming 'calendar' instance, in context of selected {@link TimeUnit}, using selected {@link Rounding}.<br>
-	 * In case if incoming 'unit' or 'calendar' will be {@code null},  {@link IllegalArgumentException} will be thrown.<br>
+	 * In case if incoming 'unit' or 'calendar' will be {@code null}, {@link IllegalArgumentException} will be thrown.<br>
 	 * In case if 'roundingMode' will be set to {@code null} or will be equals to {@link Rounding#NONE} - operation won't be performed at all.
 	 *
 	 * @param calendar
-	 * 		{@link Calendar} instance
+	 *            {@link Calendar} instance
 	 * @param unit
-	 * 		{@link TimeUnit}
+	 *            {@link TimeUnit}
 	 * @param roundingMode
-	 * 		{@link Rounding}
+	 *            {@link Rounding}
 	 */
 	public static void round(final Calendar calendar, final TimeUnit unit, final Rounding roundingMode) {
 		if (calendar == null)
@@ -80,16 +79,16 @@ public final class TimeUtils {
 
 	/**
 	 * Allow to round incoming 'timeStamp' in context of selected {@link TimeUnit}, using selected {@link Rounding}.<br>
-	 * In case if incoming 'unit' will be {@code null},  {@link IllegalArgumentException} will be thrown.<br>
+	 * In case if incoming 'unit' will be {@code null}, {@link IllegalArgumentException} will be thrown.<br>
 	 * In case if 'roundingMode' will be set to {@code null} or will be equals to {@link Rounding#NONE} - operation won't be performed at all.
 	 *
 	 * @param timeStamp
-	 * 		incoming timestamp in ms
+	 *            incoming timestamp in ms
 	 * @param unit
-	 * 		{@link TimeUnit}
+	 *            {@link TimeUnit}
 	 * @param roundingMode
-	 * 		{@link Rounding}
-	 * @return time rounded using selected {@link Rounding}, in context of  {@link TimeUnit}
+	 *            {@link Rounding}
+	 * @return time rounded using selected {@link Rounding}, in context of {@link TimeUnit}
 	 */
 	public static long round(final long timeStamp, final TimeUnit unit, final Rounding roundingMode) {
 		if (unit == null)
@@ -101,7 +100,6 @@ public final class TimeUtils {
 		round(cal, unit, roundingMode);
 		return cal.getTimeInMillis();
 	}
-
 
 	/**
 	 * Rounding mode.
@@ -192,20 +190,21 @@ public final class TimeUtils {
 		/**
 		 * Constructor.
 		 *
-		 * @param calendarField
-		 * 		mapped calendar fields
+		 * @param biggestDependingField
+		 *            biggest calendar field, on which current entry has dependency
 		 */
-		private TimeUnit(final int calendarField) {
-			dependingCalendarFields = new HashSet<>(Arrays.asList(calendarField));
+		private TimeUnit(final int biggestDependingField) {
+			dependingCalendarFields = new HashSet<>();
+			dependingCalendarFields.add(biggestDependingField);
 		}
 
 		/**
 		 * Constructor.
 		 *
 		 * @param biggestDependingField
-		 * 		biggest calendar field, on which current entry has dependency
+		 *            biggest calendar field, on which current entry has dependency
 		 * @param dependingUnit
-		 * 		{@link TimeUnit} linked depending unit
+		 *            {@link TimeUnit} linked depending unit
 		 */
 		private TimeUnit(final int biggestDependingField, final TimeUnit dependingUnit) {
 			this(biggestDependingField);
@@ -222,7 +221,6 @@ public final class TimeUtils {
 		 * @return field in value
 		 */
 		public abstract int getMappedCalendarField();
-
 
 	}
 
