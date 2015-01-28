@@ -77,8 +77,7 @@ public class TimeUtilsTest {
 		long fromNowRoundUpByCalendar = calendar.getTimeInMillis();
 
 		// util calculation
-		long fromNowRoundUpByUtil = TimeUtils.fromNow(fromNow, timeUnit);
-		calendar.setTimeInMillis(fromNowRoundUpByUtil);
+		calendar.setTimeInMillis(TimeUtils.fromNow(fromNow, timeUnit));
 		roundCalendarManually(calendar, timeUnit, TimeUtils.Rounding.UP);
 
 		Assert.assertEquals("Test time unit[" + timeUnit + "]. Values should be equal", fromNowRoundUpByCalendar, calendar.getTimeInMillis());
