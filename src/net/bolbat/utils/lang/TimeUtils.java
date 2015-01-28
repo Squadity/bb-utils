@@ -19,14 +19,12 @@ public final class TimeUtils {
 	}
 
 	/**
-	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to current time, with further rounding call. See {@link #round}.
+	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to/from current time, without further rounding call.
 	 *
 	 * @param amount
 	 *            value/amount specified
 	 * @param unit
 	 *            {@link TimeUnit}
-	 * @param roundingMode
-	 *            {@link Rounding}
 	 * @return timeStamp in millis
 	 */
 	public static long fromNow(final int amount, final TimeUnit unit) {
@@ -34,7 +32,7 @@ public final class TimeUtils {
 	}
 
 	/**
-	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to current time, with further rounding call. See {@link #round}.
+	 * Allow to add/remove specified amount of time, defined by {@link TimeUnit} to/from current time, with further rounding call. See {@link #round}.
 	 *
 	 * @param amount
 	 *            value/amount specified
@@ -200,7 +198,7 @@ public final class TimeUtils {
 		/**
 		 * TimeUnit 'dependingCalendarFields'.
 		 */
-		private Set<Integer> dependingCalendarFields;
+		private final Set<Integer> dependingCalendarFields;
 
 		/**
 		 * Constructor.
@@ -233,7 +231,7 @@ public final class TimeUtils {
 		/**
 		 * Return {@link Calendar} field, to which current entity is mapped.
 		 *
-		 * @return field in value
+		 * @return field <code>int</code> value
 		 */
 		public abstract int getMappedCalendarField();
 
