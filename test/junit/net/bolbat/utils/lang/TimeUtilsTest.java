@@ -174,34 +174,34 @@ public class TimeUtilsTest {
 				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				break;
 			case MINUTE:
-				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
+				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				break;
 			case HOUR:
-				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
-				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
 				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
+				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
+				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				break;
 			case DAY:
-				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
-				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
 				cal.set(Calendar.HOUR_OF_DAY, roundDown ? cal.getActualMinimum(Calendar.HOUR_OF_DAY) : cal.getActualMaximum(Calendar.HOUR_OF_DAY));
+				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
+				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
+				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				break;
 			case MONTH:
-				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
-				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.HOUR_OF_DAY, roundDown ? cal.getActualMinimum(Calendar.HOUR_OF_DAY) : cal.getActualMaximum(Calendar.HOUR_OF_DAY));
 				cal.set(Calendar.DAY_OF_MONTH, roundDown ? cal.getActualMinimum(Calendar.DAY_OF_MONTH) : cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				cal.set(Calendar.HOUR_OF_DAY, roundDown ? cal.getActualMinimum(Calendar.HOUR_OF_DAY) : cal.getActualMaximum(Calendar.HOUR_OF_DAY));
+				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
+				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
+				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				break;
 			case YEAR:
-				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
-				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
-				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
-				cal.set(Calendar.HOUR_OF_DAY, roundDown ? cal.getActualMinimum(Calendar.HOUR_OF_DAY) : cal.getActualMaximum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.DAY_OF_YEAR, roundDown ? cal.getActualMinimum(Calendar.DAY_OF_YEAR) : cal.getActualMaximum(Calendar.DAY_OF_YEAR));
 				cal.set(Calendar.MONTH, roundDown ? cal.getActualMinimum(Calendar.MONTH) : cal.getActualMaximum(Calendar.MONTH));
+				cal.set(Calendar.DAY_OF_MONTH, roundDown ? cal.getActualMinimum(Calendar.DAY_OF_MONTH) : cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				cal.set(Calendar.HOUR_OF_DAY, roundDown ? cal.getActualMinimum(Calendar.HOUR_OF_DAY) : cal.getActualMaximum(Calendar.HOUR_OF_DAY));
+				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
+				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
+				cal.set(Calendar.MILLISECOND, roundDown ? cal.getActualMinimum(Calendar.MILLISECOND) : cal.getActualMaximum(Calendar.MILLISECOND));
 				break;
 		}
 	}

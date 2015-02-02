@@ -1,8 +1,8 @@
 package net.bolbat.utils.lang;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Utilities for manipulating with time.
@@ -198,7 +198,7 @@ public final class TimeUtils {
 		/**
 		 * TimeUnit 'dependingCalendarFields'.
 		 */
-		private final Set<Integer> dependingCalendarFields;
+		private final List<Integer> dependingCalendarFields;
 
 		/**
 		 * Constructor.
@@ -207,8 +207,7 @@ public final class TimeUtils {
 		 *            biggest calendar field, on which current entry has dependency
 		 */
 		private TimeUnit(final int biggestDependingField) {
-			dependingCalendarFields = new HashSet<>();
-			dependingCalendarFields.add(biggestDependingField);
+			this(biggestDependingField, null);
 		}
 
 		/**
@@ -220,11 +219,13 @@ public final class TimeUtils {
 		 *            {@link TimeUnit} linked depending unit
 		 */
 		private TimeUnit(final int biggestDependingField, final TimeUnit dependingUnit) {
-			this(biggestDependingField);
-			dependingCalendarFields.addAll(dependingUnit.getDependingCalendarFields());
+			dependingCalendarFields = new ArrayList<>();
+			dependingCalendarFields.add(biggestDependingField);
+			if (dependingUnit != null)
+				dependingCalendarFields.addAll(dependingUnit.getDependingCalendarFields());
 		}
 
-		public Set<Integer> getDependingCalendarFields() {
+		public List<Integer> getDependingCalendarFields() {
 			return dependingCalendarFields;
 		}
 
