@@ -200,7 +200,7 @@ public class TimeUtilsTest {
 				cal.set(Calendar.SECOND, roundDown ? cal.getActualMinimum(Calendar.SECOND) : cal.getActualMaximum(Calendar.SECOND));
 				cal.set(Calendar.MINUTE, roundDown ? cal.getActualMinimum(Calendar.MINUTE) : cal.getActualMaximum(Calendar.MINUTE));
 				cal.set(Calendar.HOUR_OF_DAY, roundDown ? cal.getActualMinimum(Calendar.HOUR_OF_DAY) : cal.getActualMaximum(Calendar.HOUR_OF_DAY));
-				cal.set(Calendar.DAY_OF_MONTH, roundDown ? cal.getActualMinimum(Calendar.DAY_OF_MONTH) : cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+				cal.set(Calendar.DAY_OF_YEAR, roundDown ? cal.getActualMinimum(Calendar.DAY_OF_YEAR) : cal.getActualMaximum(Calendar.DAY_OF_YEAR));
 				cal.set(Calendar.MONTH, roundDown ? cal.getActualMinimum(Calendar.MONTH) : cal.getActualMaximum(Calendar.MONTH));
 				break;
 		}
