@@ -204,7 +204,6 @@ public final class ClassUtils {
 				// CHECKSTYLE:OFF
 			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
 				final String message = "Can't execute @PostConstruct method[" + m + "]";
-				LOGGER.error(e.getMessage(), e); // TODO for debugging purposes, remove me
 				LoggingUtils.error(LOGGER, message, e);
 				throw new RuntimeException(message, e); // Maybe should be some other exception?
 				// CHECKSTYLE:ON
