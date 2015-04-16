@@ -9,12 +9,8 @@
 	<parent>
 		<groupId>net.bolbat</groupId>
 		<artifactId>bb-parent</artifactId>
-		<version>8</version>
+		<version>9-SNAPSHOT</version>
 	</parent>
-
-	<properties>
-		<commons-validator.version>1.4.0</commons-validator.version>
-	</properties>
 
 	<dependencies>
 		<!-- Common dependencies -->
@@ -37,7 +33,6 @@
 		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
-			<version>${commons-validator.version}</version>
 		</dependency>
 
 		<!-- Testing dependencies -->
