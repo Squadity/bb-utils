@@ -279,4 +279,88 @@ public final class ClassUtils {
 		}
 	}
 
+	/**
+	 * Execute all methods for given instance marked with at least one of given annotations.<br>
+	 * Rules for marked methods:<br>
+	 * - MUST be void;<br>
+	 * - MUST NOT have any parameters;<br>
+	 * - MUST NOT be static;<br>
+	 * - MUST NOT throw a checked exception;<br>
+	 * - MAY be final;<br>
+	 * - MAY be public, protected, package private or private;<br>
+	 * - excludes inherited methods;<br>
+	 * - unchecked exceptions ignored, cause logged with 'DEBUG' level.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 * @param annotations
+	 *            annotations types
+	 */
+	@SafeVarargs
+	public static void execute(final Object instance, final Class<? extends Annotation>... annotations) {
+		if (instance == null)
+			throw new IllegalArgumentException("instance argument is null.");
+		if (annotations == null || annotations.length == 0)
+			return;
+
+		for (final Method m : instance.getClass().getDeclaredMethods()) {
+			boolean process = false;
+			for (final Class<? extends Annotation> aClass : annotations) {
+				if (aClass == null)
+					continue;
+				final Annotation a = m.getAnnotation(aClass);
+				if (a == null)
+					continue;
+
+				process = true;
+				break;
+			}
+
+			if (!process)
+				continue;
+
+			// The return type MUST be void
+			if (!m.getReturnType().equals(Void.TYPE)) {
+				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST be void]");
+				continue;
+			}
+
+			// The method MUST NOT have any parameters
+			if (m.getParameterTypes().length > 0) {
+				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT have any parameters]");
+				continue;
+			}
+
+			// The method MUST NOT be static
+			if (Modifier.isStatic(m.getModifiers())) {
+				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT be static]");
+				continue;
+			}
+
+			boolean isBreak = false;
+			// The method MUST NOT throw a checked exception
+			for (final Class<?> exception : m.getExceptionTypes())
+				if (!RuntimeException.class.isAssignableFrom(exception)) {
+					isBreak = true;
+					break;
+				}
+
+			if (isBreak) {
+				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
+				continue;
+			}
+
+			// processing
+			try {
+				m.setAccessible(true);
+				m.invoke(instance);
+				// CHECKSTYLE:OFF
+			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
+				// CHECKSTYLE:ON
+				// If the method throws an exception it is ignored
+				LoggingUtils.debug(LOGGER, "Can't execute method[" + m + "]", e);
+			}
+		}
+	}
+
 }

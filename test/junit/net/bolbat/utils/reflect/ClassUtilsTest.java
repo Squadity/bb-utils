@@ -8,7 +8,7 @@ import org.junit.Test;
  * 
  * @author Alexandr Bolbat
  */
-// TODO write test case for 'executePostConstruct', 'executePreDestroy' functionality
+// TODO write test case for 'executePostConstruct', 'executePreDestroy', 'execute' functionality
 public class ClassUtilsTest {
 
 	/**
