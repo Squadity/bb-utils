@@ -306,14 +306,10 @@ public final class ClassUtils {
 		for (final Method m : instance.getClass().getDeclaredMethods()) {
 			boolean process = false;
 			for (final Class<? extends Annotation> aClass : annotations) {
-				if (aClass == null)
-					continue;
-				final Annotation a = m.getAnnotation(aClass);
-				if (a == null)
-					continue;
-
-				process = true;
-				break;
+				if (aClass != null && m.getAnnotation(aClass) != null) {
+					process = true;
+					break;
+				}
 			}
 
 			if (!process)
