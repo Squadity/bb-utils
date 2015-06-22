@@ -12,7 +12,7 @@ import org.slf4j.MarkerFactory;
 public final class LoggingUtils {
 
 	/**
-	 * {@link Marker} name for 'FATAL' error case.
+	 * {@link Marker} name for 'FATAL' error message case.
 	 */
 	public static final String FATAL_NAME = "FATAL";
 
@@ -22,14 +22,24 @@ public final class LoggingUtils {
 	public static final Marker FATAL = MarkerFactory.getMarker(FATAL_NAME);
 
 	/**
-	 * {@link Marker} name for 'EVENT' error case.
+	 * {@link Marker} name for 'EVENT' message case.
 	 */
 	public static final String EVENT_NAME = "EVENT";
 
 	/**
-	 * {@link Marker} for 'FATAL' error case.
+	 * {@link Marker} for 'EVENT' message case.
 	 */
 	public static final Marker EVENT = MarkerFactory.getMarker(EVENT_NAME);
+
+	/**
+	 * {@link Marker} name for 'STATS' message case.
+	 */
+	public static final String STATS_NAME = "STATS";
+
+	/**
+	 * {@link Marker} for 'STATS' message case.
+	 */
+	public static final Marker STATS = MarkerFactory.getMarker(STATS_NAME);
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
