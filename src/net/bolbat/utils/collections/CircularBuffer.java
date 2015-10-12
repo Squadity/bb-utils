@@ -123,7 +123,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>int</code>
 	 */
 	public int lastIndex() {
-		return lastIndex.get() % size;
+		return Math.abs(lastIndex.get()) % size;
 	}
 
 	/**
