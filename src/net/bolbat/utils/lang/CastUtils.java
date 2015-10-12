@@ -14,7 +14,7 @@ import net.bolbat.utils.annotation.Stability;
  *
  */
 @Audience.Public
-@Stability.Evolving
+@Stability.Stable
 public final class CastUtils {
 
 	/**
@@ -32,7 +32,7 @@ public final class CastUtils {
 	 * @return {@link List}
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> List<T> castList(final Object object) {
+	public static <T> List<T> castList(final Object object) {
 		return object != null ? (List<T>) object : null;
 	}
 
@@ -44,7 +44,7 @@ public final class CastUtils {
 	 * @return {@link Set}
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> Set<T> castSet(final Object object) {
+	public static <T> Set<T> castSet(final Object object) {
 		return object != null ? (Set<T>) object : null;
 	}
 
@@ -56,7 +56,7 @@ public final class CastUtils {
 	 * @return {@link Map}
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <K, V> Map<K, V> castMap(final Object object) {
+	public static <K, V> Map<K, V> castMap(final Object object) {
 		return object != null ? (Map<K, V>) object : null;
 	}
 
