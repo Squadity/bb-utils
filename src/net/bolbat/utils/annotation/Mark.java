@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Annotation to inform users with TODO, FIXME, etc.
+ * Annotation to inform users with <i>to do</i>, <i>fix me</i>, etc.
  * 
  * @author Alexandr Bolbat
  */
@@ -21,7 +21,7 @@ public final class Mark {
 	}
 
 	/**
-	 * TODO message.
+	 * To do message.
 	 */
 	@Documented
 	@Retention(RetentionPolicy.RUNTIME)
@@ -29,15 +29,13 @@ public final class Mark {
 
 		/**
 		 * Description.
-		 * 
-		 * @return {@link String}
 		 */
 		String value() default "";
 
 	};
 
 	/**
-	 * FIXME message.
+	 * Fix me message.
 	 */
 	@Documented
 	@Retention(RetentionPolicy.RUNTIME)
@@ -45,8 +43,6 @@ public final class Mark {
 
 		/**
 		 * Description.
-		 * 
-		 * @return {@link String}
 		 */
 		String value() default "";
 
@@ -61,8 +57,6 @@ public final class Mark {
 
 		/**
 		 * Description.
-		 * 
-		 * @return {@link String}
 		 */
 		String value() default "";
 
@@ -77,8 +71,6 @@ public final class Mark {
 
 		/**
 		 * Description.
-		 * 
-		 * @return {@link String}
 		 */
 		String value() default "";
 

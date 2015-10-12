@@ -38,8 +38,6 @@ public final class Audience {
 
 		/**
 		 * Project(s) list.
-		 * 
-		 * @return {@link String} array
 		 */
 		String[] value();
 
