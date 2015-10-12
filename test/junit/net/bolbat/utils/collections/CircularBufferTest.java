@@ -1,5 +1,7 @@
 package net.bolbat.utils.collections;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -41,7 +43,6 @@ public class CircularBufferTest {
 	@Before
 	public void before() {
 		after();
-		buffer = CircularBuffer.of(new AtomicInteger(), new AtomicInteger(), new AtomicInteger(), new AtomicInteger());
 	}
 
 	@After
@@ -49,10 +50,21 @@ public class CircularBufferTest {
 		buffer = null;
 	}
 
+	@Test
+	public void complexTestOnArray() {
+		buffer = CircularBuffer.of(new AtomicInteger(), new AtomicInteger(), new AtomicInteger(), new AtomicInteger());
+		complexTest();
+	}
+
+	@Test
+	public void complexTestOnList() {
+		buffer = CircularBuffer.of(new ArrayList<>(Arrays.asList(new AtomicInteger(), new AtomicInteger(), new AtomicInteger(), new AtomicInteger())));
+		complexTest();
+	}
+
 	/**
 	 * Complex test.
 	 */
-	@Test
 	public void complexTest() {
 		final CountDownLatch starter = new CountDownLatch(1);
 		final CountDownLatch finisher = new CountDownLatch(THREADS);
@@ -128,8 +140,11 @@ public class CircularBufferTest {
 			}
 
 			try {
-				for (int i = 0; i < CALLS_PER_THREAD; i++)
-					buffer.get().incrementAndGet();
+				for (int i = 0; i < CALLS_PER_THREAD; i++) {
+					final AtomicInteger value = buffer.get();
+					Assert.assertNotNull(value);
+					value.incrementAndGet();
+				}
 			} finally {
 				finisher.countDown();
 			}

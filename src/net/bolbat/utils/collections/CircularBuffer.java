@@ -49,10 +49,9 @@ public class CircularBuffer<E> implements Serializable {
 	 * @param aElements
 	 *            elements array
 	 */
-	@SafeVarargs
-	private CircularBuffer(final E... aElements) {
+	private CircularBuffer(final E[] aElements) {
 		if (aElements == null)
-			throw new IllegalArgumentException("elements argument is null");
+			throw new IllegalArgumentException("aElements argument is null");
 
 		this.elements = aElements;
 		this.size = aElements.length;
@@ -66,10 +65,12 @@ public class CircularBuffer<E> implements Serializable {
 	 *            elements
 	 * @return {@link CircularBuffer}
 	 */
+	@SuppressWarnings("unchecked")
 	public static <E> CircularBuffer<E> of(final Collection<E> aElements) {
-		@SuppressWarnings("unchecked")
-		final E[] elements = aElements == null ? null : (E[]) aElements.toArray();
-		return new CircularBuffer<>(elements);
+		if (aElements == null)
+			throw new IllegalArgumentException("aElements argument is null");
+
+		return new CircularBuffer<>((E[]) aElements.toArray(new Object[aElements.size()]));
 	}
 
 	/**
@@ -81,7 +82,10 @@ public class CircularBuffer<E> implements Serializable {
 	 */
 	@SafeVarargs
 	public static <E> CircularBuffer<E> of(final E... aElements) {
-		return new CircularBuffer<>(aElements == null ? null : Arrays.copyOf(aElements, aElements.length));
+		if (aElements == null)
+			throw new IllegalArgumentException("aElements argument is null");
+
+		return new CircularBuffer<>(Arrays.copyOf(aElements, aElements.length));
 	}
 
 	/**
