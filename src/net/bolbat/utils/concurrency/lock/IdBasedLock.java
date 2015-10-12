@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+import net.bolbat.utils.annotation.Audience;
+import net.bolbat.utils.annotation.Concurrency;
+import net.bolbat.utils.annotation.Stability;
+
 /**
  * Id based lock implementation.
  * 
@@ -12,6 +16,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * @param <T>
  *            locking id type
  */
+@Audience.Public
+@Stability.Stable
+@Concurrency.ThreadSafe
 public class IdBasedLock<T> implements Serializable {
 
 	/**

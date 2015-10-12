@@ -3,6 +3,9 @@ package net.bolbat.utils.concurrency.lock;
 import java.io.Serializable;
 import java.util.List;
 
+import net.bolbat.utils.annotation.Audience;
+import net.bolbat.utils.annotation.Stability;
+
 /**
  * {@link IdBasedLock} manager interface.
  * 
@@ -11,6 +14,8 @@ import java.util.List;
  * @param <T>
  *            locking id type
  */
+@Audience.Public
+@Stability.Stable
 public interface IdBasedLockManager<T> extends Serializable {
 
 	/**

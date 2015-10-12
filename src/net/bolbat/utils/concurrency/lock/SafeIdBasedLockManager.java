@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.bolbat.utils.annotation.Audience;
+import net.bolbat.utils.annotation.Concurrency;
+import net.bolbat.utils.annotation.Stability;
+
 /**
  * Safe {@link IdBasedLockManager} implementation.
  * 
@@ -13,6 +17,9 @@ import java.util.Map;
  * @param <T>
  *            locking id type
  */
+@Audience.Public
+@Stability.Stable
+@Concurrency.ThreadSafe
 public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 
 	/**

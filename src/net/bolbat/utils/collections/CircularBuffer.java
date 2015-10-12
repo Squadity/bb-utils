@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.bolbat.utils.annotation.Audience;
+import net.bolbat.utils.annotation.Concurrency;
+import net.bolbat.utils.annotation.Stability;
 import net.bolbat.utils.lang.ToStringUtils;
 
 /**
@@ -16,6 +19,9 @@ import net.bolbat.utils.lang.ToStringUtils;
  * @param <E>
  *            elements type
  */
+@Audience.Public
+@Stability.Evolving
+@Concurrency.ThreadSafe
 public class CircularBuffer<E> implements Serializable {
 
 	/**
