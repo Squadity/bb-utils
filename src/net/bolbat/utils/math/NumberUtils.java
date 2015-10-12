@@ -46,17 +46,17 @@ public final class NumberUtils {
 		} else if (first instanceof Integer && second instanceof Integer) { // integer
 			return ((Integer) first).compareTo((Integer) second);
 		} else if (first instanceof AtomicInteger && second instanceof AtomicInteger) { // atomic integer
-			return ((Integer) first.intValue()).compareTo(second.intValue());
+			return Integer.compare(first.intValue(), second.intValue());
 		} else if (first instanceof BigInteger && second instanceof BigInteger) { // big integer
 			return ((BigInteger) first).compareTo((BigInteger) second);
 		} else if (first instanceof Long && second instanceof Long) { // long
 			return ((Long) first).compareTo((Long) second);
 		} else if (first instanceof AtomicLong && second instanceof AtomicLong) { // atomic long
-			return ((Long) first.longValue()).compareTo(second.longValue());
+			return Long.compare(first.longValue(), second.longValue());
 		} else if (first instanceof Float && second instanceof Float) { // float
-			return org.apache.commons.lang.math.NumberUtils.compare(first.floatValue(), second.floatValue());
+			return Float.compare(first.floatValue(), second.floatValue());
 		} else if (first instanceof Double && second instanceof Double) { // double
-			return org.apache.commons.lang.math.NumberUtils.compare(first.doubleValue(), second.doubleValue());
+			return Double.compare(first.doubleValue(), second.doubleValue());
 		} else if (first instanceof BigDecimal && second instanceof BigDecimal) { // big decimal
 			return ((BigDecimal) first).compareTo((BigDecimal) second);
 		} else {
