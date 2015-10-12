@@ -11,7 +11,6 @@ import net.bolbat.utils.annotation.Stability;
  * Casting utilities.
  * 
  * @author Alexandr Bolbat
- *
  */
 @Audience.Public
 @Stability.Stable
