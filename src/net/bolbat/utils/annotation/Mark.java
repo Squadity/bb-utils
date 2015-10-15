@@ -24,7 +24,7 @@ public final class Mark {
 	 * To do message.
 	 */
 	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
+	@Retention(RetentionPolicy.SOURCE)
 	public @interface ToDo {
 
 		/**
@@ -38,7 +38,7 @@ public final class Mark {
 	 * Fix me message.
 	 */
 	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
+	@Retention(RetentionPolicy.SOURCE)
 	public @interface FixMe {
 
 		/**
@@ -52,7 +52,7 @@ public final class Mark {
 	 * Indicates that annotated functionality should be improved.
 	 */
 	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
+	@Retention(RetentionPolicy.SOURCE)
 	public @interface RefactorMe {
 
 		/**
@@ -66,7 +66,7 @@ public final class Mark {
 	 * Indicates that annotated functionality should be tested.
 	 */
 	@Documented
-	@Retention(RetentionPolicy.RUNTIME)
+	@Retention(RetentionPolicy.SOURCE)
 	public @interface TestMe {
 
 		/**
