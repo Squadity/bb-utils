@@ -1,12 +1,15 @@
 package net.bolbat.utils.crypt;
 
+import static net.bolbat.utils.lang.StringUtils.EMPTY;
+import static net.bolbat.utils.lang.StringUtils.isNotEmpty;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import net.bolbat.utils.lang.StringUtils;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.ArrayUtils;
+
+import net.bolbat.utils.lang.StringUtils;
 
 /**
  * {@link MessageDigest} utilities.
@@ -29,8 +32,21 @@ public final class DigestUtils {
 	 *            algorithm
 	 * @param value
 	 *            {@link String} to digest
+	 * @return {@link String} digest
+	 */
+	public static String digest(final Algorithm algorithm, final String value) {
+		return digest(algorithm, value, EMPTY);
+	}
+
+	/**
+	 * Create digest for a {@link String}.
+	 * 
+	 * @param algorithm
+	 *            algorithm
+	 * @param value
+	 *            {@link String} to digest
 	 * @param salt
-	 *            secure salt
+	 *            secure salt, optional
 	 * @return {@link String} digest
 	 */
 	public static String digest(final Algorithm algorithm, final String value, final String salt) {
@@ -38,8 +54,6 @@ public final class DigestUtils {
 			throw new IllegalArgumentException("algorithm argument is null.");
 		if (StringUtils.isEmpty(value))
 			return CipherUtils.EMPTY_STRING;
-		if (StringUtils.isEmpty(salt))
-			throw new IllegalArgumentException("salt argument is empty.");
 
 		byte[] digest = algorithm.digest(value.getBytes(CipherUtils.DEFAULT_CHARSET), salt);
 		return Hex.encodeHexString(digest);
@@ -106,20 +120,29 @@ public final class DigestUtils {
 		 * 
 		 * @param value
 		 *            original value
+		 * @return digest value
+		 */
+		public byte[] digest(final byte[] value) {
+			return digest(value, EMPTY);
+		}
+
+		/**
+		 * Create digest.
+		 * 
+		 * @param value
+		 *            original value
 		 * @param salt
-		 *            secure salt
+		 *            secure salt, optional
 		 * @return digest value
 		 */
 		public byte[] digest(final byte[] value, final String salt) {
 			if (value == null || value.length == 0)
 				return CipherUtils.EMPTY_BYTE_ARRAY;
-			if (StringUtils.isEmpty(salt))
-				throw new IllegalArgumentException("salt argument is empty.");
 
 			try {
-				final byte[] toDigest = ArrayUtils.addAll(value, salt.getBytes(CipherUtils.DEFAULT_CHARSET));
+				final byte[] toDigest = isNotEmpty(salt) ? ArrayUtils.addAll(value, salt.getBytes(CipherUtils.DEFAULT_CHARSET)) : value;
 				return MessageDigest.getInstance(getAlgorithmName()).digest(toDigest);
-			} catch (NoSuchAlgorithmException e) {
+			} catch (final NoSuchAlgorithmException e) {
 				throw new DigestRuntimeException(e);
 			}
 		}
