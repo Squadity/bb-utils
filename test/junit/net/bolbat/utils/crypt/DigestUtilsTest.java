@@ -98,8 +98,11 @@ public class DigestUtilsTest {
 		Assert.assertEquals(Algorithm.SHA_1, Algorithm.get(Algorithm.SHA_1.getAlgorithmName()));
 		Assert.assertEquals(Algorithm.SHA_512, Algorithm.get(Algorithm.SHA_512.getAlgorithmName()));
 
+		Assert.assertEquals(CipherUtils.EMPTY_STRING, DigestUtils.digest(Algorithm.MD2, null));
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, DigestUtils.digest(Algorithm.MD2, null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null));
 		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null, null));
+		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0]));
 		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0], null));
 	}
 
