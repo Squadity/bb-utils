@@ -1,5 +1,7 @@
 package net.bolbat.utils.crypt;
 
+import static net.bolbat.utils.lang.StringUtils.isNotEmpty;
+
 import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -21,10 +23,10 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import net.bolbat.utils.lang.StringUtils;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+
+import net.bolbat.utils.lang.StringUtils;
 
 /**
  * {@link Cipher} utilities.
@@ -81,6 +83,22 @@ public final class CipherUtils {
 	}
 
 	/**
+	 * Encode {@link String}.<br>
+	 * Key will be used also as secure salt.
+	 * 
+	 * @param algorithm
+	 *            algorithm
+	 * @param value
+	 *            {@link String} to encode
+	 * @param key
+	 *            secure key
+	 * @return encoded {@link String}
+	 */
+	public static String encode(final Algorithm algorithm, final String value, final String key) {
+		return encode(algorithm, value, key, key);
+	}
+
+	/**
 	 * Encode {@link String}.
 	 * 
 	 * @param algorithm
@@ -105,6 +123,22 @@ public final class CipherUtils {
 
 		final byte[] encoded = algorithm.encode(value.getBytes(DEFAULT_CHARSET), key, salt, null);
 		return Hex.encodeHexString(encoded);
+	}
+
+	/**
+	 * Decode {@link String}.<br>
+	 * Key will be used also as secure salt.
+	 * 
+	 * @param algorithm
+	 *            algorithm
+	 * @param value
+	 *            {@link String} to decode
+	 * @param key
+	 *            secure key
+	 * @return decoded {@link String}
+	 */
+	public static String decode(final Algorithm algorithm, final String value, final String key) {
+		return decode(algorithm, value, key, key);
 	}
 
 	/**
@@ -166,20 +200,16 @@ public final class CipherUtils {
 		 */
 		DES("DES") {
 			@Override
-			public Key crateKey(final String value, final String salt) {
-				if (StringUtils.isEmpty(value))
-					throw new IllegalArgumentException("value argument is empty.");
+			public Key crateKey(final String key, final String salt) {
+				if (StringUtils.isEmpty(key))
+					throw new IllegalArgumentException("key argument is empty.");
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
 				try {
-					DESKeySpec keyspec = new DESKeySpec(toRawKey(value, salt));
+					final DESKeySpec keyspec = new DESKeySpec(toRawKey(key, salt));
 					return SecretKeyFactory.getInstance(getAlgorithmName()).generateSecret(keyspec);
-				} catch (InvalidKeyException e) {
-					throw new CipherRuntimeException(e);
-				} catch (NoSuchAlgorithmException e) {
-					throw new CipherRuntimeException(e);
-				} catch (InvalidKeySpecException e) {
+				} catch (final InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
 					throw new CipherRuntimeException(e);
 				}
 			}
@@ -192,20 +222,16 @@ public final class CipherUtils {
 		 */
 		DE_SEDE("DESede") {
 			@Override
-			public Key crateKey(final String value, final String salt) {
-				if (StringUtils.isEmpty(value))
-					throw new IllegalArgumentException("value argument is empty.");
+			public Key crateKey(final String key, final String salt) {
+				if (StringUtils.isEmpty(key))
+					throw new IllegalArgumentException("key argument is empty.");
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
 				try {
-					DESedeKeySpec keyspec = new DESedeKeySpec(toRawKey(value, salt));
+					final DESedeKeySpec keyspec = new DESedeKeySpec(toRawKey(key, salt));
 					return SecretKeyFactory.getInstance(getAlgorithmName()).generateSecret(keyspec);
-				} catch (InvalidKeyException e) {
-					throw new CipherRuntimeException(e);
-				} catch (NoSuchAlgorithmException e) {
-					throw new CipherRuntimeException(e);
-				} catch (InvalidKeySpecException e) {
+				} catch (final InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
 					throw new CipherRuntimeException(e);
 				}
 			}
@@ -223,29 +249,22 @@ public final class CipherUtils {
 		PBE_WITH_MD5_AND_DES("PBEWithMD5AndDES") {
 
 			/**
-			 * {@link SecretKeyFactory} iterations to generate strong {@link SecretKeySpec}.
-			 */
-			private static final int SALT_SECRET_KEY_ITERATIONS = DEFAULT_SECRET_KEY_ITERATIONS;
-
-			/**
 			 * Salt key size.
 			 */
 			private static final int SALT_KEY_SIZE = 64;
 
 			@Override
-			public Key crateKey(final String value, final String salt) {
-				if (StringUtils.isEmpty(value))
-					throw new IllegalArgumentException("value argument is empty.");
+			public Key crateKey(final String key, final String salt) {
+				if (StringUtils.isEmpty(key))
+					throw new IllegalArgumentException("key argument is empty.");
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
 				try {
-					SecretKey saltKey = generateSecretKeySpec(salt, salt, DEFAULT_SECRET_KEY_ALGORITHM, SALT_SECRET_KEY_ITERATIONS, SALT_KEY_SIZE);
-					KeySpec keySpec = new PBEKeySpec(value.toCharArray(), saltKey.getEncoded(), DEFAULT_SECRET_KEY_ITERATIONS);
+					final SecretKey saltKey = generateSecretKeySpec(key, salt, DEFAULT_SECRET_KEY_ALGORITHM, DEFAULT_SECRET_KEY_ITERATIONS, SALT_KEY_SIZE);
+					final KeySpec keySpec = new PBEKeySpec(key.toCharArray(), saltKey.getEncoded(), DEFAULT_SECRET_KEY_ITERATIONS);
 					return SecretKeyFactory.getInstance(getAlgorithmName()).generateSecret(keySpec);
-				} catch (NoSuchAlgorithmException e) {
-					throw new CipherRuntimeException(e);
-				} catch (InvalidKeySpecException e) {
+				} catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
 					throw new CipherRuntimeException(e);
 				}
 			}
@@ -259,8 +278,8 @@ public final class CipherUtils {
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
-				SecretKey saltKey = generateSecretKeySpec(salt, salt, DEFAULT_SECRET_KEY_ALGORITHM, SALT_SECRET_KEY_ITERATIONS, SALT_KEY_SIZE);
-				AlgorithmParameterSpec param = new PBEParameterSpec(saltKey.getEncoded(), DEFAULT_SECRET_KEY_ITERATIONS);
+				final SecretKey saltKey = generateSecretKeySpec(key, salt, DEFAULT_SECRET_KEY_ALGORITHM, DEFAULT_SECRET_KEY_ITERATIONS, SALT_KEY_SIZE);
+				final AlgorithmParameterSpec param = new PBEParameterSpec(saltKey.getEncoded(), DEFAULT_SECRET_KEY_ITERATIONS);
 				return super.encode(toEncode, key, salt, param);
 			}
 
@@ -273,8 +292,8 @@ public final class CipherUtils {
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
-				SecretKey saltKey = generateSecretKeySpec(salt, salt, DEFAULT_SECRET_KEY_ALGORITHM, SALT_SECRET_KEY_ITERATIONS, SALT_KEY_SIZE);
-				AlgorithmParameterSpec param = new PBEParameterSpec(saltKey.getEncoded(), DEFAULT_SECRET_KEY_ITERATIONS);
+				final SecretKey saltKey = generateSecretKeySpec(key, salt, DEFAULT_SECRET_KEY_ALGORITHM, DEFAULT_SECRET_KEY_ITERATIONS, SALT_KEY_SIZE);
+				final AlgorithmParameterSpec param = new PBEParameterSpec(saltKey.getEncoded(), DEFAULT_SECRET_KEY_ITERATIONS);
 				return super.decode(toDecode, key, salt, param);
 			}
 
@@ -286,18 +305,16 @@ public final class CipherUtils {
 		 */
 		PBE_WITH_SHA1_AND_DE_SEDE("PBEWithSHA1AndDESede") {
 			@Override
-			public Key crateKey(final String value, final String salt) {
-				if (StringUtils.isEmpty(value))
-					throw new IllegalArgumentException("value argument is empty.");
+			public Key crateKey(final String key, final String salt) {
+				if (StringUtils.isEmpty(key))
+					throw new IllegalArgumentException("key argument is empty.");
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
 				try {
-					KeySpec keySpec = new PBEKeySpec(value.toCharArray(), salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
+					final KeySpec keySpec = new PBEKeySpec(key.toCharArray(), salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
 					return SecretKeyFactory.getInstance(getAlgorithmName()).generateSecret(keySpec);
-				} catch (NoSuchAlgorithmException e) {
-					throw new CipherRuntimeException(e);
-				} catch (InvalidKeySpecException e) {
+				} catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
 					throw new CipherRuntimeException(e);
 				}
 			}
@@ -311,7 +328,7 @@ public final class CipherUtils {
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
-				AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
+				final AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
 				return super.encode(toEncode, key, salt, param);
 			}
 
@@ -324,7 +341,7 @@ public final class CipherUtils {
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
-				AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
+				final AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
 				return super.decode(toDecode, key, salt, param);
 			}
 		},
@@ -335,18 +352,16 @@ public final class CipherUtils {
 		 */
 		PBE_WITH_SHA1_AND_RC2_40("PBEWithSHA1AndRC2_40") {
 			@Override
-			public Key crateKey(final String value, final String salt) {
-				if (StringUtils.isEmpty(value))
-					throw new IllegalArgumentException("value argument is empty.");
+			public Key crateKey(final String key, final String salt) {
+				if (StringUtils.isEmpty(key))
+					throw new IllegalArgumentException("key argument is empty.");
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
 				try {
-					KeySpec keySpec = new PBEKeySpec(value.toCharArray(), salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
+					final KeySpec keySpec = new PBEKeySpec(key.toCharArray(), salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
 					return SecretKeyFactory.getInstance(getAlgorithmName()).generateSecret(keySpec);
-				} catch (NoSuchAlgorithmException e) {
-					throw new CipherRuntimeException(e);
-				} catch (InvalidKeySpecException e) {
+				} catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
 					throw new CipherRuntimeException(e);
 				}
 			}
@@ -360,7 +375,7 @@ public final class CipherUtils {
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
-				AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
+				final AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
 				return super.encode(toEncode, key, salt, param);
 			}
 
@@ -373,7 +388,7 @@ public final class CipherUtils {
 				if (StringUtils.isEmpty(salt))
 					throw new IllegalArgumentException("salt argument is empty.");
 
-				AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
+				final AlgorithmParameterSpec param = new PBEParameterSpec(salt.getBytes(DEFAULT_CHARSET), DEFAULT_SECRET_KEY_ITERATIONS);
 				return super.decode(toDecode, key, salt, param);
 			}
 		};
@@ -400,19 +415,19 @@ public final class CipherUtils {
 		/**
 		 * Create key.
 		 * 
-		 * @param value
-		 *            raw key value
+		 * @param key
+		 *            secure key
 		 * @param salt
-		 *            secure key salt
+		 *            secure salt
 		 * @return {@link Key}
 		 */
-		public Key crateKey(final String value, final String salt) {
-			if (StringUtils.isEmpty(value))
-				throw new IllegalArgumentException("value argument is empty.");
+		public Key crateKey(final String key, final String salt) {
+			if (StringUtils.isEmpty(key))
+				throw new IllegalArgumentException("key argument is empty.");
 			if (StringUtils.isEmpty(salt))
 				throw new IllegalArgumentException("salt argument is empty.");
 
-			return generateSecretKeySpec(value, salt, getAlgorithmName(), DEFAULT_SECRET_KEY_ITERATIONS, DEFAULT_SECRET_KEY_SIZE);
+			return generateSecretKeySpec(key, salt, getAlgorithmName(), DEFAULT_SECRET_KEY_ITERATIONS, DEFAULT_SECRET_KEY_SIZE);
 		}
 
 		/**
@@ -421,9 +436,9 @@ public final class CipherUtils {
 		 * @param toEncode
 		 *            value to encode
 		 * @param key
-		 *            raw key value
+		 *            secure key
 		 * @param salt
-		 *            secure key salt
+		 *            secure salt
 		 * @param paramSpec
 		 *            algorithm parameter, optional
 		 * @return encoded value in byte array
@@ -437,25 +452,15 @@ public final class CipherUtils {
 				throw new IllegalArgumentException("salt argument is empty.");
 
 			try {
-				Cipher cipher = Cipher.getInstance(getAlgorithmName());
+				final Cipher cipher = Cipher.getInstance(getAlgorithmName());
 				if (paramSpec != null) {
 					cipher.init(Cipher.ENCRYPT_MODE, crateKey(key, salt), paramSpec);
-					return cipher.doFinal(toEncode);
+				} else {
+					cipher.init(Cipher.ENCRYPT_MODE, crateKey(key, salt));
 				}
-
-				cipher.init(Cipher.ENCRYPT_MODE, crateKey(key, salt));
 				return cipher.doFinal(toEncode);
-			} catch (NoSuchAlgorithmException e) {
-				throw new CipherRuntimeException(e);
-			} catch (NoSuchPaddingException e) {
-				throw new CipherRuntimeException(e);
-			} catch (InvalidKeyException e) {
-				throw new CipherRuntimeException(e);
-			} catch (InvalidAlgorithmParameterException e) {
-				throw new CipherRuntimeException(e);
-			} catch (IllegalBlockSizeException e) {
-				throw new CipherRuntimeException(e);
-			} catch (BadPaddingException e) {
+			} catch (final NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException //
+					| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 				throw new CipherRuntimeException(e);
 			}
 		}
@@ -466,9 +471,9 @@ public final class CipherUtils {
 		 * @param toDecode
 		 *            value to decode
 		 * @param key
-		 *            raw key value
+		 *            secure value
 		 * @param salt
-		 *            secure key salt
+		 *            secure salt
 		 * @param paramSpec
 		 *            algorithm parameter, optional
 		 * @return decoded value in byte array
@@ -482,25 +487,15 @@ public final class CipherUtils {
 				throw new IllegalArgumentException("salt argument is empty.");
 
 			try {
-				Cipher cipher = Cipher.getInstance(getAlgorithmName());
+				final Cipher cipher = Cipher.getInstance(getAlgorithmName());
 				if (paramSpec != null) {
 					cipher.init(Cipher.DECRYPT_MODE, crateKey(key, salt), paramSpec);
-					return cipher.doFinal(toDecode);
+				} else {
+					cipher.init(Cipher.DECRYPT_MODE, crateKey(key, salt));
 				}
-
-				cipher.init(Cipher.DECRYPT_MODE, crateKey(key, salt));
 				return cipher.doFinal(toDecode);
-			} catch (NoSuchAlgorithmException e) {
-				throw new CipherRuntimeException(e);
-			} catch (NoSuchPaddingException e) {
-				throw new CipherRuntimeException(e);
-			} catch (InvalidKeyException e) {
-				throw new CipherRuntimeException(e);
-			} catch (InvalidAlgorithmParameterException e) {
-				throw new CipherRuntimeException(e);
-			} catch (IllegalBlockSizeException e) {
-				throw new CipherRuntimeException(e);
-			} catch (BadPaddingException e) {
+			} catch (final NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException //
+					| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 				throw new CipherRuntimeException(e);
 			}
 		}
@@ -509,29 +504,29 @@ public final class CipherUtils {
 		 * Get {@link Algorithm} by it name.<br>
 		 * {@link IllegalArgumentException} will be thrown if algorithm with given key is not supported or key is empty.
 		 * 
-		 * @param aAlgorithmName
+		 * @param name
 		 *            algorithm name, is not case-sensitive
 		 * @return {@link Algorithm}
 		 */
-		public static Algorithm get(final String aAlgorithmName) {
-			if (StringUtils.isEmpty(aAlgorithmName))
-				throw new IllegalArgumentException("aAlgorithmName argument is empty.");
+		public static Algorithm get(final String name) {
+			if (StringUtils.isEmpty(name))
+				throw new IllegalArgumentException("name argument is empty.");
 
 			for (final Algorithm a : Algorithm.values())
-				if (a.getAlgorithmName().equalsIgnoreCase(aAlgorithmName))
+				if (a.getAlgorithmName().equalsIgnoreCase(name))
 					return a;
 
-			throw new CipherRuntimeException("algorithm[" + aAlgorithmName + "] not supported.");
+			throw new CipherRuntimeException("algorithm[" + name + "] not supported.");
 		}
 
 		/**
 		 * Generate {@link SecretKeySpec}.
 		 * 
-		 * @param value
-		 *            original key value
+		 * @param key
+		 *            secure key
 		 * @param salt
-		 *            secret generation salt
-		 * @param name
+		 *            secure salt
+		 * @param algorithm
 		 *            algorithm name
 		 * @param i
 		 *            iterations amount
@@ -539,21 +534,19 @@ public final class CipherUtils {
 		 *            result key size
 		 * @return {@link SecretKeySpec}
 		 */
-		public static SecretKeySpec generateSecretKeySpec(final String value, final String salt, final String name, final int i, final int size) {
-			if (StringUtils.isEmpty(value))
-				throw new IllegalArgumentException("value argument is empty.");
+		public static SecretKeySpec generateSecretKeySpec(final String key, final String salt, final String algorithm, final int i, final int size) {
+			if (StringUtils.isEmpty(key))
+				throw new IllegalArgumentException("key argument is empty.");
 			if (StringUtils.isEmpty(salt))
 				throw new IllegalArgumentException("salt argument is empty.");
-			if (StringUtils.isEmpty(name))
-				throw new IllegalArgumentException("name argument is empty.");
+			if (StringUtils.isEmpty(algorithm))
+				throw new IllegalArgumentException("algorithm argument is empty.");
 
 			try {
-				SecretKeyFactory factory = SecretKeyFactory.getInstance(DEFAULT_SECRET_KEY_ALGORITHM);
-				KeySpec spec = new PBEKeySpec(value.toCharArray(), salt.getBytes(DEFAULT_CHARSET), i, size);
-				return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), name);
-			} catch (NoSuchAlgorithmException e) {
-				throw new CipherRuntimeException(e);
-			} catch (InvalidKeySpecException e) {
+				final SecretKeyFactory factory = SecretKeyFactory.getInstance(DEFAULT_SECRET_KEY_ALGORITHM);
+				final KeySpec spec = new PBEKeySpec(key.toCharArray(), salt.getBytes(DEFAULT_CHARSET), i, size);
+				return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), algorithm);
+			} catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
 				throw new CipherRuntimeException(e);
 			}
 		}
@@ -564,19 +557,21 @@ public final class CipherUtils {
 		 * <code>MINIMUM_KEY_LENGTH</code> constant).
 		 * 
 		 * @param key
-		 *            raw key value
+		 *            secure key
 		 * @param salt
-		 *            secure key salt
+		 *            secure salt
 		 * @return raw key in byte array
 		 */
 		public static byte[] toRawKey(final String key, final String salt) {
-			String rawKey = EMPTY_STRING;
-			rawKey += StringUtils.isNotEmpty(key) ? key : EMPTY_STRING;
-			rawKey += StringUtils.isNotEmpty(salt) ? salt : EMPTY_STRING;
+			final StringBuilder rawKey = new StringBuilder();
+			if (isNotEmpty(key))
+				rawKey.append(key);
+			if (isNotEmpty(salt))
+				rawKey.append(salt);
 			if (rawKey.length() < MINIMUM_KEY_LENGTH)
-				rawKey += DEFAULT_KEY_SUFFIX.substring(rawKey.length());
+				rawKey.append(DEFAULT_KEY_SUFFIX.substring(rawKey.length()));
 
-			return rawKey.getBytes(DEFAULT_CHARSET);
+			return rawKey.toString().getBytes(DEFAULT_CHARSET);
 		}
 
 	}

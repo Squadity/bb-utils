@@ -33,12 +33,12 @@ public class DigestUtilsTest {
 
 		LOGGER.info("---------> Parameters <---------");
 		LOGGER.info("salt[" + salt + "], value[" + value + "]");
-		algorithmTest(Algorithm.MD2, salt, value);
-		algorithmTest(Algorithm.MD5, salt, value);
-		algorithmTest(Algorithm.SHA_1, salt, value);
-		algorithmTest(Algorithm.SHA_256, salt, value);
-		algorithmTest(Algorithm.SHA_384, salt, value);
-		algorithmTest(Algorithm.SHA_512, salt, value);
+		algorithmTestWithSalt(Algorithm.MD2, salt, value);
+		algorithmTestWithSalt(Algorithm.MD5, salt, value);
+		algorithmTestWithSalt(Algorithm.SHA_1, salt, value);
+		algorithmTestWithSalt(Algorithm.SHA_256, salt, value);
+		algorithmTestWithSalt(Algorithm.SHA_384, salt, value);
+		algorithmTestWithSalt(Algorithm.SHA_512, salt, value);
 	}
 
 	/**
@@ -100,14 +100,14 @@ public class DigestUtilsTest {
 
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, DigestUtils.digest(Algorithm.MD2, null));
 		Assert.assertEquals(CipherUtils.EMPTY_STRING, DigestUtils.digest(Algorithm.MD2, null, null));
-		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null));
-		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null, null));
-		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0]));
-		Assert.assertEquals(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0], null));
+		Assert.assertSame(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null));
+		Assert.assertSame(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(null, null));
+		Assert.assertSame(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0]));
+		Assert.assertSame(CipherUtils.EMPTY_BYTE_ARRAY, Algorithm.MD2.digest(new byte[0], null));
 	}
 
 	/**
-	 * Real algorithm test.
+	 * Algorithm encryption test with salt.
 	 * 
 	 * @param a
 	 *            algorithm
@@ -116,7 +116,7 @@ public class DigestUtilsTest {
 	 * @param value
 	 *            value to digest
 	 */
-	private static void algorithmTest(final Algorithm a, final String salt, final String value) {
+	private static void algorithmTestWithSalt(final Algorithm a, final String salt, final String value) {
 		LOGGER.info("---------> " + a.getAlgorithmName() + " <---------");
 
 		long startTimestamp = System.currentTimeMillis();
@@ -143,7 +143,7 @@ public class DigestUtilsTest {
 	}
 
 	/**
-	 * Real algorithm test.
+	 * Algorithm encryption test without salt.
 	 * 
 	 * @param a
 	 *            algorithm
