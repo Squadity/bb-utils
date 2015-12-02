@@ -1,5 +1,8 @@
 package net.bolbat.utils.lang;
 
+import static net.bolbat.utils.lang.StringUtils.EMPTY;
+
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -171,6 +174,60 @@ public final class ToStringUtils {
 
 		builder.append(LAST_CHAR);
 		return builder.toString();
+	}
+
+	/**
+	 * Create string representation for {@link Class}.
+	 * 
+	 * @param type
+	 *            {@link Class}
+	 * @return {@link String}
+	 */
+	public static String toTypeName(final Class<?> type) {
+		if (type == null)
+			return EMPTY;
+
+		if (!type.isArray())
+			return type.getName();
+
+		Class<?> cType = type;
+		int dimensions = 0;
+		while (cType.isArray()) {
+			dimensions++;
+			cType = cType.getComponentType();
+		}
+
+		final StringBuffer result = new StringBuffer();
+		result.append(cType.getName());
+		for (int i = 0; i < dimensions; i++)
+			result.append("[]");
+
+		return result.toString();
+	}
+
+	/**
+	 * Create string representation for {@link Method}.
+	 * 
+	 * @param method
+	 *            {@link Method}
+	 * @return {@link String}
+	 */
+	public static String toMethodName(final Method method) {
+		if (method == null)
+			return EMPTY;
+
+		final StringBuilder result = new StringBuilder();
+		result.append(method.getName()).append('(');
+
+		final Class<?>[] params = method.getParameterTypes();
+		for (int i = 0; i < params.length; i++) {
+			result.append(toTypeName(params[i]));
+			if (i < params.length - 1)
+				result.append(',');
+		}
+
+		result.append(')');
+		return result.toString();
 	}
 
 }

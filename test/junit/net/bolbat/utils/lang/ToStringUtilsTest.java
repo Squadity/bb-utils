@@ -1,5 +1,6 @@
 package net.bolbat.utils.lang;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,9 +16,6 @@ import org.junit.Test;
  */
 public class ToStringUtilsTest {
 
-	/**
-	 * Complex utility test with arrays.
-	 */
 	@Test
 	public void complexArraysTest() {
 		final Object[] nullArray = null;
@@ -31,9 +29,6 @@ public class ToStringUtilsTest {
 		Assert.assertEquals("[1,2,3,4,5,...]", ToStringUtils.toString(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }, 5));
 	}
 
-	/**
-	 * Complex utility test with collections.
-	 */
 	@Test
 	public void complexCollectionsTest() {
 		final Collection<Object> nullCollection = null;
@@ -47,9 +42,6 @@ public class ToStringUtilsTest {
 		Assert.assertEquals("[1,2,3,4,5,...]", ToStringUtils.toString(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), 5));
 	}
 
-	/**
-	 * Complex utility test with maps.
-	 */
 	@Test
 	public void complexMapsTest() {
 		final Map<Object, Object> nullMap = null;
@@ -80,4 +72,56 @@ public class ToStringUtilsTest {
 		Assert.assertTrue(ToStringUtils.toString(bigMap).contains("...]"));
 		Assert.assertFalse(ToStringUtils.toString(bigMap, 15).contains("...]"));
 	}
+
+	@Test
+	public void toTypeNameTest() {
+		Assert.assertEquals("int", ToStringUtils.toTypeName(int.class));
+		Assert.assertEquals("java.lang.String", ToStringUtils.toTypeName(String.class));
+
+		// array types + multidimensional array types
+		Assert.assertEquals("int[]", ToStringUtils.toTypeName(new int[0].getClass()));
+		Assert.assertEquals("long[][]", ToStringUtils.toTypeName(new long[0][0].getClass()));
+		Assert.assertEquals("double[][][]", ToStringUtils.toTypeName(new double[0][0][0].getClass()));
+		Assert.assertEquals("java.lang.String[]", ToStringUtils.toTypeName(new String[0].getClass()));
+		Assert.assertEquals("java.lang.Integer[][]", ToStringUtils.toTypeName(new Integer[0][0].getClass()));
+		Assert.assertEquals("java.lang.Object[][][]", ToStringUtils.toTypeName(new Object[0][0][0].getClass()));
+	}
+
+	@Test
+	public void toMethodNameTest() {
+		int validatedMethods = 0;
+		final Method[] methods = MethodTest.class.getMethods();
+		for (final Method method : methods) {
+			final String methodName = ToStringUtils.toMethodName(method);
+			switch (method.getName()) {
+				case "method1":
+					Assert.assertEquals("method1()", methodName);
+					validatedMethods++;
+					break;
+				case "method2":
+					Assert.assertEquals("method2(java.lang.String,int,java.lang.Object[])", methodName);
+					validatedMethods++;
+					break;
+				case "method3":
+					Assert.assertEquals("method3(java.lang.String[],int[][],java.lang.Object[])", methodName);
+					validatedMethods++;
+					break;
+				default:
+					continue;
+			}
+		}
+		Assert.assertEquals(3, validatedMethods);
+	}
+
+	public static class MethodTest {
+		public void method1() {
+		}
+
+		public void method2(final String param1, final int param2, final Object... params) {
+		}
+
+		public void method3(final String[] param1, final int[][] param2, final Object... params) {
+		}
+	}
+
 }
