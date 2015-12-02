@@ -54,6 +54,13 @@ public final class ThreadFactoryBuilder {
 		return defaultThreadFactory;
 	}
 
+	/**
+	 * Set default {@link ThreadFactory}.
+	 * 
+	 * @param aDefaultThreadFactory
+	 *            {@link ThreadFactory}
+	 * @return {@link ThreadFactoryBuilder}
+	 */
 	public ThreadFactoryBuilder setDefaultThreadFactory(final ThreadFactory aDefaultThreadFactory) {
 		this.defaultThreadFactory = aDefaultThreadFactory;
 		return this;
@@ -63,15 +70,34 @@ public final class ThreadFactoryBuilder {
 		return nameFormat;
 	}
 
+	/**
+	 * Set thread name format.
+	 * 
+	 * @param aNameFormat
+	 *            thread name format
+	 * @return {@link ThreadFactoryBuilder}
+	 */
 	public ThreadFactoryBuilder setNameFormat(final String aNameFormat) {
 		this.nameFormat = aNameFormat;
 		return this;
 	}
 
+	/**
+	 * Get thread name format arguments.
+	 * 
+	 * @return array copy or <code>null</code>
+	 */
 	public Object[] getNameFormatArgs() {
-		return nameFormatArgs;
+		return ArrayUtils.clone(nameFormatArgs);
 	}
 
+	/**
+	 * Set thread name format arguments.
+	 * 
+	 * @param aNameFormatArgs
+	 *            thread name format arguments
+	 * @return {@link ThreadFactoryBuilder}
+	 */
 	public ThreadFactoryBuilder setNameFormatArgs(final Object... aNameFormatArgs) {
 		this.nameFormatArgs = aNameFormatArgs;
 		return this;
@@ -81,6 +107,13 @@ public final class ThreadFactoryBuilder {
 		return daemon;
 	}
 
+	/**
+	 * Set thread as daemon.
+	 * 
+	 * @param aDaemon
+	 *            <code>true</code> to set as daemon
+	 * @return {@link ThreadFactoryBuilder}
+	 */
 	public ThreadFactoryBuilder setDaemon(final Boolean aDaemon) {
 		this.daemon = aDaemon;
 		return this;
@@ -90,6 +123,13 @@ public final class ThreadFactoryBuilder {
 		return priority;
 	}
 
+	/**
+	 * Set thread priority.
+	 * 
+	 * @param aPriority
+	 *            priority
+	 * @return {@link ThreadFactoryBuilder}
+	 */
 	public ThreadFactoryBuilder setPriority(final Integer aPriority) {
 		this.priority = aPriority;
 		return this;
@@ -99,6 +139,13 @@ public final class ThreadFactoryBuilder {
 		return uncaughtExceptionHandler;
 	}
 
+	/**
+	 * Set thread {@link UncaughtExceptionHandler}.
+	 * 
+	 * @param aUncaughtExceptionHandler
+	 *            {@link UncaughtExceptionHandler}
+	 * @return {@link ThreadFactoryBuilder}
+	 */
 	public ThreadFactoryBuilder setUncaughtExceptionHandler(final UncaughtExceptionHandler aUncaughtExceptionHandler) {
 		this.uncaughtExceptionHandler = aUncaughtExceptionHandler;
 		return this;
@@ -110,31 +157,31 @@ public final class ThreadFactoryBuilder {
 	 * @return {@link ThreadFactory}
 	 */
 	public ThreadFactory build() {
-		final ThreadFactory dThreadFactory = this.defaultThreadFactory != null ? this.defaultThreadFactory : Executors.defaultThreadFactory();
-		final String nameFormat = this.nameFormat;
-		final Object[] nameFormatArgs = this.nameFormatArgs;
-		final Boolean daemon = this.daemon;
-		final Integer priority = this.priority;
-		final UncaughtExceptionHandler uncaughtExceptionHandler = this.uncaughtExceptionHandler;
+		final ThreadFactory aDefaultThreadFactory = this.defaultThreadFactory != null ? this.defaultThreadFactory : Executors.defaultThreadFactory();
+		final String aNameFormat = this.nameFormat;
+		final Object[] aNameFormatArgs = this.nameFormatArgs;
+		final Boolean aDaemon = this.daemon;
+		final Integer aPriority = this.priority;
+		final UncaughtExceptionHandler aUncaughtExceptionHandler = this.uncaughtExceptionHandler;
 
 		return new ThreadFactory() {
-			private final AtomicLong threadsCount = isNotEmpty(nameFormat) ? new AtomicLong(1) : null;
+			private final AtomicLong threadsCount = isNotEmpty(aNameFormat) ? new AtomicLong(1) : null;
 
 			@Override
 			public Thread newThread(final Runnable r) {
-				final Thread result = dThreadFactory.newThread(r);
+				final Thread result = aDefaultThreadFactory.newThread(r);
 
-				if (isNotEmpty(nameFormat))
-					result.setName(String.format(nameFormat, ArrayUtils.concat(nameFormatArgs, threadsCount.getAndIncrement())));
+				if (isNotEmpty(aNameFormat))
+					result.setName(String.format(aNameFormat, ArrayUtils.concat(aNameFormatArgs, threadsCount.getAndIncrement())));
 
-				if (daemon != null)
-					result.setDaemon(daemon);
+				if (aDaemon != null)
+					result.setDaemon(aDaemon);
 
-				if (priority != null)
-					result.setPriority(priority);
+				if (aPriority != null)
+					result.setPriority(aPriority);
 
-				if (uncaughtExceptionHandler != null)
-					result.setUncaughtExceptionHandler(uncaughtExceptionHandler);
+				if (aUncaughtExceptionHandler != null)
+					result.setUncaughtExceptionHandler(aUncaughtExceptionHandler);
 
 				return result;
 			}
