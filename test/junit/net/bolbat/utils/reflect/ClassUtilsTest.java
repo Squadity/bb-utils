@@ -3,17 +3,16 @@ package net.bolbat.utils.reflect;
 import org.junit.Assert;
 import org.junit.Test;
 
+import net.bolbat.utils.annotation.Mark.ToDo;
+
 /**
  * {@link ClassUtils} test.
  * 
  * @author Alexandr Bolbat
  */
-// TODO write test case for 'executePostConstruct', 'executePreDestroy', 'execute' functionality
+@ToDo("Write test cases for 'executePostConstruct', 'executePreDestroy', 'execute' functionality and resolve other @ToDo")
 public class ClassUtilsTest {
 
-	/**
-	 * Complex test.
-	 */
 	@Test
 	public void complexTest() {
 		Assert.assertEquals(Byte.class, ClassUtils.convertPrimitive(byte.class));
@@ -39,25 +38,51 @@ public class ClassUtilsTest {
 		Assert.assertEquals(boolean.class, ClassUtils.convertNotPrimitive(boolean.class));
 	}
 
-	/**
-	 * Test for reading all types meta data for given type.
-	 */
 	@Test
+	@ToDo("Implement me")
 	public void getAllTypesTest() {
-		// TODO Implement me
 	}
 
-	/**
-	 * Test for reading all fields meta data for given type.
-	 */
 	@Test
-	public void getAllFieldsTest() {
-		// TODO Implement me
+	public void getAllIntefracesTest() {
+		Class<?>[] interfaces = ClassUtils.getAllInterfaces(GlobalImpl.class);
+		Assert.assertNotNull(interfaces);
+		Assert.assertEquals(3, interfaces.length);
+		Assert.assertEquals(Global.class, interfaces[0]);
+		Assert.assertEquals(Parent.class, interfaces[1]);
+		Assert.assertEquals(Root.class, interfaces[2]);
+
+		interfaces = ClassUtils.getAllInterfaces(AbstractParent.class);
+		Assert.assertNotNull(interfaces);
+		Assert.assertEquals(2, interfaces.length);
+		Assert.assertEquals(Parent.class, interfaces[0]);
+		Assert.assertEquals(Root.class, interfaces[1]);
+
+		interfaces = ClassUtils.getAllInterfaces(Global.class);
+		Assert.assertNotNull(interfaces);
+		Assert.assertEquals(2, interfaces.length);
+		Assert.assertEquals(Parent.class, interfaces[0]);
+		Assert.assertEquals(Root.class, interfaces[1]);
+
+		interfaces = ClassUtils.getAllInterfaces(Parent.class);
+		Assert.assertNotNull(interfaces);
+		Assert.assertEquals(1, interfaces.length);
+		Assert.assertEquals(Root.class, interfaces[0]);
+
+		interfaces = ClassUtils.getAllInterfaces(Root.class);
+		Assert.assertNotNull(interfaces);
+		Assert.assertEquals(0, interfaces.length);
+
+		interfaces = ClassUtils.getAllInterfaces(Object.class);
+		Assert.assertNotNull(interfaces);
+		Assert.assertEquals(0, interfaces.length);
 	}
 
-	/**
-	 * Error cases test.
-	 */
+	@Test
+	@ToDo("Implement me")
+	public void getAllFieldsTest() {
+	}
+
 	@Test
 	public void errorCasesTest() {
 		try {
@@ -73,6 +98,21 @@ public class ClassUtilsTest {
 		} catch (IllegalArgumentException e) {
 			Assert.assertTrue("Exception should be there.", true);
 		}
+	}
+
+	public interface Root {
+	}
+
+	public interface Parent extends Root {
+	}
+
+	public interface Global extends Parent {
+	}
+
+	public static class AbstractParent implements Parent {
+	}
+
+	public static class GlobalImpl extends AbstractParent implements Global {
 	}
 
 }

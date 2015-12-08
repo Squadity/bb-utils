@@ -12,10 +12,10 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import net.bolbat.utils.logging.LoggingUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.bolbat.utils.logging.LoggingUtils;
 
 /**
  * {@link Class} utilities.
@@ -54,6 +54,41 @@ public final class ClassUtils {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Get all class interfaces.
+	 * 
+	 * @param type
+	 *            class
+	 * @return array of {@link Class}
+	 */
+	public static Class<?>[] getAllInterfaces(final Class<?> type) {
+		final Set<Class<?>> interfaces = new LinkedHashSet<>();
+
+		if (type != null)
+			fillAllInterfaces(type, interfaces);
+
+		return interfaces.toArray(new Class<?>[interfaces.size()]);
+	}
+
+	/**
+	 * Fill recursively class interfaces to result set.
+	 * 
+	 * @param type
+	 *            class
+	 * @param result
+	 *            result set
+	 */
+	private static void fillAllInterfaces(final Class<?> type, final Set<Class<?>> result) {
+		Class<?> currentClazz = type;
+		while (currentClazz != null) {
+			for (final Class<?> i : currentClazz.getInterfaces())
+				if (result.add(i))
+					fillAllInterfaces(i, result);
+
+			currentClazz = currentClazz.getSuperclass();
+		}
 	}
 
 	/**
