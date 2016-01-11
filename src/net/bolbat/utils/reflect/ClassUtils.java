@@ -1,10 +1,13 @@
 package net.bolbat.utils.reflect;
 
+import static net.bolbat.utils.lang.Validations.checkArgument;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.bolbat.utils.logging.LoggingUtils;
+import net.bolbat.utils.reflect.proxy.ProxyUtils;
 
 /**
  * {@link Class} utilities.
@@ -118,8 +122,7 @@ public final class ClassUtils {
 	 * @return {@link Class} of not primitive analog
 	 */
 	public static Class<?> convertPrimitive(final Class<?> clazz) {
-		if (clazz == null)
-			throw new IllegalArgumentException("clazz argument is null.");
+		checkArgument(clazz != null, "clazz argument is null");
 
 		if (clazz.isAssignableFrom(byte.class) || clazz.isAssignableFrom(Byte.class))
 			return Byte.class;
@@ -151,8 +154,7 @@ public final class ClassUtils {
 	 * @return {@link Class} of primitive analog
 	 */
 	public static Class<?> convertNotPrimitive(Class<?> clazz) {
-		if (clazz == null)
-			throw new IllegalArgumentException("clazz argument is null.");
+		checkArgument(clazz != null, "clazz argument is null");
 
 		if (clazz.isPrimitive()) // if it's already primitive
 			return clazz;
@@ -178,140 +180,65 @@ public final class ClassUtils {
 	}
 
 	/**
-	 * Execute 'post-construct' for given instance.<br>
-	 * Rules for marked methods:<br>
-	 * - MUST be void;<br>
-	 * - MUST NOT have any parameters;<br>
-	 * - MUST NOT be static;<br>
-	 * - MUST NOT throw a checked exception;<br>
-	 * - MAY be final;<br>
-	 * - MAY be public, protected, package private or private;<br>
-	 * - excludes inherited methods;<br>
-	 * - unchecked exceptions are not ignored.
+	 * Execute {@code PostConstruct} methods.<br>
+	 * Check {@code execute(Object,boolean,Class<? extends Annotation>[])} for details.
 	 * 
 	 * @param instance
 	 *            {@link Object}
 	 */
 	public static void executePostConstruct(final Object instance) {
-		if (instance == null)
-			throw new IllegalArgumentException("instance argument is null.");
-
-		for (final Method m : instance.getClass().getDeclaredMethods()) {
-			final Annotation a = m.getAnnotation(PostConstruct.class);
-			if (a == null)
-				continue;
-
-			// The return type MUST be void
-			if (!m.getReturnType().equals(Void.TYPE)) {
-				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST be void]");
-				continue;
-			}
-
-			// The method MUST NOT have any parameters
-			if (m.getParameterTypes().length > 0) {
-				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST NOT have any parameters]");
-				continue;
-			}
-
-			// The method MUST NOT be static
-			if (Modifier.isStatic(m.getModifiers())) {
-				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST NOT be static]");
-				continue;
-			}
-
-			boolean isBreak = false;
-			// The method MUST NOT throw a checked exception
-			for (final Class<?> exception : m.getExceptionTypes())
-				if (!RuntimeException.class.isAssignableFrom(exception)) {
-					isBreak = true;
-					break;
-				}
-
-			if (isBreak) {
-				LoggingUtils.trace(LOGGER, "Skipping @PostConstruct method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
-				continue;
-			}
-
-			// processing
-			try {
-				m.setAccessible(true);
-				m.invoke(instance);
-				// CHECKSTYLE:OFF
-			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
-				final String message = "Can't execute @PostConstruct method[" + m + "]";
-				LoggingUtils.error(LOGGER, message, e);
-				throw new RuntimeException(message, e); // Maybe should be some other exception?
-				// CHECKSTYLE:ON
-			}
-		}
+		executePostConstruct(instance, false);
 	}
 
 	/**
-	 * Execute 'pre-destroy' for given instance.<br>
-	 * Rules for marked methods:<br>
-	 * - MUST be void;<br>
-	 * - MUST NOT have any parameters;<br>
-	 * - MUST NOT be static;<br>
-	 * - MUST NOT throw a checked exception;<br>
-	 * - MAY be final;<br>
-	 * - MAY be public, protected, package private or private;<br>
-	 * - excludes inherited methods;<br>
-	 * - unchecked exceptions ignored, cause logged with 'DEBUG' level.
+	 * Execute {@code PostConstruct} methods.<br>
+	 * Check {@code execute(Object,boolean,Class<? extends Annotation>[])} for details.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 * @param unwrapIfProxy
+	 *            if <code>true</code> try to unwrap if instance if a {@link Proxy} by {@code ProxyUtils.unwrapProxy(proxy)}
+	 */
+	public static void executePostConstruct(final Object instance, final boolean unwrapIfProxy) {
+		execute(instance, unwrapIfProxy, PostConstruct.class);
+	}
+
+	/**
+	 * Execute {@code @PreDestroy} methods.<br>
+	 * Check {@code execute(Object,boolean,Class<? extends Annotation>[])} for details.
 	 * 
 	 * @param instance
 	 *            {@link Object}
 	 */
 	public static void executePreDestroy(final Object instance) {
-		if (instance == null)
-			throw new IllegalArgumentException("instance argument is null.");
+		executePreDestroy(instance, false);
+	}
 
-		for (final Method m : instance.getClass().getDeclaredMethods()) {
-			final Annotation a = m.getAnnotation(PreDestroy.class);
-			if (a == null)
-				continue;
+	/**
+	 * Execute {@code @PreDestroy} methods.<br>
+	 * Check {@code execute(Object,boolean,Class<? extends Annotation>[])} for details.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 * @param unwrapIfProxy
+	 *            if <code>true</code> try to unwrap if instance if a {@link Proxy} by {@code ProxyUtils.unwrapProxy(proxy)}
+	 */
+	public static void executePreDestroy(final Object instance, final boolean unwrapIfProxy) {
+		execute(instance, unwrapIfProxy, PreDestroy.class);
+	}
 
-			// The return type MUST be void
-			if (!m.getReturnType().equals(Void.TYPE)) {
-				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST be void]");
-				continue;
-			}
-
-			// The method MUST NOT have any parameters
-			if (m.getParameterTypes().length > 0) {
-				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST NOT have any parameters]");
-				continue;
-			}
-
-			// The method MUST NOT be static
-			if (Modifier.isStatic(m.getModifiers())) {
-				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST NOT be static]");
-				continue;
-			}
-
-			boolean isBreak = false;
-			// The method MUST NOT throw a checked exception
-			for (final Class<?> exception : m.getExceptionTypes())
-				if (!RuntimeException.class.isAssignableFrom(exception)) {
-					isBreak = true;
-					break;
-				}
-
-			if (isBreak) {
-				LoggingUtils.trace(LOGGER, "Skipping @PreDestroy method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
-				continue;
-			}
-
-			// processing
-			try {
-				m.setAccessible(true);
-				m.invoke(instance);
-				// CHECKSTYLE:OFF
-			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
-				// CHECKSTYLE:ON
-				// If the method throws an exception it is ignored
-				LoggingUtils.debug(LOGGER, "Can't execute @PreDestroy method[" + m + "]", e);
-			}
-		}
+	/**
+	 * Execute all methods for given instance marked with at least one of given annotations.<br>
+	 * Check {@code execute(Object,boolean,Class<? extends Annotation>[])} for details.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 * @param annotations
+	 *            annotations types
+	 */
+	@SafeVarargs
+	public static void execute(final Object instance, final Class<? extends Annotation>... annotations) {
+		execute(instance, false, annotations);
 	}
 
 	/**
@@ -324,21 +251,33 @@ public final class ClassUtils {
 	 * - MAY be final;<br>
 	 * - MAY be public, protected, package private or private;<br>
 	 * - excludes inherited methods;<br>
-	 * - unchecked exceptions ignored, cause logged with 'DEBUG' level.
+	 * - unchecked exceptions ignored, cause logged with 'WARN' or 'DEBUG' level.
 	 * 
 	 * @param instance
 	 *            {@link Object}
+	 * @param unwrapIfProxy
+	 *            if <code>true</code> try to unwrap if instance if a {@link Proxy} by {@code ProxyUtils.unwrapProxy(proxy)}
 	 * @param annotations
 	 *            annotations types
 	 */
 	@SafeVarargs
-	public static void execute(final Object instance, final Class<? extends Annotation>... annotations) {
-		if (instance == null)
-			throw new IllegalArgumentException("instance argument is null.");
+	public static void execute(final Object instance, final boolean unwrapIfProxy, final Class<? extends Annotation>... annotations) {
+		checkArgument(instance != null, "instance argument is null");
 		if (annotations == null || annotations.length == 0)
 			return;
 
-		for (final Method m : instance.getClass().getDeclaredMethods()) {
+		// unwrapping if proxy and invocation handler is supported
+		Object target = instance;
+		if (unwrapIfProxy)
+			try {
+				target = ProxyUtils.unwrapProxy(target);
+				// CHECKSTYLE:OFF
+			} catch (final RuntimeException e) {
+				// CHECKSTYLE:ON
+				LoggingUtils.warn(LOGGER, "Can't unwrap from proxy[" + target + "]", e);
+			}
+
+		for (final Method m : target.getClass().getDeclaredMethods()) {
 			boolean process = false;
 			for (final Class<? extends Annotation> aClass : annotations) {
 				if (aClass != null && m.getAnnotation(aClass) != null) {
@@ -352,19 +291,19 @@ public final class ClassUtils {
 
 			// The return type MUST be void
 			if (!m.getReturnType().equals(Void.TYPE)) {
-				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST be void]");
+				LoggingUtils.debug(LOGGER, "Skipping method[" + m + "] execution, cause[MUST be void]");
 				continue;
 			}
 
 			// The method MUST NOT have any parameters
 			if (m.getParameterTypes().length > 0) {
-				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT have any parameters]");
+				LoggingUtils.debug(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT have any parameters]");
 				continue;
 			}
 
 			// The method MUST NOT be static
 			if (Modifier.isStatic(m.getModifiers())) {
-				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT be static]");
+				LoggingUtils.debug(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT be static]");
 				continue;
 			}
 
@@ -377,19 +316,18 @@ public final class ClassUtils {
 				}
 
 			if (isBreak) {
-				LoggingUtils.trace(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
+				LoggingUtils.debug(LOGGER, "Skipping method[" + m + "] execution, cause[MUST NOT throw a checked exception]");
 				continue;
 			}
 
 			// processing
 			try {
 				m.setAccessible(true);
-				m.invoke(instance);
+				m.invoke(target);
 				// CHECKSTYLE:OFF
 			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
 				// CHECKSTYLE:ON
-				// If the method throws an exception it is ignored
-				LoggingUtils.debug(LOGGER, "Can't execute method[" + m + "]", e);
+				LoggingUtils.warn(LOGGER, "Can't execute method[" + m + "]", e);
 			}
 		}
 	}

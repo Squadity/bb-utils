@@ -24,6 +24,18 @@ public final class CastUtils {
 	}
 
 	/**
+	 * Cast {@link Object} to expected type.
+	 * 
+	 * @param object
+	 *            {@link Object}
+	 * @return {@link Object} with expected type
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T cast(final Object object) {
+		return (T) object;
+	}
+
+	/**
 	 * Cast {@link Object} to {@link List}.
 	 * 
 	 * @param object
@@ -32,7 +44,7 @@ public final class CastUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> castList(final Object object) {
-		return object != null ? (List<T>) object : null;
+		return (List<T>) object;
 	}
 
 	/**
@@ -44,7 +56,7 @@ public final class CastUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Set<T> castSet(final Object object) {
-		return object != null ? (Set<T>) object : null;
+		return (Set<T>) object;
 	}
 
 	/**
@@ -56,7 +68,7 @@ public final class CastUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <K, V> Map<K, V> castMap(final Object object) {
-		return object != null ? (Map<K, V>) object : null;
+		return (Map<K, V>) object;
 	}
 
 }

@@ -22,13 +22,19 @@ public class CastUtilsTest {
 	 */
 	@Test
 	public void complexTest() {
+		Assert.assertNull(CastUtils.cast(null));
 		Assert.assertNull(CastUtils.castList(null));
 		Assert.assertNull(CastUtils.castSet(null));
 		Assert.assertNull(CastUtils.castMap(null));
 
+		Object rawString = "string";
 		Object rawList = new ArrayList<String>();
 		Object rawSet = new HashSet<String>();
 		Object rawMap = new HashMap<String, String>();
+
+		final String string = CastUtils.cast(rawString);
+		Assert.assertNotNull(string);
+		Assert.assertSame(rawString, string);
 
 		final List<String> list = CastUtils.castList(rawList);
 		Assert.assertNotNull(list);
