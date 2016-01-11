@@ -44,7 +44,7 @@ public abstract class AdvisedHandler implements Advised, InvocationHandler {
 
 	@Override
 	public Class<?>[] getProxiedInterfaces() {
-		return interfaces;
+		return interfaces.clone();
 	}
 
 }

@@ -64,14 +64,12 @@ public final class ProxyUtils {
 		while (Proxy.isProxyClass(result.getClass())) {
 			final InvocationHandler handler = Proxy.getInvocationHandler(result);
 			boolean unwrapped = false;
-			for (final ProxyHandlerSupport support : HANDLERS_SUPPORTS.values()) {
-				if (!support.getHandlerClass().isAssignableFrom(handler.getClass()))
-					continue;
-
-				result = support.getTarget(handler);
-				unwrapped = true;
-				break;
-			}
+			for (final ProxyHandlerSupport support : HANDLERS_SUPPORTS.values())
+				if (support.getHandlerClass().isAssignableFrom(handler.getClass())) {
+					result = support.getTarget(handler);
+					unwrapped = true;
+					break;
+				}
 
 			if (!unwrapped)
 				throw new ProxyHandlerUnsupportedException(handler.getClass());
