@@ -52,7 +52,6 @@
 		<connection>scm:git:ssh://git@bitbucket.infra.bolbat.net:9074/BBUTILS/main.git</connection>
 		<developerConnection>scm:git:ssh://git@bitbucket.infra.bolbat.net:9074/BBUTILS/main.git</developerConnection>
 		<url>http://bitbucket.infra.bolbat.net/scm/BBUTILS/main.git</url>
-		<tag>bb-utils-0.2.7</tag>
 	</scm>
 
 </project>
