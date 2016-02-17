@@ -119,7 +119,7 @@ public final class TimeUtils {
 	 *
 	 * @author Alexandr Bolbat
 	 */
-	public static enum Rounding {
+	public enum Rounding {
 
 		/**
 		 * No rounding.
@@ -140,7 +140,7 @@ public final class TimeUtils {
 	/**
 	 * Time unit measure.
 	 */
-	public static enum TimeUnit {
+	public enum TimeUnit {
 		/**
 		 * Represent 'second'.
 		 */
@@ -206,7 +206,7 @@ public final class TimeUtils {
 		 * @param biggestDependingField
 		 *            biggest calendar field, on which current entry has dependency
 		 */
-		private TimeUnit(final int biggestDependingField) {
+		TimeUnit(final int biggestDependingField) {
 			this(biggestDependingField, null);
 		}
 
@@ -218,7 +218,7 @@ public final class TimeUtils {
 		 * @param dependingUnit
 		 *            {@link TimeUnit} linked depending unit
 		 */
-		private TimeUnit(final int biggestDependingField, final TimeUnit dependingUnit) {
+		TimeUnit(final int biggestDependingField, final TimeUnit dependingUnit) {
 			dependingCalendarFields = new ArrayList<>();
 			dependingCalendarFields.add(biggestDependingField);
 			if (dependingUnit != null)

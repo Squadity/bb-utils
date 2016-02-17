@@ -29,6 +29,8 @@ public final class Mark {
 
 		/**
 		 * Description.
+		 * 
+		 * @return {@link String}
 		 */
 		String value() default "";
 
@@ -43,6 +45,8 @@ public final class Mark {
 
 		/**
 		 * Description.
+		 * 
+		 * @return {@link String}
 		 */
 		String value() default "";
 
@@ -57,6 +61,8 @@ public final class Mark {
 
 		/**
 		 * Description.
+		 * 
+		 * @return {@link String}
 		 */
 		String value() default "";
 
@@ -71,6 +77,8 @@ public final class Mark {
 
 		/**
 		 * Description.
+		 * 
+		 * @return {@link String}
 		 */
 		String value() default "";
 

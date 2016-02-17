@@ -107,7 +107,7 @@ public final class DigestUtils {
 		 * @param aAlgorithmName
 		 *            algorithm key
 		 */
-		private Algorithm(final String aAlgorithmName) {
+		Algorithm(final String aAlgorithmName) {
 			this.algorithmName = aAlgorithmName;
 		}
 
