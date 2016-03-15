@@ -3,16 +3,16 @@ package net.bolbat.utils.concurrency.lock;
 import static net.bolbat.utils.lang.Validations.checkArgument;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import net.bolbat.utils.annotation.Audience;
 import net.bolbat.utils.annotation.Concurrency;
 import net.bolbat.utils.annotation.Stability;
 
 /**
- * Safe {@link IdBasedLockManager} implementation.
+ * Unsafe {@link IdBasedLockManager} implementation.
  * 
  * @author Alexandr Bolbat
  * 
@@ -22,22 +22,17 @@ import net.bolbat.utils.annotation.Stability;
 @Audience.Public
 @Stability.Stable
 @Concurrency.ThreadSafe
-public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
+public final class UnsafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 
 	/**
 	 * Generated SerialVersionUID.
 	 */
-	private static final long serialVersionUID = -7874697154191192576L;
+	private static final long serialVersionUID = 674166364226128518L;
 
 	/**
 	 * Locks storage.
 	 */
-	private final Map<T, IdBasedLock<T>> locks = new HashMap<>();
-
-	/**
-	 * Synchronization lock.
-	 */
-	private final Object synchLock = new Object();
+	private final ConcurrentMap<T, IdBasedLock<T>> locks = new ConcurrentHashMap<>();
 
 	@Override
 	public List<T> getLocksIds() {
@@ -53,28 +48,28 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 	public IdBasedLock<T> obtainLock(T id) {
 		checkArgument(id != null, "id argument is null");
 
-		synchronized (synchLock) {
-			IdBasedLock<T> lock = locks.get(id);
-			if (lock == null) {
-				lock = new IdBasedLock<>(id, this);
-				locks.put(id, lock);
-			}
+		final IdBasedLock<T> lock = new IdBasedLock<>(id, this);
+		final IdBasedLock<T> fromMap = locks.putIfAbsent(id, lock);
+		if (fromMap != null) { // already exist lock
+			fromMap.increaseReferences();
+			if (fromMap.getReferencesCount() == 1) // if they already released from "locks" by other thread
+				locks.put(id, fromMap); // if result of put is not null - then we are in trouble and this is why this implementation is unsafe
 
-			lock.increaseReferences();
-			return lock;
+			return fromMap;
 		}
+
+		lock.increaseReferences();
+		return lock;
 	}
 
 	@Override
 	public void releaseLock(final IdBasedLock<T> lock) {
 		checkArgument(lock != null, "lock argument is null");
 
-		synchronized (synchLock) {
-			if (lock.getReferencesCount() == 1)
-				locks.remove(lock.getId());
+		if (lock.getReferencesCount() == 1)
+			locks.remove(lock.getId());
 
-			lock.decreaseReferences();
-		}
+		lock.decreaseReferences();
 	}
 
 	@Override

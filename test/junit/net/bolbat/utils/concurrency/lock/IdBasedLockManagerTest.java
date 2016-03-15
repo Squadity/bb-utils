@@ -128,6 +128,22 @@ public final class IdBasedLockManagerTest {
 	}
 
 	/**
+	 * {@link UnsafeIdBasedLockManager} test.
+	 */
+	@Test
+	public void unsafeLockManagerTest() {
+		final IdBasedLockManager<String> lockManager = new UnsafeIdBasedLockManager<>();
+		lockManagerTestExecutor(lockManager);
+
+		// checking results
+		Assert.assertEquals(0, lockManager.getLocksCount());
+		Assert.assertNotNull(lockManager.getLocksIds());
+		Assert.assertEquals(0, lockManager.getLocksIds().size());
+		Assert.assertEquals(1, MAX_ACTIVE_CALLS.get()); // should not more then 1
+		Assert.assertEquals(THREADS * CALLS_PER_THREAD, PROCESSED_CALLS.get());
+	}
+
+	/**
 	 * {@link IdBasedLockManager} test executor.
 	 * 
 	 * @param lockManager
