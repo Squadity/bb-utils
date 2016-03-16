@@ -85,16 +85,20 @@ public class IdBasedLock<T> implements Serializable {
 
 	/**
 	 * Increase references count.
+	 * 
+	 * @return increased value as <code>int</code>
 	 */
-	protected void increaseReferences() {
-		referencesCount.incrementAndGet();
+	protected int increaseReferences() {
+		return referencesCount.incrementAndGet();
 	}
 
 	/**
 	 * Decrease references count.
+	 * 
+	 * @return decreased value as <code>int</code>
 	 */
-	protected void decreaseReferences() {
-		referencesCount.decrementAndGet();
+	protected int decreaseReferences() {
+		return referencesCount.decrementAndGet();
 	}
 
 	/**

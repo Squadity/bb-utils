@@ -70,10 +70,8 @@ public final class SafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
 		checkArgument(lock != null, "lock argument is null");
 
 		synchronized (synchLock) {
-			if (lock.getReferencesCount() == 1)
+			if (lock.decreaseReferences() == 0)
 				locks.remove(lock.getId());
-
-			lock.decreaseReferences();
 		}
 	}
 

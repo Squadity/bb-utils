@@ -20,9 +20,9 @@ import net.bolbat.utils.annotation.Stability;
  *            locking id type
  */
 @Audience.Public
-@Stability.Stable
+@Stability.Evolving
 @Concurrency.ThreadSafe
-public final class UnsafeIdBasedLockManager<T> implements IdBasedLockManager<T> {
+public final class ConcurrentIdBasedLockManager<T> implements IdBasedLockManager<T> {
 
 	/**
 	 * Generated SerialVersionUID.
@@ -49,27 +49,32 @@ public final class UnsafeIdBasedLockManager<T> implements IdBasedLockManager<T> 
 		checkArgument(id != null, "id argument is null");
 
 		final IdBasedLock<T> lock = new IdBasedLock<>(id, this);
-		final IdBasedLock<T> fromMap = locks.putIfAbsent(id, lock);
-		if (fromMap != null) { // already exist lock
-			fromMap.increaseReferences();
-			if (fromMap.getReferencesCount() == 1) // if they already released from "locks" by other thread
-				locks.put(id, fromMap); // if result of put is not null - then we are in trouble and this is why this implementation is unsafe
+		lock.increaseReferences();
 
-			return fromMap;
+		final IdBasedLock<T> fromMap = locks.putIfAbsent(id, lock);
+		if (fromMap == null)
+			return lock;
+
+		synchronized (fromMap) {
+			if (fromMap.increaseReferences() == 1) { // if they already released from "locks" by other thread
+				IdBasedLock<T> tmp = null;
+				do {
+					tmp = locks.putIfAbsent(id, fromMap);
+				} while ((tmp == null) || (tmp != null && tmp != fromMap));
+			}
 		}
 
-		lock.increaseReferences();
-		return lock;
+		return fromMap;
 	}
 
 	@Override
 	public void releaseLock(final IdBasedLock<T> lock) {
 		checkArgument(lock != null, "lock argument is null");
 
-		if (lock.getReferencesCount() == 1)
-			locks.remove(lock.getId());
-
-		lock.decreaseReferences();
+		synchronized (lock) {
+			if (lock.decreaseReferences() == 0)
+				locks.remove(lock.getId());
+		}
 	}
 
 	@Override
