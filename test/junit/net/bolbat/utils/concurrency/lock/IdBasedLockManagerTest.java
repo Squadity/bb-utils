@@ -244,7 +244,7 @@ public final class IdBasedLockManagerTest {
 		}
 
 		Assert.assertEquals(THREADS * CALLS_PER_THREAD, processedTotal);
-		Assert.assertEquals(THREADS, ACTIVE_MAX_CALLS.get()); // should be equal to threads amount
+		Assert.assertTrue(THREADS >= ACTIVE_MAX_CALLS.get()); // should be not more then threads amount
 		Assert.assertEquals(0, unsafeTotal);
 	}
 
