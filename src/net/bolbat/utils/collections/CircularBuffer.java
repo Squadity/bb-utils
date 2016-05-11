@@ -6,13 +6,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.bolbat.utils.annotation.Audience;
 import net.bolbat.utils.annotation.Concurrency;
 import net.bolbat.utils.annotation.Stability;
-import net.bolbat.utils.lang.CastUtils;
 import net.bolbat.utils.lang.ToStringUtils;
 
 /**
@@ -40,46 +40,18 @@ public class CircularBuffer<E> implements Serializable {
 	private final AtomicInteger lastIndex = new AtomicInteger();
 
 	/**
-	 * Elements array.<br>
-	 * It will be always {@link Object} array instance.
+	 * Elements list.
 	 */
-	private final E[] elements;
-
-	/**
-	 * Elements size.
-	 */
-	private final int size;
-
-	/**
-	 * Is elements array are empty.
-	 */
-	private final boolean empty;
+	private final List<E> elements;
 
 	/**
 	 * Default constructor.
 	 * 
 	 * @param aElements
-	 *            elements array
+	 *            elements list
 	 */
-	@SuppressWarnings("unchecked")
-	private CircularBuffer(final Object[] aElements) {
-		this.elements = (E[]) aElements;
-		this.size = aElements.length;
-		this.empty = aElements.length == 0;
-	}
-
-	/**
-	 * Create {@link CircularBuffer} from {@link Collection}.
-	 * 
-	 * @param aElements
-	 *            elements
-	 * @return {@link CircularBuffer}
-	 */
-	public static <E> CircularBuffer<E> of(final Collection<E> aElements) {
-		checkArgument(aElements != null, "aElements argument is null");
-
-		final E[] array = CastUtils.cast(aElements.toArray());
-		return of(array);
+	private CircularBuffer(final List<E> aElements) {
+		this.elements = aElements != null ? aElements : new ArrayList<E>();
 	}
 
 	/**
@@ -93,7 +65,20 @@ public class CircularBuffer<E> implements Serializable {
 	public static <E> CircularBuffer<E> of(final E... aElements) {
 		checkArgument(aElements != null, "aElements argument is null");
 
-		return new CircularBuffer<>(Arrays.copyOf(aElements, aElements.length, Object[].class));
+		return of(Arrays.asList(aElements));
+	}
+
+	/**
+	 * Create {@link CircularBuffer} from {@link Collection}.
+	 * 
+	 * @param aElements
+	 *            elements
+	 * @return {@link CircularBuffer}
+	 */
+	public static <E> CircularBuffer<E> of(final Collection<E> aElements) {
+		checkArgument(aElements != null, "aElements argument is null");
+
+		return new CircularBuffer<>(new ArrayList<>(aElements));
 	}
 
 	/**
@@ -102,31 +87,31 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return next element or <code>null</code> if element is <code>null</code> or elements array is empty
 	 */
 	public E get() {
-		return empty ? null : elements[Math.abs(lastIndex.incrementAndGet()) % size];
+		return elements.isEmpty() ? null : elements.get(Math.abs(lastIndex.incrementAndGet()) % elements.size());
 	}
 
 	/**
 	 * Get element by index.<br>
-	 * {@link ArrayIndexOutOfBoundsException} will be thrown if elements array is empty or index out of elements array bounds.
+	 * {@link IndexOutOfBoundsException} will be thrown if elements list is empty or index out of elements list bounds.
 	 * 
 	 * @param index
 	 *            element index
 	 * @return element
 	 */
 	public E get(final int index) {
-		if (empty || index < 0 || index >= size)
-			throw new ArrayIndexOutOfBoundsException(index);
+		if (elements.isEmpty() || index < 0 || index >= elements.size())
+			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + elements.size());
 
-		return elements[index];
+		return elements.get(index);
 	}
 
 	/**
-	 * Get elements array.
+	 * Get elements list (unmodifiable).
 	 * 
-	 * @return elements array copy or <code>null</code> if elements array is empty
+	 * @return unmodifiable elements list
 	 */
-	public E[] getAll() {
-		return empty ? null : Arrays.copyOf(elements, size);
+	public List<E> getAll() {
+		return Collections.unmodifiableList(elements);
 	}
 
 	/**
@@ -135,7 +120,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>int</code>
 	 */
 	public int lastIndex() {
-		return Math.abs(lastIndex.get()) % size;
+		return Math.abs(lastIndex.get()) % elements.size();
 	}
 
 	/**
@@ -144,7 +129,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>true</code> if empty or <code>false</code>
 	 */
 	public boolean isEmpty() {
-		return empty;
+		return elements.isEmpty();
 	}
 
 	/**
@@ -153,7 +138,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>int</code>
 	 */
 	public int size() {
-		return size;
+		return elements.size();
 	}
 
 	/**
@@ -164,14 +149,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>true</code> if contains or <code>false</code>
 	 */
 	public boolean contains(final E element) {
-		if (empty)
-			return false;
-
-		for (final E e : elements)
-			if (isEquals(element, e))
-				return true;
-
-		return false;
+		return elements.isEmpty() ? false : elements.contains(element);
 	}
 
 	/**
@@ -182,7 +160,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return new buffer instance
 	 */
 	public CircularBuffer<E> add(final E element) {
-		final List<E> result = new ArrayList<>(Arrays.asList(elements));
+		final List<E> result = new ArrayList<>(elements);
 		result.add(element);
 		return of(result);
 	}
@@ -195,8 +173,8 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return new buffer instance
 	 */
 	public CircularBuffer<E> remove(final E element) {
-		if (empty)
-			return new CircularBuffer<>(new Object[0]);
+		if (elements.isEmpty())
+			return new CircularBuffer<>(null);
 
 		final List<E> result = new ArrayList<>();
 		for (final E e : elements)
