@@ -216,7 +216,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>true</code> if equals or <code>false</code>
 	 */
 	private boolean isEquals(final E first, final E second) {
-		return (first != null && first.equals(second)) || (first == null && second == null);
+		return first != null && first.equals(second) || first == null && second == null;
 	}
 
 	@Override
