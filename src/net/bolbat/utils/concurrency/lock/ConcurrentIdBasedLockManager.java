@@ -60,7 +60,7 @@ public final class ConcurrentIdBasedLockManager<T> implements IdBasedLockManager
 				IdBasedLock<T> tmp = null;
 				do {
 					tmp = locks.putIfAbsent(id, fromMap);
-				} while ((tmp == null) || (tmp != null && tmp != fromMap));
+				} while (tmp == null || tmp != null && tmp != fromMap);
 			}
 		}
 
