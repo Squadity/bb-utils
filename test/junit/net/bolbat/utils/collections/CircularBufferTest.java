@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Alexandr Bolbat
  */
-// TODO finish me with good code coverage for testing class
 public class CircularBufferTest {
 
 	/**
@@ -28,12 +27,12 @@ public class CircularBufferTest {
 	/**
 	 * Testing threads amount.
 	 */
-	private static final int THREADS = 100;
+	private static final int THREADS = 4;
 
 	/**
 	 * Thread test calls amount.
 	 */
-	private static final int CALLS_PER_THREAD = 10000;
+	private static final int CALLS_PER_THREAD = 250000;
 
 	/**
 	 * Testing instance.
@@ -51,21 +50,71 @@ public class CircularBufferTest {
 	}
 
 	@Test
-	public void complexTestOnArray() {
+	public void complexOnArray() {
 		buffer = CircularBuffer.of(new AtomicInteger(), new AtomicInteger(), new AtomicInteger(), new AtomicInteger());
-		complexTest();
+		complexScenario();
 	}
 
 	@Test
-	public void complexTestOnList() {
+	public void complexOnList() {
 		buffer = CircularBuffer.of(new ArrayList<>(Arrays.asList(new AtomicInteger(), new AtomicInteger(), new AtomicInteger(), new AtomicInteger())));
-		complexTest();
+		complexScenario();
+	}
+
+	@Test
+	public void contains() {
+		final String nullString = null;
+		Assert.assertTrue(CircularBuffer.of(nullString).contains(null));
+		Assert.assertFalse(CircularBuffer.of().contains(null));
+
+		CircularBuffer<String> b = CircularBuffer.of("1", "2", "3");
+		Assert.assertTrue(b.contains("1"));
+		Assert.assertFalse(b.contains("4"));
+		Assert.assertFalse(b.contains(null));
+
+		b = b.add(null);
+		Assert.assertTrue(b.contains(null));
+	}
+
+	@Test
+	public void add() {
+		final CircularBuffer<String> original = CircularBuffer.of();
+		Assert.assertEquals(0, original.size());
+
+		CircularBuffer<String> b = original.add("1");
+		Assert.assertEquals(1, b.size());
+		Assert.assertNotSame(original, b);
+
+		b = b.add(null);
+		Assert.assertEquals(2, b.size());
+	}
+
+	@Test
+	public void remove() {
+		final CircularBuffer<String> original = CircularBuffer.of("1", "2", "3", null, "2");
+		Assert.assertEquals(5, original.size());
+
+		CircularBuffer<String> b = original.remove("1");
+		Assert.assertEquals(4, b.size());
+		Assert.assertFalse(b.contains("1"));
+		Assert.assertTrue(b.contains("2"));
+		Assert.assertTrue(b.contains("3"));
+		Assert.assertTrue(b.contains(null));
+
+		b = b.remove("2");
+		Assert.assertEquals(2, b.size());
+		Assert.assertTrue(b.contains("3"));
+		Assert.assertTrue(b.contains(null));
+
+		b = b.remove(null);
+		Assert.assertEquals(1, b.size());
+		Assert.assertTrue(b.contains("3"));
 	}
 
 	/**
-	 * Complex test.
+	 * Complex testing scenario.
 	 */
-	public void complexTest() {
+	public void complexScenario() {
 		final CountDownLatch starter = new CountDownLatch(1);
 		final CountDownLatch finisher = new CountDownLatch(THREADS);
 

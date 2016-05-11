@@ -1,18 +1,23 @@
 package net.bolbat.utils.collections;
 
+import static net.bolbat.utils.lang.Validations.checkArgument;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.bolbat.utils.annotation.Audience;
 import net.bolbat.utils.annotation.Concurrency;
 import net.bolbat.utils.annotation.Stability;
+import net.bolbat.utils.lang.CastUtils;
 import net.bolbat.utils.lang.ToStringUtils;
 
 /**
  * Circular buffer implementation for situations when we need to obtain each time next value from the original collection in circular way.<br>
- * This implementation is thread safe.
+ * This implementation is thread safe and immutable.
  * 
  * @author Alexandr Bolbat
  *
@@ -35,7 +40,8 @@ public class CircularBuffer<E> implements Serializable {
 	private final AtomicInteger lastIndex = new AtomicInteger();
 
 	/**
-	 * Elements array.
+	 * Elements array.<br>
+	 * It will be always {@link Object} array instance.
 	 */
 	private final E[] elements;
 
@@ -55,11 +61,9 @@ public class CircularBuffer<E> implements Serializable {
 	 * @param aElements
 	 *            elements array
 	 */
-	private CircularBuffer(final E[] aElements) {
-		if (aElements == null)
-			throw new IllegalArgumentException("aElements argument is null");
-
-		this.elements = aElements;
+	@SuppressWarnings("unchecked")
+	private CircularBuffer(final Object[] aElements) {
+		this.elements = (E[]) aElements;
 		this.size = aElements.length;
 		this.empty = aElements.length == 0;
 	}
@@ -71,12 +75,11 @@ public class CircularBuffer<E> implements Serializable {
 	 *            elements
 	 * @return {@link CircularBuffer}
 	 */
-	@SuppressWarnings("unchecked")
 	public static <E> CircularBuffer<E> of(final Collection<E> aElements) {
-		if (aElements == null)
-			throw new IllegalArgumentException("aElements argument is null");
+		checkArgument(aElements != null, "aElements argument is null");
 
-		return new CircularBuffer<>((E[]) aElements.toArray(new Object[aElements.size()]));
+		final E[] array = CastUtils.cast(aElements.toArray());
+		return of(array);
 	}
 
 	/**
@@ -88,10 +91,9 @@ public class CircularBuffer<E> implements Serializable {
 	 */
 	@SafeVarargs
 	public static <E> CircularBuffer<E> of(final E... aElements) {
-		if (aElements == null)
-			throw new IllegalArgumentException("aElements argument is null");
+		checkArgument(aElements != null, "aElements argument is null");
 
-		return new CircularBuffer<>(Arrays.copyOf(aElements, aElements.length));
+		return new CircularBuffer<>(Arrays.copyOf(aElements, aElements.length, Object[].class));
 	}
 
 	/**
@@ -137,7 +139,7 @@ public class CircularBuffer<E> implements Serializable {
 	}
 
 	/**
-	 * Is elements array are empty.
+	 * Is this buffer is empty.
 	 * 
 	 * @return <code>true</code> if empty or <code>false</code>
 	 */
@@ -146,12 +148,75 @@ public class CircularBuffer<E> implements Serializable {
 	}
 
 	/**
-	 * Get elements array size.
+	 * Get this buffer size.
 	 * 
 	 * @return <code>int</code>
 	 */
 	public int size() {
 		return size;
+	}
+
+	/**
+	 * Check is this buffer contains given element.
+	 * 
+	 * @param element
+	 *            element
+	 * @return <code>true</code> if contains or <code>false</code>
+	 */
+	public boolean contains(final E element) {
+		if (empty)
+			return false;
+
+		for (final E e : elements)
+			if (isEquals(element, e))
+				return true;
+
+		return false;
+	}
+
+	/**
+	 * Create this buffer copy with added given element to the end.
+	 * 
+	 * @param element
+	 *            element to add
+	 * @return new buffer instance
+	 */
+	public CircularBuffer<E> add(final E element) {
+		final List<E> result = new ArrayList<>(Arrays.asList(elements));
+		result.add(element);
+		return of(result);
+	}
+
+	/**
+	 * Create this buffer copy with removed given element (all occurrences in original buffer).
+	 * 
+	 * @param element
+	 *            element to remove
+	 * @return new buffer instance
+	 */
+	public CircularBuffer<E> remove(final E element) {
+		if (empty)
+			return new CircularBuffer<>(new Object[0]);
+
+		final List<E> result = new ArrayList<>();
+		for (final E e : elements)
+			if (!isEquals(element, e))
+				result.add(e);
+
+		return of(result);
+	}
+
+	/**
+	 * Check is first element equals to second.
+	 * 
+	 * @param first
+	 *            first
+	 * @param second
+	 *            second
+	 * @return <code>true</code> if equals or <code>false</code>
+	 */
+	private boolean isEquals(final E first, final E second) {
+		return (first != null && first.equals(second)) || (first == null && second == null);
 	}
 
 	@Override
