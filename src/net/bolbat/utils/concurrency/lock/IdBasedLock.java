@@ -1,6 +1,7 @@
 package net.bolbat.utils.concurrency.lock;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -60,18 +61,90 @@ public class IdBasedLock<T> implements Serializable {
 	}
 
 	/**
-	 * Lock.
+	 * Acquires the lock.<br>
+	 * Check <code>ReentrantLock.lock()</code> for details.
 	 */
 	public void lock() {
 		lock.lock();
 	}
 
 	/**
-	 * Unlock.
+	 * Try to acquires the lock.<br>
+	 * Check <code>ReentrantLock.tryLock()</code> for details.
+	 *
+	 * @return {@code true} if the lock was free and was acquired by the current thread, or the lock was already held by the current thread; and {@code false}
+	 *         otherwise
+	 */
+	public boolean tryLock() {
+		return lock.tryLock();
+	}
+
+	/**
+	 * Try to acquires the lock.<br>
+	 * Check <code>ReentrantLock.tryLock(timeout, unit)</code> for details.
+	 * 
+	 * @param timeout
+	 *            the time to wait for the lock
+	 * @param unit
+	 *            the time unit of the timeout argument
+	 * @return {@code true} if the lock was free and was acquired by the current thread or the lock was already held by the current thread and {@code false} if
+	 *         the waiting time elapsed before the lock could be acquired
+	 * @throws InterruptedException
+	 *             if the current thread is interrupted
+	 */
+	public boolean tryLock(final long timeout, final TimeUnit unit) throws InterruptedException {
+		return lock.tryLock(timeout, unit);
+	}
+
+	/**
+	 * Attempts to release this lock.<br>
+	 * Check <code>ReentrantLock.unlock()</code> for details.
 	 */
 	public void unlock() {
 		lock.unlock();
 		manager.releaseLock(this);
+	}
+
+	/**
+	 * Queries if this lock is held by the current thread.<br>
+	 * Check <code>ReentrantLock.isHeldByCurrentThread()</code> for details.
+	 *
+	 * @return {@code true} if current thread holds this lock and {@code false} otherwise
+	 */
+	public boolean isHeldByCurrentThread() {
+		return lock.isHeldByCurrentThread();
+	}
+
+	/**
+	 * Queries if this lock is held by any thread.<br>
+	 * Check <code>ReentrantLock.isLocked()</code> for details.
+	 *
+	 * @return {@code true} if any thread holds this lock and {@code false} otherwise
+	 */
+	public boolean isLocked() {
+		return lock.isLocked();
+	}
+
+	/**
+	 * Queries whether any threads are waiting to acquire this lock.<br>
+	 * Check <code>ReentrantLock.hasQueuedThreads()</code> for details.
+	 *
+	 * @return {@code true} if there may be other threads waiting to acquire the lock and {@code false} otherwise
+	 */
+	public boolean hasQueuedThreads() {
+		return lock.hasQueuedThreads();
+	}
+
+	/**
+	 * Queries whether the given thread is waiting to acquire this lock.<br>
+	 * Check <code>ReentrantLock.hasQueuedThread(thread)</code> for details.
+	 *
+	 * @param thread
+	 *            the thread
+	 * @return {@code true} if the given thread is queued waiting for this lock and {@code false} otherwise
+	 */
+	public boolean hasQueuedThread(final Thread thread) {
+		return lock.hasQueuedThread(thread);
 	}
 
 	/**
