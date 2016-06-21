@@ -10,7 +10,7 @@ public final class StringUtils {
 	/**
 	 * Empty {@link String} constant.
 	 */
-	public static final String EMPTY = "";
+	public static final String EMPTY = "".intern();
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
@@ -39,6 +39,43 @@ public final class StringUtils {
 	 */
 	public static boolean isNotEmpty(final String value) {
 		return !isEmpty(value);
+	}
+
+	/**
+	 * Check value and return it if not <code>null</code> otherwise return 'empty' value.
+	 *
+	 * @param value
+	 *            value
+	 * @return value if not <code>null</code>, otherwise 'empty' value
+	 */
+	public static String notNull(final String value) {
+		return value != null ? value : EMPTY;
+	}
+
+	/**
+	 * Check value and return it if not <code>null</code> otherwise return 'default' value.
+	 *
+	 * @param value
+	 *            value
+	 * @param def
+	 *            default value
+	 * @return value if not <code>null</code>, otherwise 'default' value
+	 */
+	public static String notNull(final String value, final String def) {
+		return value != null ? value : def;
+	}
+
+	/**
+	 * Check value and return it if not empty otherwise return 'default' value.
+	 *
+	 * @param value
+	 *            value
+	 * @param def
+	 *            default value
+	 * @return value if not empty, otherwise 'default' value
+	 */
+	public static String notEmpty(final String value, final String def) {
+		return isNotEmpty(value) ? value : def;
 	}
 
 }
