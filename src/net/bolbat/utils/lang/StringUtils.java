@@ -10,7 +10,7 @@ public final class StringUtils {
 	/**
 	 * Empty {@link String} constant.
 	 */
-	public static final String EMPTY = "".intern();
+	public static final String EMPTY = "";
 
 	/**
 	 * Default constructor with preventing instantiations of this class.
