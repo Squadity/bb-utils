@@ -1,5 +1,7 @@
 package net.bolbat.utils.math;
 
+import static java.lang.Integer.*;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,13 +46,13 @@ public class NumberUtilsTest {
 		Assert.assertEquals(1, NumberUtils.compare(Short.MAX_VALUE, Short.MAX_VALUE - 1));
 
 		// integer negative
-		Assert.assertEquals(0, NumberUtils.compare(Integer.MIN_VALUE, Integer.MIN_VALUE));
-		Assert.assertEquals(-1, NumberUtils.compare(Integer.MIN_VALUE, Integer.MIN_VALUE + 1));
-		Assert.assertEquals(1, NumberUtils.compare(Integer.MIN_VALUE + 1, Integer.MIN_VALUE));
+		Assert.assertEquals(0, NumberUtils.compare(MIN_VALUE, MIN_VALUE));
+		Assert.assertEquals(-1, NumberUtils.compare(MIN_VALUE, MIN_VALUE + 1));
+		Assert.assertEquals(1, NumberUtils.compare(MIN_VALUE + 1, MIN_VALUE));
 		// integer positive
-		Assert.assertEquals(0, NumberUtils.compare(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		Assert.assertEquals(-1, NumberUtils.compare(Integer.MAX_VALUE - 1, Integer.MAX_VALUE));
-		Assert.assertEquals(1, NumberUtils.compare(Integer.MAX_VALUE, Integer.MAX_VALUE - 1));
+		Assert.assertEquals(0, NumberUtils.compare(MAX_VALUE, MAX_VALUE));
+		Assert.assertEquals(-1, NumberUtils.compare(MAX_VALUE - 1, MAX_VALUE));
+		Assert.assertEquals(1, NumberUtils.compare(MAX_VALUE, MAX_VALUE - 1));
 
 		// big integer negative
 		Assert.assertEquals(0, NumberUtils.compare(BigInteger.valueOf(Long.MIN_VALUE), BigInteger.valueOf(Long.MIN_VALUE)));
@@ -113,9 +115,9 @@ public class NumberUtilsTest {
 		Assert.assertEquals(1, NumberUtils.compare(Short.valueOf(Byte.MIN_VALUE) + 1, Byte.MIN_VALUE));
 
 		// long with integer
-		Assert.assertEquals(0, NumberUtils.compare(Long.valueOf(Integer.MAX_VALUE), Integer.MAX_VALUE));
-		Assert.assertEquals(-1, NumberUtils.compare(Long.valueOf(Integer.MAX_VALUE) - 1, Integer.MAX_VALUE));
-		Assert.assertEquals(1, NumberUtils.compare(Long.valueOf(Integer.MAX_VALUE), Integer.MAX_VALUE - 1));
+		Assert.assertEquals(0, NumberUtils.compare(Long.valueOf(MAX_VALUE), MAX_VALUE));
+		Assert.assertEquals(-1, NumberUtils.compare(Long.valueOf(MAX_VALUE) - 1, MAX_VALUE));
+		Assert.assertEquals(1, NumberUtils.compare(Long.valueOf(MAX_VALUE), MAX_VALUE - 1));
 
 		// float with double
 		Assert.assertEquals(-1, NumberUtils.compare(Float.MAX_VALUE, Double.MAX_VALUE));
@@ -123,21 +125,21 @@ public class NumberUtilsTest {
 
 		// BigInteger with BigDecimal
 		Assert.assertEquals(-1, NumberUtils.compare(BigInteger.valueOf(Long.MAX_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
-		Assert.assertEquals(1, NumberUtils.compare(BigInteger.valueOf(Integer.MIN_VALUE), BigDecimal.valueOf(Long.MIN_VALUE)));
+		Assert.assertEquals(1, NumberUtils.compare(BigInteger.valueOf(MIN_VALUE), BigDecimal.valueOf(Long.MIN_VALUE)));
 
 		// BigDecimal with BigDecimal
 		Assert.assertEquals(1, NumberUtils.compare(BigDecimal.valueOf(Float.MIN_VALUE), BigDecimal.valueOf(Double.MIN_VALUE)));
 		Assert.assertEquals(-1, NumberUtils.compare(BigDecimal.valueOf(Float.MAX_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
 
 		// atomic types
-		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(Integer.MAX_VALUE), new AtomicInteger(Integer.MAX_VALUE)));
+		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(MAX_VALUE), new AtomicInteger(MAX_VALUE)));
 		Assert.assertEquals(0, NumberUtils.compare(new AtomicLong(Long.MIN_VALUE), new AtomicLong(Long.MIN_VALUE)));
 		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(0), new AtomicLong(0)));
 		Assert.assertEquals(1, NumberUtils.compare(new AtomicLong(1), new AtomicInteger(-1)));
 		Assert.assertEquals(-1, NumberUtils.compare(new AtomicLong(-1), new AtomicInteger(1)));
 
 		// other types
-		Assert.assertEquals(0, NumberUtils.compare(new MutableInt(Integer.MAX_VALUE), new MutableInt(Integer.MAX_VALUE)));
+		Assert.assertEquals(0, NumberUtils.compare(new MutableInt(MAX_VALUE), new MutableInt(MAX_VALUE)));
 		Assert.assertEquals(-1, NumberUtils.compare(new MutableLong(Long.MIN_VALUE), new MutableLong(Long.MAX_VALUE)));
 		Assert.assertEquals(1, NumberUtils.compare(new MutableShort(Short.MAX_VALUE), new MutableShort(Short.MIN_VALUE)));
 
@@ -162,18 +164,6 @@ public class NumberUtilsTest {
 			Assert.assertTrue(e.getMessage().contains("second"));
 		}
 
-		try {
-			NumberUtils.add(null, 0);
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-			Assert.assertTrue(e.getMessage().contains("first"));
-		}
-		try {
-			NumberUtils.add(0, null);
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-			Assert.assertTrue(e.getMessage().contains("second"));
-		}
 	}
 
 	/**
@@ -182,9 +172,9 @@ public class NumberUtilsTest {
 	@Test
 	public void testAdd() {
 		// Big decimal
-		Assert.assertEquals(0d, NumberUtils.add(new BigDecimal(-1), 1L));
+		Assert.assertEquals(new BigDecimal(0d), NumberUtils.add(new BigDecimal(-1), 1L));
 		//vice versa
-		Assert.assertEquals(0d, NumberUtils.add(1L, new BigDecimal(-1)));
+		Assert.assertEquals(new BigDecimal(0d), NumberUtils.add(1L, new BigDecimal(-1)));
 
 		// Big int
 		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
@@ -207,9 +197,9 @@ public class NumberUtilsTest {
 		Assert.assertEquals(0L, NumberUtils.add((short) 1, -1L));
 
 		// BigInt
-		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), (short) 1));
+		Assert.assertEquals(new BigInteger("0"), NumberUtils.add(new BigInteger("-1"), (short) 1));
 		//vice versa
-		Assert.assertEquals(0L, NumberUtils.add((short) 1, new BigInteger("-1")));
+		Assert.assertEquals(new BigInteger("0"), NumberUtils.add((short) 1, new BigInteger("-1")));
 
 
 		// int
@@ -223,13 +213,15 @@ public class NumberUtilsTest {
 		Assert.assertEquals(0, NumberUtils.add((short) 1, (byte) -1));
 
 		//bytes
-		Assert.assertEquals(0, NumberUtils.add((byte) -1, (byte) 1));
+		//noinspection AssertEqualsBetweenInconvertibleTypes
+		Assert.assertEquals(Integer.valueOf(0), NumberUtils.add((byte) -1,(byte) 1));
 		//vice versa
-		Assert.assertEquals(0, NumberUtils.add((byte) 1, (byte) -1));
+		//noinspection AssertEqualsBetweenInconvertibleTypes
+		Assert.assertEquals(Integer.valueOf(0), NumberUtils.add((byte) 1, (byte) -1));
 
 
 		// other cases
-		Assert.assertEquals(new AtomicLong(0).get(), NumberUtils.add(1f, new AtomicLong(-1)).longValue());
+		Assert.assertEquals(new AtomicLong(0).get(), NumberUtils.add(new AtomicLong(-1), 1f).longValue());
 		Assert.assertEquals(new AtomicInteger(0).get(), NumberUtils.add(new AtomicInteger(1), -1).intValue());
 
 		// custom cases
@@ -281,5 +273,12 @@ public class NumberUtilsTest {
 
 	}
 
+	public void testDefaultAddCases() {
+		Assert.assertNull(NumberUtils.add(null, null));
+		Assert.assertEquals(valueOf(0), NumberUtils.add(0, null));
+		Assert.assertEquals(valueOf(0), NumberUtils.add(null, valueOf(0)));
+
+
+	}
 
 }

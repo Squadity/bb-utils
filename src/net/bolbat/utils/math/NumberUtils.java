@@ -69,13 +69,14 @@ public final class NumberUtils {
 	 * Return sum of  incoming parameters.
 	 * Returned result type will be calculated using next scheme, by highest argument type, but there is special prio for Atomics.
 	 *  result type priorities :
+	 *   - AtomicLong - in case if any argument is instance of it;
+	 *   - AtomicInteger - in case if any argument is instance of it;
 	 *   - BigDecimal - in case if any argument is instance of it;
 	 *   - Double - in case if any argument is instance of it;
 	 *   - Float - in case if any argument is instance of it;
 	 *   - Long - in case if any argument is instance of it;
 	 *   - BigInteger - in case if any argument is instance of it;
-	 *   - Integer - in case if any argument is instance of it;
-	 *   - Short - in case if any argument is instance of it, or  byte;
+	 *   - Integer - in case if any argument is instance of it, or short, or byte;
 	 *   - Double  - for all other cases.
 	 *
 	 * @param first
@@ -84,38 +85,46 @@ public final class NumberUtils {
 	 * 		second {@link Number}, can't be <code>null</code>
 	 * @return sum of two numbers
 	 */
-	public static Number add(final Number first, final Number second) {
+	@SuppressWarnings ("unchecked")
+	public static <Type extends Number> Type add(final Type first, final Type second) {
+		if (first == null && second == null)
+			return null;
 		if (first == null)
-			throw new IllegalArgumentException("first argument is null.");
+			return second;
 		if (second == null)
-			throw new IllegalArgumentException("second argument is null.");
+			return first;
+
+		if(first instanceof AtomicLong || second instanceof AtomicLong)
+			return (Type) new AtomicLong(first.longValue() + second.longValue());
+
+		if (first instanceof AtomicInteger || second instanceof AtomicInteger)
+			return (Type) new AtomicLong(first.intValue() + second.intValue());
 
 		if (first instanceof BigDecimal || second instanceof BigDecimal)
-			return first.doubleValue() + second.doubleValue();
-
+			return (Type) new BigDecimal(first.doubleValue()).add(new BigDecimal(second.doubleValue()));
 		if (first instanceof Double || second instanceof Double)
-			return first.doubleValue() + second.doubleValue();
+			return (Type) Double.valueOf(first.doubleValue() + second.doubleValue());
 
 		if (first instanceof Float || second instanceof Float)
-			return first.floatValue() + second.floatValue();
+			return (Type) Float.valueOf(first.floatValue() + second.floatValue());
 
 		if (first instanceof Long || second instanceof Long)
-			return first.longValue() + second.longValue();
+			return (Type) Long.valueOf(first.longValue() + second.longValue());
 
 		if (first instanceof BigInteger || second instanceof BigInteger)
-			return first.longValue() + second.longValue();
+			return (Type) BigInteger.valueOf(first.longValue() + second.longValue());
 
 		if (first instanceof Integer || second instanceof Integer)
-			return first.intValue() + second.intValue();
+			return (Type) Integer.valueOf(first.intValue() + second.intValue());
 
 		if (first instanceof Short || second instanceof Short)
-			return first.shortValue() + second.shortValue();
+			return (Type) Integer.valueOf(first.shortValue() + second.shortValue());
 
 		if (first instanceof Byte || second instanceof Byte)
-			return first.shortValue() + second.shortValue();
+			return (Type)  Integer.valueOf(first.shortValue() + second.shortValue());
 
 		// in other  cases for now  lets  stick to double, afterwards  may be improved - but no sense now
-		return first.doubleValue() + second.doubleValue();
+		return (Type) Double.valueOf(first.doubleValue() + second.doubleValue());
 	}
 
 }
