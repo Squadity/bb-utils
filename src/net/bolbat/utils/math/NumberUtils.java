@@ -69,23 +69,23 @@ public final class NumberUtils {
 	 * Return sum of incoming parameters.<br>
 	 * Returned result type will be calculated using next scheme, by highest argument type, but there is special priority for Atomics.<br>
 	 * Result type priorities:<br>
-	 * - AtomicLong - in case if any argument is instance of it;<br>
-	 * - AtomicInteger - in case if any argument is instance of it;<br>
-	 * - BigDecimal - in case if any argument is instance of it;<br>
-	 * - Double - in case if any argument is instance of it;<br>
-	 * - Float - in case if any argument is instance of it;<br>
-	 * - Long - in case if any argument is instance of it;<br>
-	 * - BigInteger - in case if any argument is instance of it;<br>
-	 * - Integer - in case if any argument is instance of it, or short, or byte;<br>
-	 * - Double - for all other cases.
+	 * - AtomicLong - in case if both arguments are instance of it;<br>
+	 * - AtomicInteger - in case if both arguments are instance of it;<br>
+	 * - BigDecimal - in case if both arguments are instance of it;<br>
+	 * - Double - in case if both arguments are instance of it;<br>
+	 * - Float - in case if both arguments are instance of it;<br>
+	 * - Long - in case if both arguments are instance of it;<br>
+	 * - BigInteger - in case if both arguments are instance of it;<br>
+	 * - Integer - in case if both arguments are instance of it; or Short or Byte;<br>
+	 * - *** BigDecimal - for all other cases, custom Number impl so on. <br>
 	 *
 	 * @param first
-	 *            first {@link Number}
+	 * 		first {@link Number}
 	 * @param second
-	 *            second {@link Number}
+	 * 		second {@link Number}
 	 * @return {@link Number} as sum of <code>first</code> and <code>second</code>
 	 */
-	public static <Type extends Number> Number add(final Type first, final Type second) {
+	public static Number add(final Number first, final Number second) {
 		if (first == null && second == null)
 			return 0;
 		if (first == null)
@@ -103,13 +103,13 @@ public final class NumberUtils {
 			return ((BigDecimal) first).add((BigDecimal) second);
 
 		if (first instanceof Double && second instanceof Double)
-			return Double.valueOf(first.doubleValue() + second.doubleValue());
+			return first.doubleValue() + second.doubleValue();
 
 		if (first instanceof Float && second instanceof Float)
-			return Float.valueOf(first.floatValue() + second.floatValue());
+			return first.floatValue() + second.floatValue();
 
 		if (first instanceof Long && second instanceof Long)
-			return Long.valueOf(first.longValue() + second.longValue());
+			return first.longValue() + second.longValue();
 
 		if (first instanceof BigInteger && second instanceof BigInteger)
 			return ((BigInteger) first).add((BigInteger) second);
@@ -117,7 +117,7 @@ public final class NumberUtils {
 		if ((first instanceof Integer && second instanceof Integer) || //
 				(first instanceof Short && second instanceof Short) || //
 				(first instanceof Byte && second instanceof Byte))
-			return Integer.valueOf(first.intValue() + second.intValue());
+			return first.intValue() + second.intValue();
 
 		// in other cases for now lets stick to BigDecimal
 		return new BigDecimal(first.doubleValue()).add(new BigDecimal(second.doubleValue()));
