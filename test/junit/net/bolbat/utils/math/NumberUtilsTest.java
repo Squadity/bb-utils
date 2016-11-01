@@ -1,11 +1,13 @@
 package net.bolbat.utils.math;
 
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Integer.valueOf;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import net.bolbat.utils.math.NumberUtils;
 
 import org.apache.commons.lang.mutable.MutableInt;
 import org.apache.commons.lang.mutable.MutableLong;
@@ -44,13 +46,13 @@ public class NumberUtilsTest {
 		Assert.assertEquals(1, NumberUtils.compare(Short.MAX_VALUE, Short.MAX_VALUE - 1));
 
 		// integer negative
-		Assert.assertEquals(0, NumberUtils.compare(Integer.MIN_VALUE, Integer.MIN_VALUE));
-		Assert.assertEquals(-1, NumberUtils.compare(Integer.MIN_VALUE, Integer.MIN_VALUE + 1));
-		Assert.assertEquals(1, NumberUtils.compare(Integer.MIN_VALUE + 1, Integer.MIN_VALUE));
+		Assert.assertEquals(0, NumberUtils.compare(MIN_VALUE, MIN_VALUE));
+		Assert.assertEquals(-1, NumberUtils.compare(MIN_VALUE, MIN_VALUE + 1));
+		Assert.assertEquals(1, NumberUtils.compare(MIN_VALUE + 1, MIN_VALUE));
 		// integer positive
-		Assert.assertEquals(0, NumberUtils.compare(Integer.MAX_VALUE, Integer.MAX_VALUE));
-		Assert.assertEquals(-1, NumberUtils.compare(Integer.MAX_VALUE - 1, Integer.MAX_VALUE));
-		Assert.assertEquals(1, NumberUtils.compare(Integer.MAX_VALUE, Integer.MAX_VALUE - 1));
+		Assert.assertEquals(0, NumberUtils.compare(MAX_VALUE, MAX_VALUE));
+		Assert.assertEquals(-1, NumberUtils.compare(MAX_VALUE - 1, MAX_VALUE));
+		Assert.assertEquals(1, NumberUtils.compare(MAX_VALUE, MAX_VALUE - 1));
 
 		// big integer negative
 		Assert.assertEquals(0, NumberUtils.compare(BigInteger.valueOf(Long.MIN_VALUE), BigInteger.valueOf(Long.MIN_VALUE)));
@@ -113,9 +115,9 @@ public class NumberUtilsTest {
 		Assert.assertEquals(1, NumberUtils.compare(Short.valueOf(Byte.MIN_VALUE) + 1, Byte.MIN_VALUE));
 
 		// long with integer
-		Assert.assertEquals(0, NumberUtils.compare(Long.valueOf(Integer.MAX_VALUE), Integer.MAX_VALUE));
-		Assert.assertEquals(-1, NumberUtils.compare(Long.valueOf(Integer.MAX_VALUE) - 1, Integer.MAX_VALUE));
-		Assert.assertEquals(1, NumberUtils.compare(Long.valueOf(Integer.MAX_VALUE), Integer.MAX_VALUE - 1));
+		Assert.assertEquals(0, NumberUtils.compare(Long.valueOf(MAX_VALUE), MAX_VALUE));
+		Assert.assertEquals(-1, NumberUtils.compare(Long.valueOf(MAX_VALUE) - 1, MAX_VALUE));
+		Assert.assertEquals(1, NumberUtils.compare(Long.valueOf(MAX_VALUE), MAX_VALUE - 1));
 
 		// float with double
 		Assert.assertEquals(-1, NumberUtils.compare(Float.MAX_VALUE, Double.MAX_VALUE));
@@ -123,21 +125,21 @@ public class NumberUtilsTest {
 
 		// BigInteger with BigDecimal
 		Assert.assertEquals(-1, NumberUtils.compare(BigInteger.valueOf(Long.MAX_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
-		Assert.assertEquals(1, NumberUtils.compare(BigInteger.valueOf(Integer.MIN_VALUE), BigDecimal.valueOf(Long.MIN_VALUE)));
+		Assert.assertEquals(1, NumberUtils.compare(BigInteger.valueOf(MIN_VALUE), BigDecimal.valueOf(Long.MIN_VALUE)));
 
 		// BigDecimal with BigDecimal
 		Assert.assertEquals(1, NumberUtils.compare(BigDecimal.valueOf(Float.MIN_VALUE), BigDecimal.valueOf(Double.MIN_VALUE)));
 		Assert.assertEquals(-1, NumberUtils.compare(BigDecimal.valueOf(Float.MAX_VALUE), BigDecimal.valueOf(Double.MAX_VALUE)));
 
 		// atomic types
-		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(Integer.MAX_VALUE), new AtomicInteger(Integer.MAX_VALUE)));
+		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(MAX_VALUE), new AtomicInteger(MAX_VALUE)));
 		Assert.assertEquals(0, NumberUtils.compare(new AtomicLong(Long.MIN_VALUE), new AtomicLong(Long.MIN_VALUE)));
 		Assert.assertEquals(0, NumberUtils.compare(new AtomicInteger(0), new AtomicLong(0)));
 		Assert.assertEquals(1, NumberUtils.compare(new AtomicLong(1), new AtomicInteger(-1)));
 		Assert.assertEquals(-1, NumberUtils.compare(new AtomicLong(-1), new AtomicInteger(1)));
 
 		// other types
-		Assert.assertEquals(0, NumberUtils.compare(new MutableInt(Integer.MAX_VALUE), new MutableInt(Integer.MAX_VALUE)));
+		Assert.assertEquals(0, NumberUtils.compare(new MutableInt(MAX_VALUE), new MutableInt(MAX_VALUE)));
 		Assert.assertEquals(-1, NumberUtils.compare(new MutableLong(Long.MIN_VALUE), new MutableLong(Long.MAX_VALUE)));
 		Assert.assertEquals(1, NumberUtils.compare(new MutableShort(Short.MAX_VALUE), new MutableShort(Short.MIN_VALUE)));
 
@@ -161,125 +163,106 @@ public class NumberUtilsTest {
 		} catch (IllegalArgumentException e) {
 			Assert.assertTrue(e.getMessage().contains("second"));
 		}
-
-		try {
-			NumberUtils.add(null, 0);
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-			Assert.assertTrue(e.getMessage().contains("first"));
-		}
-		try {
-			NumberUtils.add(0, null);
-			Assert.fail();
-		} catch (IllegalArgumentException e) {
-			Assert.assertTrue(e.getMessage().contains("second"));
-		}
 	}
 
 	/**
 	 * Test add cases.
 	 */
 	@Test
-	public void testAdd() {
+	public void testAddDifferentArgs() {
 		// Big decimal
-		Assert.assertEquals(0d, NumberUtils.add(new BigDecimal(-1), 1L));
-		//vice versa
-		Assert.assertEquals(0d, NumberUtils.add(1L, new BigDecimal(-1)));
+		Assert.assertEquals(new BigDecimal(0d), NumberUtils.add(new BigDecimal(-1), 1L));
+		// vice versa
+		Assert.assertEquals(new BigDecimal(0d), NumberUtils.add(1L, new BigDecimal(-1)));
 
 		// Big int
-		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
-		//vice versa
-		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
+		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(new BigInteger("-1"), 1L));
+		// vice versa
+		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(new BigInteger("-1"), 1L));
 
 		// double
-		Assert.assertEquals(0D, NumberUtils.add(-1d, 1L));
-		//vice versa
-		Assert.assertEquals(0D, NumberUtils.add(1L, -1d));
-
-		// float
-		Assert.assertEquals(0f, NumberUtils.add(-1f, 1L));
-		//vice versa
-		Assert.assertEquals(0f, NumberUtils.add(1L, -1f));
-
-		// long
-		Assert.assertEquals(0L, NumberUtils.add(-1L, (short) 1));
-		//vice versa
-		Assert.assertEquals(0L, NumberUtils.add((short) 1, -1L));
-
-		// BigInt
-		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), (short) 1));
-		//vice versa
-		Assert.assertEquals(0L, NumberUtils.add((short) 1, new BigInteger("-1")));
-
-
-		// int
-		Assert.assertEquals(0, NumberUtils.add(-1, (short) 1));
-		//vice versa
-		Assert.assertEquals(0, NumberUtils.add((short) 1, -1));
-
-		// short
-		Assert.assertEquals(0, NumberUtils.add((byte) -1, (short) 1));
-		//vice versa
-		Assert.assertEquals(0, NumberUtils.add((short) 1, (byte) -1));
-
-		//bytes
-		Assert.assertEquals(0, NumberUtils.add((byte) -1, (byte) 1));
-		//vice versa
-		Assert.assertEquals(0, NumberUtils.add((byte) 1, (byte) -1));
-
-
-		// other cases
-		Assert.assertEquals(new AtomicLong(0).get(), NumberUtils.add(1f, new AtomicLong(-1)).longValue());
-		Assert.assertEquals(new AtomicInteger(0).get(), NumberUtils.add(new AtomicInteger(1), -1).intValue());
+		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(-1d, 1L));
+		// vice versa
+		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(1L, -1d));
 
 		// custom cases
+		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(new Number() {
+			private static final long serialVersionUID = -7234874693244521786L;
 
-		Assert.assertEquals(0D, NumberUtils.add(
-				new Number() {
-					@Override
-					public int intValue() {
-						return -1;
-					}
+			@Override
+			public int intValue() {
+				return -1;
+			}
 
-					@Override
-					public long longValue() {
-						return -1;
-					}
+			@Override
+			public long longValue() {
+				return -1;
+			}
 
-					@Override
-					public float floatValue() {
-						return -1f;
-					}
+			@Override
+			public float floatValue() {
+				return -1f;
+			}
 
-					@Override
-					public double doubleValue() {
-						return -1D;
-					}
-				},
-				new Number() {
-					@Override
-					public int intValue() {
-						return 1;
-					}
+			@Override
+			public double doubleValue() {
+				return -1D;
+			}
+		}, new Number() {
+			private static final long serialVersionUID = 9074621109639847995L;
 
-					@Override
-					public long longValue() {
-						return 1L;
-					}
+			@Override
+			public int intValue() {
+				return 1;
+			}
 
-					@Override
-					public float floatValue() {
-						return 1f;
-					}
+			@Override
+			public long longValue() {
+				return 1L;
+			}
 
-					@Override
-					public double doubleValue() {
-						return 1d;
-					}
-				})
-		);
+			@Override
+			public float floatValue() {
+				return 1f;
+			}
 
+			@Override
+			public double doubleValue() {
+				return 1d;
+			}
+		}));
 	}
 
+	@Test
+	public void testAddSameArgs() {
+		// Big decimal
+		Assert.assertEquals(new BigDecimal(0), NumberUtils.add(new BigDecimal(-1), new BigDecimal(1)));
+		// Double
+		Assert.assertEquals(0d, NumberUtils.add(1d, -1d));
+		// float
+		Assert.assertEquals(0f, NumberUtils.add(1f, -1f));
+		// Long
+		Assert.assertEquals(0L, NumberUtils.add(1L, -1L));
+		// BigInt
+		Assert.assertEquals(BigInteger.valueOf(0L), NumberUtils.add(BigInteger.valueOf(1L), BigInteger.valueOf(-1L)));
+		// Int
+		Assert.assertEquals(0, NumberUtils.add(1, -1));
+		// short
+		Assert.assertEquals(0, NumberUtils.add((short) 1, (short) -1));
+		// byte
+		Assert.assertEquals(0, NumberUtils.add((byte) 1, (byte) -1));
+
+		// atomics
+		Assert.assertEquals(0L, NumberUtils.add(new AtomicLong(-1), new AtomicLong(1)));
+		// AtomicInt
+		Assert.assertEquals(0, NumberUtils.add(new AtomicInteger(-1), new AtomicInteger(1)));
+	}
+
+	@Test
+	public void testDefaultAddCases() {
+		Assert.assertEquals(0, NumberUtils.add(null, null));
+		Assert.assertEquals(valueOf(0), NumberUtils.add(0, null));
+		Assert.assertEquals(valueOf(0), NumberUtils.add(null, valueOf(0)));
+	}
 
 }
