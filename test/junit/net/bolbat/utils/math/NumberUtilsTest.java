@@ -1,13 +1,13 @@
 package net.bolbat.utils.math;
 
-import static java.lang.Integer.*;
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Integer.valueOf;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import net.bolbat.utils.math.NumberUtils;
 
 import org.apache.commons.lang.mutable.MutableInt;
 import org.apache.commons.lang.mutable.MutableLong;
@@ -163,7 +163,6 @@ public class NumberUtilsTest {
 		} catch (IllegalArgumentException e) {
 			Assert.assertTrue(e.getMessage().contains("second"));
 		}
-
 	}
 
 	/**
@@ -173,52 +172,50 @@ public class NumberUtilsTest {
 	public void testAdd() {
 		// Big decimal
 		Assert.assertEquals(new BigDecimal(0d), NumberUtils.add(new BigDecimal(-1), 1L));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(new BigDecimal(0d), NumberUtils.add(1L, new BigDecimal(-1)));
 
 		// Big int
 		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
 
 		// double
 		Assert.assertEquals(0D, NumberUtils.add(-1d, 1L));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(0D, NumberUtils.add(1L, -1d));
 
 		// float
 		Assert.assertEquals(0f, NumberUtils.add(-1f, 1L));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(0f, NumberUtils.add(1L, -1f));
 
 		// long
 		Assert.assertEquals(0L, NumberUtils.add(-1L, (short) 1));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(0L, NumberUtils.add((short) 1, -1L));
 
 		// BigInt
 		Assert.assertEquals(new BigInteger("0"), NumberUtils.add(new BigInteger("-1"), (short) 1));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(new BigInteger("0"), NumberUtils.add((short) 1, new BigInteger("-1")));
-
 
 		// int
 		Assert.assertEquals(0, NumberUtils.add(-1, (short) 1));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(0, NumberUtils.add((short) 1, -1));
 
 		// short
 		Assert.assertEquals(0, NumberUtils.add((byte) -1, (short) 1));
-		//vice versa
+		// vice versa
 		Assert.assertEquals(0, NumberUtils.add((short) 1, (byte) -1));
 
-		//bytes
-		//noinspection AssertEqualsBetweenInconvertibleTypes
-		Assert.assertEquals(Integer.valueOf(0), NumberUtils.add((byte) -1,(byte) 1));
-		//vice versa
-		//noinspection AssertEqualsBetweenInconvertibleTypes
+		// bytes
+		// noinspection AssertEqualsBetweenInconvertibleTypes
+		Assert.assertEquals(Integer.valueOf(0), NumberUtils.add((byte) -1, (byte) 1));
+		// vice versa
+		// noinspection AssertEqualsBetweenInconvertibleTypes
 		Assert.assertEquals(Integer.valueOf(0), NumberUtils.add((byte) 1, (byte) -1));
-
 
 		// other cases
 		Assert.assertEquals(new AtomicLong(0).get(), NumberUtils.add(new AtomicLong(-1), 1f).longValue());
@@ -226,59 +223,57 @@ public class NumberUtilsTest {
 
 		// custom cases
 
-		Assert.assertEquals(0D, NumberUtils.add(
-				new Number() {
-					@Override
-					public int intValue() {
-						return -1;
-					}
+		Assert.assertEquals(0D, NumberUtils.add(new Number() {
+			private static final long serialVersionUID = -7234874693244521786L;
 
-					@Override
-					public long longValue() {
-						return -1;
-					}
+			@Override
+			public int intValue() {
+				return -1;
+			}
 
-					@Override
-					public float floatValue() {
-						return -1f;
-					}
+			@Override
+			public long longValue() {
+				return -1;
+			}
 
-					@Override
-					public double doubleValue() {
-						return -1D;
-					}
-				},
-				new Number() {
-					@Override
-					public int intValue() {
-						return 1;
-					}
+			@Override
+			public float floatValue() {
+				return -1f;
+			}
 
-					@Override
-					public long longValue() {
-						return 1L;
-					}
+			@Override
+			public double doubleValue() {
+				return -1D;
+			}
+		}, new Number() {
+			private static final long serialVersionUID = 9074621109639847995L;
 
-					@Override
-					public float floatValue() {
-						return 1f;
-					}
+			@Override
+			public int intValue() {
+				return 1;
+			}
 
-					@Override
-					public double doubleValue() {
-						return 1d;
-					}
-				})
-		);
+			@Override
+			public long longValue() {
+				return 1L;
+			}
 
+			@Override
+			public float floatValue() {
+				return 1f;
+			}
+
+			@Override
+			public double doubleValue() {
+				return 1d;
+			}
+		}));
 	}
 
 	public void testDefaultAddCases() {
 		Assert.assertNull(NumberUtils.add(null, null));
 		Assert.assertEquals(valueOf(0), NumberUtils.add(0, null));
 		Assert.assertEquals(valueOf(0), NumberUtils.add(null, valueOf(0)));
-
-
 	}
 
 }

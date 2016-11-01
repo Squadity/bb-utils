@@ -23,9 +23,9 @@ public final class NumberUtils {
 	 * Compare two instances of {@link Number} between each other.
 	 *
 	 * @param first
-	 * 		first {@link Number}, can't be <code>null</code>
+	 *            first {@link Number}, can't be <code>null</code>
 	 * @param second
-	 * 		second {@link Number}, can't be <code>null</code>
+	 *            second {@link Number}, can't be <code>null</code>
 	 * @return -1, 0, or 1 as first {@link Number} is less than, equal to, or greater than second {@link Number}
 	 */
 	public static int compare(final Number first, final Number second) {
@@ -66,65 +66,61 @@ public final class NumberUtils {
 	}
 
 	/**
-	 * Return sum of  incoming parameters.
-	 * Returned result type will be calculated using next scheme, by highest argument type, but there is special prio for Atomics.
-	 *  result type priorities :
-	 *   - AtomicLong - in case if any argument is instance of it;
-	 *   - AtomicInteger - in case if any argument is instance of it;
-	 *   - BigDecimal - in case if any argument is instance of it;
-	 *   - Double - in case if any argument is instance of it;
-	 *   - Float - in case if any argument is instance of it;
-	 *   - Long - in case if any argument is instance of it;
-	 *   - BigInteger - in case if any argument is instance of it;
-	 *   - Integer - in case if any argument is instance of it, or short, or byte;
-	 *   - Double  - for all other cases.
+	 * Return sum of incoming parameters.<br>
+	 * Returned result type will be calculated using next scheme, by highest argument type, but there is special priority for Atomics.<br>
+	 * Result type priorities:<br>
+	 * - AtomicLong - in case if any argument is instance of it;<br>
+	 * - AtomicInteger - in case if any argument is instance of it;<br>
+	 * - BigDecimal - in case if any argument is instance of it;<br>
+	 * - Double - in case if any argument is instance of it;<br>
+	 * - Float - in case if any argument is instance of it;<br>
+	 * - Long - in case if any argument is instance of it;<br>
+	 * - BigInteger - in case if any argument is instance of it;<br>
+	 * - Integer - in case if any argument is instance of it, or short, or byte;<br>
+	 * - Double - for all other cases.
 	 *
 	 * @param first
-	 * 		first {@link Number}, can't be <code>null</code>
+	 *            first {@link Number}
 	 * @param second
-	 * 		second {@link Number}, can't be <code>null</code>
-	 * @return sum of two numbers
+	 *            second {@link Number}
+	 * @return {@link Number} as sum of <code>first</code> and <code>second</code>
 	 */
-	@SuppressWarnings ("unchecked")
-	public static <Type extends Number> Type add(final Type first, final Type second) {
+	public static <Type extends Number> Number add(final Type first, final Type second) {
 		if (first == null && second == null)
-			return null;
+			return 0;
 		if (first == null)
 			return second;
 		if (second == null)
 			return first;
 
-		if(first instanceof AtomicLong || second instanceof AtomicLong)
-			return (Type) new AtomicLong(first.longValue() + second.longValue());
+		if (first instanceof AtomicLong && second instanceof AtomicLong)
+			return ((AtomicLong) first).addAndGet(((AtomicLong) second).get());
 
-		if (first instanceof AtomicInteger || second instanceof AtomicInteger)
-			return (Type) new AtomicLong(first.intValue() + second.intValue());
+		if (first instanceof AtomicInteger && second instanceof AtomicInteger)
+			return ((AtomicInteger) first).addAndGet(((AtomicInteger) second).get());
 
-		if (first instanceof BigDecimal || second instanceof BigDecimal)
-			return (Type) new BigDecimal(first.doubleValue()).add(new BigDecimal(second.doubleValue()));
-		if (first instanceof Double || second instanceof Double)
-			return (Type) Double.valueOf(first.doubleValue() + second.doubleValue());
+		if (first instanceof BigDecimal && second instanceof BigDecimal)
+			return ((BigDecimal) first).add((BigDecimal) second);
 
-		if (first instanceof Float || second instanceof Float)
-			return (Type) Float.valueOf(first.floatValue() + second.floatValue());
+		if (first instanceof Double && second instanceof Double)
+			return Double.valueOf(first.doubleValue() + second.doubleValue());
 
-		if (first instanceof Long || second instanceof Long)
-			return (Type) Long.valueOf(first.longValue() + second.longValue());
+		if (first instanceof Float && second instanceof Float)
+			return Float.valueOf(first.floatValue() + second.floatValue());
 
-		if (first instanceof BigInteger || second instanceof BigInteger)
-			return (Type) BigInteger.valueOf(first.longValue() + second.longValue());
+		if (first instanceof Long && second instanceof Long)
+			return Long.valueOf(first.longValue() + second.longValue());
 
-		if (first instanceof Integer || second instanceof Integer)
-			return (Type) Integer.valueOf(first.intValue() + second.intValue());
+		if (first instanceof BigInteger && second instanceof BigInteger)
+			return ((BigInteger) first).add((BigInteger) second);
 
-		if (first instanceof Short || second instanceof Short)
-			return (Type) Integer.valueOf(first.shortValue() + second.shortValue());
+		if ((first instanceof Integer && second instanceof Integer) || //
+				(first instanceof Short && second instanceof Short) || //
+				(first instanceof Byte && second instanceof Byte))
+			return Integer.valueOf(first.intValue() + second.intValue());
 
-		if (first instanceof Byte || second instanceof Byte)
-			return (Type)  Integer.valueOf(first.shortValue() + second.shortValue());
-
-		// in other  cases for now  lets  stick to double, afterwards  may be improved - but no sense now
-		return (Type) Double.valueOf(first.doubleValue() + second.doubleValue());
+		// in other cases for now lets stick to BigDecimal
+		return new BigDecimal(first.doubleValue()).add(new BigDecimal(second.doubleValue()));
 	}
 
 }
