@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Utility with some helper functionality related to numbers.
- * 
+ *
  * @author Alexandr Bolbat
  */
 public final class NumberUtils {
@@ -21,11 +21,11 @@ public final class NumberUtils {
 
 	/**
 	 * Compare two instances of {@link Number} between each other.
-	 * 
+	 *
 	 * @param first
-	 *            first {@link Number}, can't be <code>null</code>
+	 * 		first {@link Number}, can't be <code>null</code>
 	 * @param second
-	 *            second {@link Number}, can't be <code>null</code>
+	 * 		second {@link Number}, can't be <code>null</code>
 	 * @return -1, 0, or 1 as first {@link Number} is less than, equal to, or greater than second {@link Number}
 	 */
 	public static int compare(final Number first, final Number second) {
@@ -64,4 +64,58 @@ public final class NumberUtils {
 			return new BigDecimal(first.doubleValue()).compareTo(new BigDecimal(second.doubleValue()));
 		}
 	}
+
+	/**
+	 * Return sum of  incoming parameters.
+	 * Returned result type will be calculated using next scheme, by highest argument type, but there is special prio for Atomics.
+	 *  result type priorities :
+	 *   - BigDecimal - in case if any argument is instance of it;
+	 *   - Double - in case if any argument is instance of it;
+	 *   - Float - in case if any argument is instance of it;
+	 *   - Long - in case if any argument is instance of it;
+	 *   - BigInteger - in case if any argument is instance of it;
+	 *   - Integer - in case if any argument is instance of it;
+	 *   - Short - in case if any argument is instance of it, or  byte;
+	 *   - Double  - for all other cases.
+	 *
+	 * @param first
+	 * 		first {@link Number}, can't be <code>null</code>
+	 * @param second
+	 * 		second {@link Number}, can't be <code>null</code>
+	 * @return sum of two numbers
+	 */
+	public static Number add(final Number first, final Number second) {
+		if (first == null)
+			throw new IllegalArgumentException("first argument is null.");
+		if (second == null)
+			throw new IllegalArgumentException("second argument is null.");
+
+		if (first instanceof BigDecimal || second instanceof BigDecimal)
+			return first.doubleValue() + second.doubleValue();
+
+		if (first instanceof Double || second instanceof Double)
+			return first.doubleValue() + second.doubleValue();
+
+		if (first instanceof Float || second instanceof Float)
+			return first.floatValue() + second.floatValue();
+
+		if (first instanceof Long || second instanceof Long)
+			return first.longValue() + second.longValue();
+
+		if (first instanceof BigInteger || second instanceof BigInteger)
+			return first.longValue() + second.longValue();
+
+		if (first instanceof Integer || second instanceof Integer)
+			return first.intValue() + second.intValue();
+
+		if (first instanceof Short || second instanceof Short)
+			return first.shortValue() + second.shortValue();
+
+		if (first instanceof Byte || second instanceof Byte)
+			return first.shortValue() + second.shortValue();
+
+		// in other  cases for now  lets  stick to double, afterwards  may be improved - but no sense now
+		return first.doubleValue() + second.doubleValue();
+	}
+
 }

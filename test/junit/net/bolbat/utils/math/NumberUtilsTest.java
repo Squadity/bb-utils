@@ -15,7 +15,7 @@ import org.junit.Test;
 
 /**
  * {@link NumberUtils} test.
- * 
+ *
  * @author Alexandr Bolbat
  */
 public class NumberUtilsTest {
@@ -161,6 +161,125 @@ public class NumberUtilsTest {
 		} catch (IllegalArgumentException e) {
 			Assert.assertTrue(e.getMessage().contains("second"));
 		}
+
+		try {
+			NumberUtils.add(null, 0);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue(e.getMessage().contains("first"));
+		}
+		try {
+			NumberUtils.add(0, null);
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			Assert.assertTrue(e.getMessage().contains("second"));
+		}
 	}
+
+	/**
+	 * Test add cases.
+	 */
+	@Test
+	public void testAdd() {
+		// Big decimal
+		Assert.assertEquals(0d, NumberUtils.add(new BigDecimal(-1), 1L));
+		//vice versa
+		Assert.assertEquals(0d, NumberUtils.add(1L, new BigDecimal(-1)));
+
+		// Big int
+		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
+		//vice versa
+		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), 1L));
+
+		// double
+		Assert.assertEquals(0D, NumberUtils.add(-1d, 1L));
+		//vice versa
+		Assert.assertEquals(0D, NumberUtils.add(1L, -1d));
+
+		// float
+		Assert.assertEquals(0f, NumberUtils.add(-1f, 1L));
+		//vice versa
+		Assert.assertEquals(0f, NumberUtils.add(1L, -1f));
+
+		// long
+		Assert.assertEquals(0L, NumberUtils.add(-1L, (short) 1));
+		//vice versa
+		Assert.assertEquals(0L, NumberUtils.add((short) 1, -1L));
+
+		// BigInt
+		Assert.assertEquals(0L, NumberUtils.add(new BigInteger("-1"), (short) 1));
+		//vice versa
+		Assert.assertEquals(0L, NumberUtils.add((short) 1, new BigInteger("-1")));
+
+
+		// int
+		Assert.assertEquals(0, NumberUtils.add(-1, (short) 1));
+		//vice versa
+		Assert.assertEquals(0, NumberUtils.add((short) 1, -1));
+
+		// short
+		Assert.assertEquals(0, NumberUtils.add((byte) -1, (short) 1));
+		//vice versa
+		Assert.assertEquals(0, NumberUtils.add((short) 1, (byte) -1));
+
+		//bytes
+		Assert.assertEquals(0, NumberUtils.add((byte) -1, (byte) 1));
+		//vice versa
+		Assert.assertEquals(0, NumberUtils.add((byte) 1, (byte) -1));
+
+
+		// other cases
+		Assert.assertEquals(new AtomicLong(0).get(), NumberUtils.add(1f, new AtomicLong(-1)).longValue());
+		Assert.assertEquals(new AtomicInteger(0).get(), NumberUtils.add(new AtomicInteger(1), -1).intValue());
+
+		// custom cases
+
+		Assert.assertEquals(0D, NumberUtils.add(
+				new Number() {
+					@Override
+					public int intValue() {
+						return -1;
+					}
+
+					@Override
+					public long longValue() {
+						return -1;
+					}
+
+					@Override
+					public float floatValue() {
+						return -1f;
+					}
+
+					@Override
+					public double doubleValue() {
+						return -1D;
+					}
+				},
+				new Number() {
+					@Override
+					public int intValue() {
+						return 1;
+					}
+
+					@Override
+					public long longValue() {
+						return 1L;
+					}
+
+					@Override
+					public float floatValue() {
+						return 1f;
+					}
+
+					@Override
+					public double doubleValue() {
+						return 1d;
+					}
+				})
+		);
+
+	}
+
 
 }
