@@ -185,9 +185,7 @@ public class NumberUtilsTest {
 		// vice versa
 		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(1L, -1d));
 
-
 		// custom cases
-
 		Assert.assertEquals(BigDecimal.valueOf(0L), NumberUtils.add(new Number() {
 			private static final long serialVersionUID = -7234874693244521786L;
 
@@ -236,30 +234,29 @@ public class NumberUtilsTest {
 	}
 
 	@Test
-	public void testAddSameArgs(){
+	public void testAddSameArgs() {
 		// Big decimal
 		Assert.assertEquals(new BigDecimal(0), NumberUtils.add(new BigDecimal(-1), new BigDecimal(1)));
-		//Double
+		// Double
 		Assert.assertEquals(0d, NumberUtils.add(1d, -1d));
-		//float
+		// float
 		Assert.assertEquals(0f, NumberUtils.add(1f, -1f));
-		//Long
+		// Long
 		Assert.assertEquals(0L, NumberUtils.add(1L, -1L));
-		//BigInt
+		// BigInt
 		Assert.assertEquals(BigInteger.valueOf(0L), NumberUtils.add(BigInteger.valueOf(1L), BigInteger.valueOf(-1L)));
 		// Int
 		Assert.assertEquals(0, NumberUtils.add(1, -1));
-		//short
-		Assert.assertEquals(0, NumberUtils.add((short)1, (short)-1));
-		//byte
-		Assert.assertEquals(0, NumberUtils.add((byte)1, (byte)-1));
+		// short
+		Assert.assertEquals(0, NumberUtils.add((short) 1, (short) -1));
+		// byte
+		Assert.assertEquals(0, NumberUtils.add((byte) 1, (byte) -1));
 
-		//atomics
+		// atomics
 		Assert.assertEquals(0L, NumberUtils.add(new AtomicLong(-1), new AtomicLong(1)));
-		//AtomicInt
+		// AtomicInt
 		Assert.assertEquals(0, NumberUtils.add(new AtomicInteger(-1), new AtomicInteger(1)));
 	}
-
 
 	@Test
 	public void testDefaultAddCases() {

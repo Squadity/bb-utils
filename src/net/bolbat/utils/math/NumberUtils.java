@@ -66,23 +66,22 @@ public final class NumberUtils {
 	}
 
 	/**
-	 * Return sum of incoming parameters.<br>
-	 * Returned result type will be calculated using next scheme, by highest argument type, but there is special priority for Atomics.<br>
-	 * Result type priorities:<br>
-	 * - AtomicLong - in case if both arguments are instance of it;<br>
-	 * - AtomicInteger - in case if both arguments are instance of it;<br>
-	 * - BigDecimal - in case if both arguments are instance of it;<br>
-	 * - Double - in case if both arguments are instance of it;<br>
-	 * - Float - in case if both arguments are instance of it;<br>
-	 * - Long - in case if both arguments are instance of it;<br>
-	 * - BigInteger - in case if both arguments are instance of it;<br>
-	 * - Integer - in case if both arguments are instance of it; or Short or Byte;<br>
-	 * - *** BigDecimal - for all other cases, custom Number impl so on. <br>
+	 * Return sum of incoming numbers.<br>
+	 * Result types:<br>
+	 * - {@link AtomicLong} - in case if both arguments are instance of it;<br>
+	 * - {@link AtomicInteger} - in case if both arguments are instance of it;<br>
+	 * - {@link BigDecimal} - in case if both arguments are instance of it;<br>
+	 * - {@link Double} - in case if both arguments are instance of it;<br>
+	 * - {@link Float} - in case if both arguments are instance of it;<br>
+	 * - {@link Long} - in case if both arguments are instance of it;<br>
+	 * - {@link BigInteger} - in case if both arguments are instance of it;<br>
+	 * - {@link Integer} - in case if both arguments are instance of {@link Integer} or {@link Short} or {@link Byte};<br>
+	 * - default is {@link BigDecimal} - for all other cases, including other and custom Number implementations.
 	 *
 	 * @param first
-	 * 		first {@link Number}
+	 *            first {@link Number}
 	 * @param second
-	 * 		second {@link Number}
+	 *            second {@link Number}
 	 * @return {@link Number} as sum of <code>first</code> and <code>second</code>
 	 */
 	public static Number add(final Number first, final Number second) {
