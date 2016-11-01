@@ -114,9 +114,9 @@ public final class NumberUtils {
 		if (first instanceof BigInteger && second instanceof BigInteger)
 			return ((BigInteger) first).add((BigInteger) second);
 
-		if ((first instanceof Integer && second instanceof Integer) || //
-				(first instanceof Short && second instanceof Short) || //
-				(first instanceof Byte && second instanceof Byte))
+		if (first instanceof Integer && second instanceof Integer || //
+				first instanceof Short && second instanceof Short || //
+				first instanceof Byte && second instanceof Byte)
 			return first.intValue() + second.intValue();
 
 		// in other cases for now lets stick to BigDecimal
