@@ -32,7 +32,7 @@ public final class Mark {
 		 * 
 		 * @return {@link String}
 		 */
-		String value() default "";
+		String[] value() default "";
 
 	};
 
@@ -48,7 +48,7 @@ public final class Mark {
 		 * 
 		 * @return {@link String}
 		 */
-		String value() default "";
+		String[] value() default "";
 
 	};
 
@@ -64,7 +64,7 @@ public final class Mark {
 		 * 
 		 * @return {@link String}
 		 */
-		String value() default "";
+		String[] value() default "";
 
 	};
 
@@ -80,7 +80,7 @@ public final class Mark {
 		 * 
 		 * @return {@link String}
 		 */
-		String value() default "";
+		String[] value() default "";
 
 	};
 
