@@ -57,9 +57,9 @@ public final class ProxyUtils {
 	}
 
 	/**
-	 * Unwrap proxied target from supported proxy invocation handlers.<br>
+	 * Unwrap proxied target.<br>
 	 * {@link ClassCastException} would be thrown if result instance can't be casted to expected type.<br>
-	 * {@link ProxyHandlerUnsupportedException} would be thrown if proxy invocation handler is unsupported.
+	 * {@link ProxyHandlerUnsupportedException} would be thrown if required proxy support is not registered.
 	 *
 	 * @param proxy
 	 *            proxy instance, can be <code>null</code>
