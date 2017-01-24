@@ -66,8 +66,8 @@ public class ProxyUtilsTest {
 		try {
 			ProxyUtils.unwrapProxy(proxy);
 			Assert.fail("Exception should be thrown before this step");
-		} catch (final ProxyHandlerUnsupportedException e) {
-			Assert.assertTrue("Exception should be there", e.getMessage().equals("Proxy invocation handler[" + handler.getClass() + "] is unsupported"));
+		} catch (final ProxyUnsupportedException e) {
+			Assert.assertTrue("Exception should be there", e.getMessage().equals("Proxy[" + handler.getClass() + "] is unsupported"));
 		}
 	}
 

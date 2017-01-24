@@ -59,7 +59,7 @@ public final class ProxyUtils {
 	/**
 	 * Unwrap proxied target.<br>
 	 * {@link ClassCastException} would be thrown if result instance can't be casted to expected type.<br>
-	 * {@link ProxyHandlerUnsupportedException} would be thrown if required proxy support is not registered.
+	 * {@link ProxyUnsupportedException} would be thrown if required proxy support is not registered.
 	 *
 	 * @param proxy
 	 *            proxy instance, can be <code>null</code>
@@ -92,7 +92,7 @@ public final class ProxyUtils {
 				}
 
 			if (!unwrapped)
-				throw new ProxyHandlerUnsupportedException(handler.getClass());
+				throw new ProxyUnsupportedException(handler.getClass());
 		}
 
 		return CastUtils.cast(result);
