@@ -17,7 +17,7 @@ public interface ProxySupport<T> {
 	 * 
 	 * @return {@link Class}
 	 */
-	Class<?> getHandlerClass();
+	Class<?> getSupportedType();
 
 	/**
 	 * Get proxied target from proxy.

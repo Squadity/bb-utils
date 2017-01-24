@@ -73,7 +73,7 @@ public final class ProxyUtils {
 		while (Proxy.isProxyClass(result.getClass())) {
 			boolean unwrapped = false;
 			for (final ProxySupport<?> support : SUPPORTS.values())
-				if (support.getHandlerClass().isAssignableFrom(result.getClass())) {
+				if (support.getSupportedType().isAssignableFrom(result.getClass())) {
 					final ProxySupport<Object> oSupport = CastUtils.cast(support);
 					result = oSupport.getTarget(result);
 					unwrapped = true;
@@ -85,7 +85,7 @@ public final class ProxyUtils {
 
 			final InvocationHandler handler = Proxy.getInvocationHandler(result);
 			for (final ProxyHandlerSupport support : SUPPORTS_BY_HANDLERS.values())
-				if (support.getHandlerClass().isAssignableFrom(handler.getClass())) {
+				if (support.getSupportedType().isAssignableFrom(handler.getClass())) {
 					result = support.getTarget(handler);
 					unwrapped = true;
 					break;

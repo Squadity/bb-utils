@@ -48,7 +48,7 @@ public class ProxyUtilsTest {
 	}
 
 	@Test
-	public void unsupportedHandler() {
+	public void unsupportedProxy() {
 		final ManagedService service = new ManagedServiceImpl();
 		final Class<?>[] interfaces = ClassUtils.getAllInterfaces(ManagedServiceImpl.class);
 		final InvocationHandler handler = new InvocationHandler() {
@@ -78,7 +78,7 @@ public class ProxyUtilsTest {
 		final InvocationHandler handler = new ManagedServiceHandler(service, interfaces);
 
 		final ProxyHandlerSupport support = new AdvisedHandlerSupport();
-		Assert.assertEquals(AdvisedHandler.class, support.getHandlerClass());
+		Assert.assertEquals(AdvisedHandler.class, support.getSupportedType());
 
 		final Object target = support.getTarget(handler);
 		Assert.assertEquals(service, target);
