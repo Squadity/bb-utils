@@ -80,6 +80,9 @@ public final class ProxyUtils {
 					break;
 				}
 
+			if (unwrapped)
+				continue;
+
 			final InvocationHandler handler = Proxy.getInvocationHandler(result);
 			for (final ProxyHandlerSupport support : SUPPORTS_BY_HANDLERS.values())
 				if (support.getHandlerClass().isAssignableFrom(handler.getClass())) {
