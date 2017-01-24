@@ -17,9 +17,14 @@ import net.bolbat.utils.lang.CastUtils;
 public final class ProxyUtils {
 
 	/**
+	 * {@link ProxySupport}'s holder.
+	 */
+	private static final Map<Class<?>, ProxySupport<?>> SUPPORTS = new ConcurrentHashMap<>();
+
+	/**
 	 * {@link ProxyHandlerSupport}'s holder.
 	 */
-	private static final Map<Class<? extends ProxyHandlerSupport>, ProxyHandlerSupport> HANDLERS_SUPPORTS = new ConcurrentHashMap<>();
+	private static final Map<Class<?>, ProxyHandlerSupport> SUPPORTS_BY_HANDLERS = new ConcurrentHashMap<>();
 
 	/**
 	 * Static initialization.
@@ -36,15 +41,19 @@ public final class ProxyUtils {
 	}
 
 	/**
-	 * Register {@link ProxyHandlerSupport}.
+	 * Register {@link ProxySupport}.
 	 * 
 	 * @param support
-	 *            {@link ProxyHandlerSupport}
+	 *            {@link ProxySupport}
 	 */
-	public static void registerProxyHandlerSupport(final ProxyHandlerSupport support) {
+	public static void registerProxyHandlerSupport(final ProxySupport<?> support) {
 		checkArgument(support != null, "support argument is null");
 
-		HANDLERS_SUPPORTS.put(support.getClass(), support);
+		if (support instanceof ProxyHandlerSupport) {
+			SUPPORTS_BY_HANDLERS.put(support.getClass(), (ProxyHandlerSupport) support);
+		} else {
+			SUPPORTS.put(support.getClass(), support);
+		}
 	}
 
 	/**
@@ -62,9 +71,17 @@ public final class ProxyUtils {
 
 		Object result = proxy;
 		while (Proxy.isProxyClass(result.getClass())) {
-			final InvocationHandler handler = Proxy.getInvocationHandler(result);
 			boolean unwrapped = false;
-			for (final ProxyHandlerSupport support : HANDLERS_SUPPORTS.values())
+			for (final ProxySupport<?> support : SUPPORTS.values())
+				if (support.getHandlerClass().isAssignableFrom(result.getClass())) {
+					final ProxySupport<Object> oSupport = CastUtils.cast(support);
+					result = oSupport.getTarget(result);
+					unwrapped = true;
+					break;
+				}
+
+			final InvocationHandler handler = Proxy.getInvocationHandler(result);
+			for (final ProxyHandlerSupport support : SUPPORTS_BY_HANDLERS.values())
 				if (support.getHandlerClass().isAssignableFrom(handler.getClass())) {
 					result = support.getTarget(handler);
 					unwrapped = true;

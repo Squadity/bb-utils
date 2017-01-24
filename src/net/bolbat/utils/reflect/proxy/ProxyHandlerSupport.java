@@ -8,22 +8,6 @@ import java.lang.reflect.Proxy;
  * 
  * @author Alexandr Bolbat
  */
-public interface ProxyHandlerSupport {
-
-	/**
-	 * Get supported {@link InvocationHandler} class.
-	 * 
-	 * @return {@link Class}
-	 */
-	Class<?> getHandlerClass();
-
-	/**
-	 * Get proxied target from supported {@link InvocationHandler}.
-	 * 
-	 * @param handler
-	 *            {@link InvocationHandler}
-	 * @return proxied target
-	 */
-	Object getTarget(InvocationHandler handler);
+public interface ProxyHandlerSupport extends ProxySupport<InvocationHandler> {
 
 }
