@@ -5,7 +5,7 @@ package net.bolbat.utils.reflect.proxy;
  * 
  * @author Alexandr Bolbat
  */
-public class ProxyHandlerUnsupportedException extends RuntimeException {
+public class ProxyUnsupportedException extends RuntimeException {
 
 	/**
 	 * Basic serialVersionUID variable.
@@ -18,8 +18,8 @@ public class ProxyHandlerUnsupportedException extends RuntimeException {
 	 * @param clazz
 	 *            handler class
 	 */
-	public ProxyHandlerUnsupportedException(final Class<?> clazz) {
-		super("Proxy invocation handler[" + clazz + "] is unsupported");
+	public ProxyUnsupportedException(final Class<?> clazz) {
+		super("Proxy[" + clazz + "] is unsupported");
 	}
 
 }

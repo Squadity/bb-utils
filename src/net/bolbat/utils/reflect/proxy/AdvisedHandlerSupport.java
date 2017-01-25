@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationHandler;
 public class AdvisedHandlerSupport implements ProxyHandlerSupport {
 
 	@Override
-	public Class<?> getHandlerClass() {
+	public Class<?> getSupportedType() {
 		return AdvisedHandler.class;
 	}
 
