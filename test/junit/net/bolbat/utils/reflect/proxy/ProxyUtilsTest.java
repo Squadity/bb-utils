@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import net.bolbat.utils.common.ManagedService;
@@ -22,6 +23,11 @@ import net.bolbat.utils.reflect.ClassUtils;
  * @author Alexandr Bolbat
  */
 public class ProxyUtilsTest {
+
+	@BeforeClass
+	public static void beforeClass(){
+		ProxyUtils.registerProxyHandlerSupport(new AdditionalAdvisedProxySupport());
+	}
 
 	@Test
 	public void unwrapProxy() {
@@ -107,10 +113,6 @@ public class ProxyUtilsTest {
 		Assert.assertNotEquals(service, proxy);
 		Assert.assertNotSame(service, proxy);
 
-		final AdditionalAdvisedProxySupport support = new AdditionalAdvisedProxySupport();
-		ProxyUtils.registerProxyHandlerSupport(support);
-		Assert.assertEquals(Advised.class, support.getSupportedType());
-
 		final Object unwrapped = ProxyUtils.unwrapProxy(proxy);
 		Assert.assertSame(service, unwrapped);
 		Assert.assertFalse(Proxy.isProxyClass(unwrapped.getClass()));
@@ -142,11 +144,6 @@ public class ProxyUtilsTest {
 
 		final ManagedService proxyOverProxy =
 				CastUtils.cast(Proxy.newProxyInstance(service.getClass().getClassLoader(), requiredProxyOverProxyInterfaces, secondProxyHandler));
-		//re-registering Additional ProxySupport<Advised> for test  purposes...
-		final AdditionalAdvisedProxySupport support = new AdditionalAdvisedProxySupport();
-		ProxyUtils.registerProxyHandlerSupport(support);
-		Assert.assertEquals(Advised.class, support.getSupportedType());
-
 
 		final Object secondTimeUnwrapped = ProxyUtils.unwrapProxy(proxyOverProxy);
 		Assert.assertSame(service, unwrapped);
