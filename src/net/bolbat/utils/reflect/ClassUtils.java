@@ -250,8 +250,7 @@ public final class ClassUtils {
 	 * - MUST NOT throw a checked exception;<br>
 	 * - MAY be final;<br>
 	 * - MAY be public, protected, package private or private;<br>
-	 * - excludes inherited methods;<br>
-	 * - unchecked exceptions ignored, cause logged with 'WARN' or 'DEBUG' level.
+	 * - excludes inherited methods.
 	 * 
 	 * @param instance
 	 *            {@link Object}
@@ -262,6 +261,32 @@ public final class ClassUtils {
 	 */
 	@SafeVarargs
 	public static void execute(final Object instance, final boolean unwrapIfProxy, final Class<? extends Annotation>... annotations) {
+		execute(instance, unwrapIfProxy, false, annotations);
+	}
+
+	/**
+	 * Execute all methods for given instance marked with at least one of given annotations.<br>
+	 * Rules for marked methods:<br>
+	 * - MUST be void;<br>
+	 * - MUST NOT have any parameters;<br>
+	 * - MUST NOT be static;<br>
+	 * - MUST NOT throw a checked exception;<br>
+	 * - MAY be final;<br>
+	 * - MAY be public, protected, package private or private;<br>
+	 * - excludes inherited methods.
+	 * 
+	 * @param instance
+	 *            {@link Object}
+	 * @param unwrapIfProxy
+	 *            if <code>true</code> try to unwrap if instance if a {@link Proxy} by {@code ProxyUtils.unwrapProxy(proxy)}
+	 * @param skipOnError
+	 *            skip execution on any exception
+	 * @param annotations
+	 *            annotations types
+	 */
+	@SafeVarargs
+	public static void execute(final Object instance, final boolean unwrapIfProxy, final boolean skipOnError,
+			final Class<? extends Annotation>... annotations) {
 		checkArgument(instance != null, "instance argument is null");
 		if (annotations == null || annotations.length == 0)
 			return;
@@ -325,9 +350,17 @@ public final class ClassUtils {
 				m.setAccessible(true);
 				m.invoke(target);
 				// CHECKSTYLE:OFF
-			} catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
+			} catch (final IllegalAccessException | InvocationTargetException e) {
 				// CHECKSTYLE:ON
-				LoggingUtils.warn(LOGGER, "Can't execute method[" + m + "]", e);
+				LoggingUtils.debug(LOGGER, "Can't execute method[" + m + "]", e);
+
+				if (skipOnError)
+					return;
+
+				if (e instanceof InvocationTargetException) // unwrapping
+					throw new RuntimeException(((InvocationTargetException) e).getTargetException());
+
+				throw new RuntimeException(e);
 			}
 		}
 	}

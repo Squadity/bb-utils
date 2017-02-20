@@ -150,7 +150,7 @@ public class ClassUtilsTest {
 		final ManagedService service = ManagedServiceImpl.createManagedService();
 		Assert.assertEquals(ManagedServiceImpl.class, service.getClass());
 
-		ClassUtils.execute(service, Execute.class);
+		ClassUtils.execute(service, false, true, Execute.class);
 		Assert.assertEquals(2, service.getExecuteExecutions());
 
 		try {
@@ -159,6 +159,13 @@ public class ClassUtilsTest {
 		} catch (final IllegalArgumentException e) {
 			Assert.assertTrue("Exception should be there", e.getMessage().equals("instance argument is null"));
 		}
+
+		try {
+			ClassUtils.execute(service, Execute.class);
+			Assert.fail("Exception should be thrown before this step");
+		} catch (final RuntimeException e) {
+			Assert.assertTrue("Exception should be there", e.getMessage().equals("java.lang.IllegalArgumentException: Testing case"));
+		}
 	}
 
 	@Test
@@ -166,7 +173,7 @@ public class ClassUtilsTest {
 		final ManagedService service = ManagedServiceImpl.createProxiedManagedService();
 		Assert.assertTrue(Proxy.isProxyClass(service.getClass()));
 
-		ClassUtils.execute(service, true, Execute.class);
+		ClassUtils.execute(service, true, true, Execute.class);
 		Assert.assertEquals(2, service.getExecuteExecutions());
 
 		try {
@@ -174,6 +181,13 @@ public class ClassUtilsTest {
 			Assert.fail("Exception should be thrown before this step");
 		} catch (final IllegalArgumentException e) {
 			Assert.assertTrue("Exception should be there", e.getMessage().equals("instance argument is null"));
+		}
+
+		try {
+			ClassUtils.execute(service, true, false, Execute.class);
+			Assert.fail("Exception should be thrown before this step");
+		} catch (final RuntimeException e) {
+			Assert.assertTrue("Exception should be there", e.getMessage().equals("java.lang.IllegalArgumentException: Testing case"));
 		}
 	}
 
