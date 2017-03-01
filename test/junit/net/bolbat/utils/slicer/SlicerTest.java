@@ -6,12 +6,23 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import net.bolbat.utils.test.CommonTester;
+
 /**
  * {@link Slicer} utility test.
  * 
  * @author Alexandr Bolbat
  */
 public class SlicerTest {
+
+	/**
+	 * Check that utility is protected from instantiation.
+	 */
+	@Test
+	public void protectedUtilityInstantiation() {
+		CommonTester.checkNotInstantiableDefaultConstructor(Slicer.class);
+		CommonTester.checkNotInstantiableDefaultConstructor(Slicer.class, IllegalAccessError.class);
+	}
 
 	/**
 	 * Testing slicing.

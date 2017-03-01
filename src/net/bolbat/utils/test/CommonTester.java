@@ -1,6 +1,7 @@
 package net.bolbat.utils.test;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import net.bolbat.utils.reflect.Instantiator;
 
@@ -16,6 +17,41 @@ public final class CommonTester {
 	 */
 	private CommonTester() {
 		throw new IllegalAccessError("Shouldn't be instantiated.");
+	}
+
+	/**
+	 * Check is class protected from instantiation by default constructor.
+	 * 
+	 * @param clazz
+	 *            type
+	 */
+	public static void checkNotInstantiableDefaultConstructor(final Class<?> clazz) {
+		checkNotInstantiableDefaultConstructor(clazz, null);
+	}
+
+	/**
+	 * Check is class protected from instantiation by default constructor.
+	 * 
+	 * @param clazz
+	 *            type
+	 * @param expectedException
+	 *            expected exception while instantiation
+	 */
+	public static <T extends Throwable> void checkNotInstantiableDefaultConstructor(final Class<?> clazz, final Class<T> expectedException) {
+		try {
+			final Constructor<?> constructor = clazz.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			constructor.newInstance();
+			throw new AssertionError(String.format("Shouldn't be possible type[%s] instantiation", clazz));
+		} catch (final NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException e) {
+			throw new AssertionError(String.format("Unexpected type[%s] instantiation problem ", clazz));
+		} catch (final InvocationTargetException e) {
+			if (expectedException != null && (e.getCause() == null || !e.getCause().getClass().equals(expectedException))) {
+				final String format = "Unexpected type[%s] instantiation exception cause[%s], expected[%s]";
+				final String message = String.format(format, clazz, e.getCause(), expectedException);
+				throw new AssertionError(message);
+			}
+		}
 	}
 
 	/**
