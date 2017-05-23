@@ -111,6 +111,19 @@ public final class IdBasedLockManagerTest {
 			UNSAFE_PER_ID_CALLS.put(id, new AtomicInteger(0));
 	}
 
+	@Test
+	public void autoClose() {
+		final IdBasedLockManager<String> lockManager = new ConcurrentIdBasedLockManager<>();
+
+		Assert.assertFalse(lockManager.obtainLock("some-id").isLocked());
+
+		try (final IdBasedLock<String> l = lockManager.obtainLock("some-id").lock()) {
+			Assert.assertTrue(l.isLocked());
+		}
+
+		Assert.assertFalse(lockManager.obtainLock("some-id").isLocked());
+	}
+
 	/**
 	 * Error cases test.
 	 */

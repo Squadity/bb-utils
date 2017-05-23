@@ -20,7 +20,7 @@ import net.bolbat.utils.annotation.Stability;
 @Audience.Public
 @Stability.Stable
 @Concurrency.ThreadSafe
-public class IdBasedLock<T> implements Serializable {
+public class IdBasedLock<T> implements Serializable, AutoCloseable {
 
 	/**
 	 * Generated SerialVersionUID.
@@ -63,9 +63,12 @@ public class IdBasedLock<T> implements Serializable {
 	/**
 	 * Acquires the lock.<br>
 	 * Check <code>ReentrantLock.lock()</code> for details.
+	 * 
+	 * @return {@link IdBasedLock}
 	 */
-	public void lock() {
+	public IdBasedLock<T> lock() {
 		lock.lock();
+		return this;
 	}
 
 	/**
@@ -99,10 +102,13 @@ public class IdBasedLock<T> implements Serializable {
 	/**
 	 * Attempts to release this lock.<br>
 	 * Check <code>ReentrantLock.unlock()</code> for details.
+	 * 
+	 * @return {@link IdBasedLock}
 	 */
-	public void unlock() {
+	public IdBasedLock<T> unlock() {
 		lock.unlock();
 		manager.releaseLock(this);
+		return this;
 	}
 
 	/**
@@ -181,6 +187,11 @@ public class IdBasedLock<T> implements Serializable {
 	 */
 	protected T getId() {
 		return id;
+	}
+
+	@Override
+	public void close() {
+		unlock();
 	}
 
 	@Override
