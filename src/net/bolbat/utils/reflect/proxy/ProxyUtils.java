@@ -117,7 +117,7 @@ public final class ProxyUtils {
 	/**
 	 * Is given class a proxy class.
 	 * 
-	 * @param proxy
+	 * @param proxyClass
 	 *            given class
 	 * @return <code>true</code> if proxy or <code>false</code>
 	 */
