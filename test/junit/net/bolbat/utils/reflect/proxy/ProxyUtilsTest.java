@@ -16,6 +16,9 @@ import net.bolbat.utils.common.ManagedServiceHandler;
 import net.bolbat.utils.common.ManagedServiceImpl;
 import net.bolbat.utils.lang.CastUtils;
 import net.bolbat.utils.reflect.ClassUtils;
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.Factory;
 
 /**
  * {@link ProxyUtils} test.
@@ -27,6 +30,7 @@ public class ProxyUtilsTest {
 	@BeforeClass
 	public static void beforeClass(){
 		ProxyUtils.registerProxyHandlerSupport(new AdditionalAdvisedProxySupport());
+		ProxyUtils.registerProxyHandlerSupport(new CglibProxySupport());
 	}
 
 	@Test
@@ -76,7 +80,7 @@ public class ProxyUtilsTest {
 			ProxyUtils.unwrapProxy(proxy);
 			Assert.fail("Exception should be thrown before this step");
 		} catch (final ProxyUnsupportedException e) {
-			Assert.assertTrue("Exception should be there", e.getMessage().equals("Proxy[" + handler.getClass() + "] is unsupported"));
+			Assert.assertTrue("Exception should be there", e.getMessage().equals("Proxy[" + proxy.getClass() + "] is unsupported"));
 		}
 	}
 
@@ -152,6 +156,57 @@ public class ProxyUtilsTest {
 		Assert.assertFalse(Proxy.isProxyClass(secondTimeUnwrapped.getClass()));
 	}
 
+	/**
+	 * CGLIB proxy unwrap test case.. Uses  same Advised interface, but with {@link AdditionalAdvisedProxySupport} instead of
+	 * {@link AdvisedHandlerSupport}.
+	 */
+	@Test
+	public void cglibProxySupportTest() {
+		final ManagedService service = new ManagedServiceImpl();
+		Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(ManagedServiceImpl.class);
+		enhancer.setCallback(new CglibInvocationHandler(service));
+		ManagedService proxy = (ManagedService) enhancer.create();
+
+		Assert.assertTrue(ProxyUtils.isProxy(proxy));
+		Assert.assertNotEquals(service, proxy);
+		Assert.assertNotSame(service, proxy);
+
+		final Object unwrapped = ProxyUtils.unwrapProxy(proxy);
+		Assert.assertSame(service, unwrapped);
+		Assert.assertFalse(ProxyUtils.isProxy(unwrapped));
+	}
+
+	@Test
+	public void genericProxyDetecting() throws Exception {
+		final ManagedService service = new ManagedServiceImpl();
+		final Class<?>[] interfaces = ClassUtils.getAllInterfaces(ManagedServiceImpl.class);
+		List<Class<?>> interfacesList = new ArrayList<>(Arrays.asList(interfaces));
+		//appending Advised to interfaces list... ( as spring @ least does )....
+		interfacesList.add(Advised.class);
+		final InvocationHandler handler = new ManagedServiceHandler(service, interfaces);
+		final ManagedService proxy = CastUtils.cast(Proxy.newProxyInstance(service.getClass().getClassLoader(), interfacesList.toArray(new Class<?>[interfacesList.size()]), handler));
+
+		Assert.assertTrue(ProxyUtils.isProxy(proxy));
+	}
+
+	@Test
+	public void cglibProxyDetecting() throws Exception {
+		final ManagedService service = new ManagedServiceImpl();
+		Enhancer enhancer = new Enhancer();
+		enhancer.setSuperclass(ManagedServiceImpl.class);
+		enhancer.setCallback(new CglibInvocationHandler(service));
+		ManagedService proxy = CastUtils.cast(enhancer.create());
+
+		Assert.assertTrue(ProxyUtils.isProxy(proxy));
+	}
+
+	@Test
+	public void nullDetecting() throws Exception {
+		ManagedService proxy = null;
+
+		Assert.assertFalse(ProxyUtils.isProxy(proxy));
+	}
 
 	/**
 	 * Additional ProxySupport for Advised. Required for generic testCase.
@@ -171,4 +226,45 @@ public class ProxyUtilsTest {
 
 	}
 
+	/**
+	 * Dummy cglib invocation handler
+	 */
+	private class CglibInvocationHandler implements net.sf.cglib.proxy.InvocationHandler {
+		private final Object target;
+
+		public CglibInvocationHandler(Object target) {
+			this.target = target;
+		}
+
+		public Object getTarget() {
+			return target;
+		}
+
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			return method.invoke(target, args);
+		}
+	}
+
+	/**
+	 * Additional ProxySupport for CGLIB proxy. Required for generic testCase.
+	 */
+	private static class CglibProxySupport implements ProxySupport<Factory> {
+		@Override
+		public Class<?> getSupportedType() {
+			return Factory.class;
+		}
+
+		@Override
+		public Object getTarget(Factory source) {
+			final Callback[] callbacks = source.getCallbacks();
+			for (Callback callback :callbacks) {
+				if (callback instanceof CglibInvocationHandler) {
+					return ((CglibInvocationHandler) callback).getTarget();
+				}
+			}
+
+			throw new ProxyUnsupportedException(source.getClass());
+		}
+	}
 }

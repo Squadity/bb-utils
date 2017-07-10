@@ -17,6 +17,11 @@ import net.bolbat.utils.lang.CastUtils;
 public final class ProxyUtils {
 
 	/**
+	 * The CGLIB class separator character "$$"
+	 */
+	private static final String CGLIB_CLASS_SEPARATOR = "$$";
+
+	/**
 	 * {@link ProxySupport}'s holder.
 	 */
 	private static final Map<Class<?>, ProxySupport<?>> SUPPORTS = new ConcurrentHashMap<>();
@@ -66,14 +71,12 @@ public final class ProxyUtils {
 	 * @return expected instance
 	 */
 	public static <T> T unwrapProxy(final Object proxy) {
-		if (proxy == null || !Proxy.isProxyClass(proxy.getClass()))
-			return CastUtils.cast(proxy);
-
 		Object result = proxy;
-		while (Proxy.isProxyClass(result.getClass())) {
+		while (isProxy(result)) {
 			boolean unwrapped = false;
+			final Class<?> clazz = result.getClass();
 			for (final ProxySupport<?> support : SUPPORTS.values())
-				if (support.getSupportedType().isAssignableFrom(result.getClass())) {
+				if (support.getSupportedType().isAssignableFrom(clazz)) {
 					final ProxySupport<Object> oSupport = CastUtils.cast(support);
 					result = oSupport.getTarget(result);
 					unwrapped = true;
@@ -83,19 +86,37 @@ public final class ProxyUtils {
 			if (unwrapped)
 				continue;
 
-			final InvocationHandler handler = Proxy.getInvocationHandler(result);
-			for (final ProxyHandlerSupport support : SUPPORTS_BY_HANDLERS.values())
-				if (support.getSupportedType().isAssignableFrom(handler.getClass())) {
-					result = support.getTarget(handler);
-					unwrapped = true;
-					break;
-				}
+			if (isJdkDynamicProxy(clazz)) {
+				final InvocationHandler handler = Proxy.getInvocationHandler(result);
+				for (final ProxyHandlerSupport support : SUPPORTS_BY_HANDLERS.values())
+					if (support.getSupportedType().isAssignableFrom(handler.getClass())) {
+						result = support.getTarget(handler);
+						unwrapped = true;
+						break;
+					}
+			}
 
 			if (!unwrapped)
-				throw new ProxyUnsupportedException(handler.getClass());
+				throw new ProxyUnsupportedException(clazz);
 		}
 
 		return CastUtils.cast(result);
+	}
+
+	public static boolean isProxy(final Object proxy) {
+		return proxy != null ? isProxy(proxy.getClass()) : false;
+	}
+
+	public static boolean isProxy(final Class<?> proxyClass) {
+		return proxyClass != null ? isJdkDynamicProxy(proxyClass) || isCglibProxy(proxyClass) : false;
+	}
+
+	private static boolean isJdkDynamicProxy(final Class<?> clazz) {
+		return Proxy.isProxyClass(clazz);
+	}
+
+	private static boolean isCglibProxy(final Class<?> clazz) {
+		return clazz.getName().contains(CGLIB_CLASS_SEPARATOR);
 	}
 
 }

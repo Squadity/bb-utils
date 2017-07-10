@@ -12,6 +12,10 @@
 		<version>13</version>
 	</parent>
 
+	<properties>
+		<cglib_cglib.version>2.2.2</cglib_cglib.version>
+	</properties>
+
 	<dependencies>
 		<!-- Common dependencies -->
 		<dependency>
@@ -44,6 +48,12 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency> <!-- required for net.bolbat.utils.reflect.proxy.ProxyUtilsTest -->
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${cglib_cglib.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
