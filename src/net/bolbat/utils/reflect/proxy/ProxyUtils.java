@@ -17,7 +17,7 @@ import net.bolbat.utils.lang.CastUtils;
 public final class ProxyUtils {
 
 	/**
-	 * The CGLIB class separator character "$$"
+	 * The CGLIB class separator character "$$".
 	 */
 	private static final String CGLIB_CLASS_SEPARATOR = "$$";
 
@@ -103,10 +103,24 @@ public final class ProxyUtils {
 		return CastUtils.cast(result);
 	}
 
+	/**
+	 * Is given object a proxy.
+	 * 
+	 * @param proxy
+	 *            given object
+	 * @return <code>true</code> if proxy or <code>false</code>
+	 */
 	public static boolean isProxy(final Object proxy) {
 		return proxy != null ? isProxy(proxy.getClass()) : false;
 	}
 
+	/**
+	 * Is given class a proxy class.
+	 * 
+	 * @param proxy
+	 *            given class
+	 * @return <code>true</code> if proxy or <code>false</code>
+	 */
 	public static boolean isProxy(final Class<?> proxyClass) {
 		return proxyClass != null ? isJdkDynamicProxy(proxyClass) || isCglibProxy(proxyClass) : false;
 	}
