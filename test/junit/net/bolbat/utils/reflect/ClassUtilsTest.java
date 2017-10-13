@@ -110,6 +110,11 @@ public class ClassUtilsTest {
 	}
 
 	@Test
+	@ToDo("Implement me")
+	public void getAllMethodsTest() {
+	}
+
+	@Test
 	public void executePostConstruct() {
 		final ManagedService service = ManagedServiceImpl.createManagedService();
 		Assert.assertEquals(ManagedServiceImpl.class, service.getClass());

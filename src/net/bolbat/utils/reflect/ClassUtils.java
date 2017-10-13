@@ -112,6 +112,21 @@ public final class ClassUtils {
 	}
 
 	/**
+	 * Get all class methods.
+	 * 
+	 * @param type
+	 *            class
+	 * @return {@link Set} of {@link Method}
+	 */
+	public static Set<Method> getAllMethods(final Class<?> type) {
+		final Set<Method> result = new LinkedHashSet<>();
+		for (final Class<?> t : getAllTypes(type))
+			result.addAll(Arrays.asList(t.getDeclaredMethods()));
+
+		return result;
+	}
+
+	/**
 	 * Convert primitive type to it's not primitive analog. <br>
 	 * Supported primitive types of: {@link Byte}, {@link Short}, {@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean},
 	 * {@link Character}. <br>
@@ -250,7 +265,7 @@ public final class ClassUtils {
 	 * - MUST NOT throw a checked exception;<br>
 	 * - MAY be final;<br>
 	 * - MAY be public, protected, package private or private;<br>
-	 * - excludes inherited methods.
+	 * - includes inherited methods.
 	 * 
 	 * @param instance
 	 *            {@link Object}
@@ -273,7 +288,7 @@ public final class ClassUtils {
 	 * - MUST NOT throw a checked exception;<br>
 	 * - MAY be final;<br>
 	 * - MAY be public, protected, package private or private;<br>
-	 * - excludes inherited methods.
+	 * - includes inherited methods.
 	 * 
 	 * @param instance
 	 *            {@link Object}
@@ -302,7 +317,7 @@ public final class ClassUtils {
 				LoggingUtils.warn(LOGGER, "Can't unwrap from proxy[" + target + "]", e);
 			}
 
-		for (final Method m : target.getClass().getDeclaredMethods()) {
+		for (final Method m : getAllMethods(target.getClass())) {
 			boolean process = false;
 			for (final Class<? extends Annotation> aClass : annotations) {
 				if (aClass != null && m.getAnnotation(aClass) != null) {
