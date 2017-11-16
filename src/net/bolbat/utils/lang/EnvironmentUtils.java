@@ -158,7 +158,7 @@ public final class EnvironmentUtils {
 	/**
 	 * Clear cache.
 	 */
-	public void tearDown() {
+	public static void tearDown() {
 		synchronized (VARIABLES_CACHE_LOCK) {
 			VARIABLES_CACHE.clear();
 			VARIABLES_TOTAL.set(0);
