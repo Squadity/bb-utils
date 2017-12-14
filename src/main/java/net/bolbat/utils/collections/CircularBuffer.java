@@ -149,7 +149,7 @@ public class CircularBuffer<E> implements Serializable {
 	 * @return <code>true</code> if contains or <code>false</code>
 	 */
 	public boolean contains(final E element) {
-		return elements.isEmpty() ? false : elements.contains(element);
+		return !elements.isEmpty() && elements.contains(element);
 	}
 
 	/**

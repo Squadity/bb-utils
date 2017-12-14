@@ -111,7 +111,7 @@ public final class ProxyUtils {
 	 * @return <code>true</code> if proxy or <code>false</code>
 	 */
 	public static boolean isProxy(final Object proxy) {
-		return proxy != null ? isProxy(proxy.getClass()) : false;
+		return proxy != null && isProxy(proxy.getClass());
 	}
 
 	/**
@@ -122,7 +122,7 @@ public final class ProxyUtils {
 	 * @return <code>true</code> if proxy or <code>false</code>
 	 */
 	public static boolean isProxy(final Class<?> proxyClass) {
-		return proxyClass != null ? isJdkDynamicProxy(proxyClass) || isCglibProxy(proxyClass) : false;
+		return proxyClass != null && (isJdkDynamicProxy(proxyClass) || isCglibProxy(proxyClass));
 	}
 
 	private static boolean isJdkDynamicProxy(final Class<?> clazz) {
