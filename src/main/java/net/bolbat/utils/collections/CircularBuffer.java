@@ -51,7 +51,7 @@ public class CircularBuffer<E> implements Serializable {
 	 *            elements list
 	 */
 	private CircularBuffer(final List<E> aElements) {
-		this.elements = aElements != null ? aElements : new ArrayList<E>();
+		this.elements = aElements != null ? aElements : new ArrayList<>();
 	}
 
 	/**
