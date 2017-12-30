@@ -6,7 +6,7 @@ import static net.bolbat.utils.lang.StringUtils.isNotEmpty;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.codec.binary.Hex;
+import javax.xml.bind.DatatypeConverter;
 
 import net.bolbat.utils.lang.ArrayUtils;
 import net.bolbat.utils.lang.StringUtils;
@@ -55,8 +55,8 @@ public final class DigestUtils {
 		if (StringUtils.isEmpty(value))
 			return CipherUtils.EMPTY_STRING;
 
-		byte[] digest = algorithm.digest(value.getBytes(CipherUtils.DEFAULT_CHARSET), salt);
-		return Hex.encodeHexString(digest);
+		final byte[] digest = algorithm.digest(value.getBytes(CipherUtils.DEFAULT_CHARSET), salt);
+		return DatatypeConverter.printHexBinary(digest).toLowerCase(); // toLowerCase for backward compatibility after migration from Hex utility
 	}
 
 	/**

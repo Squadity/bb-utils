@@ -2,7 +2,6 @@ package net.bolbat.utils.crypt;
 
 import java.util.Date;
 
-import org.apache.commons.codec.DecoderException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -155,7 +154,7 @@ public class CipherUtilsTest {
 			CipherUtils.decode(Algorithm.BLOWFISH, "not-valid-hex", "mock", "mock");
 			Assert.fail("Exception shold be thrown before this step.");
 		} catch (CipherRuntimeException e) {
-			Assert.assertTrue("Exception should be there.", e.getCause() instanceof DecoderException);
+			Assert.assertTrue("Exception should be there.", e.getCause() instanceof IllegalArgumentException);
 		}
 
 		// algorithm enumeration

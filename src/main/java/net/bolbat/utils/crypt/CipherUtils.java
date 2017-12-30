@@ -22,9 +22,7 @@ import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
+import javax.xml.bind.DatatypeConverter;
 
 import net.bolbat.utils.lang.StringUtils;
 
@@ -122,7 +120,7 @@ public final class CipherUtils {
 			throw new IllegalArgumentException("salt argument is empty.");
 
 		final byte[] encoded = algorithm.encode(value.getBytes(DEFAULT_CHARSET), key, salt, null);
-		return Hex.encodeHexString(encoded);
+		return DatatypeConverter.printHexBinary(encoded);
 	}
 
 	/**
@@ -165,9 +163,10 @@ public final class CipherUtils {
 			throw new IllegalArgumentException("salt argument is empty.");
 
 		try {
-			final byte[] decoded = algorithm.decode(Hex.decodeHex(value.toCharArray()), key, salt, null);
+			final byte[] decodedHex = DatatypeConverter.parseHexBinary(value);
+			final byte[] decoded = algorithm.decode(decodedHex, key, salt, null);
 			return new String(decoded, DEFAULT_CHARSET);
-		} catch (DecoderException e) {
+		} catch (IllegalArgumentException e) {
 			throw new CipherRuntimeException(e);
 		}
 	}
