@@ -3,11 +3,14 @@ package net.bolbat.utils.lang;
 import org.junit.Assert;
 import org.junit.Test;
 
+import net.bolbat.utils.annotation.Mark.ToDo;
+
 /**
  * {@link ArrayUtils} test.
  * 
  * @author Alexandr Bolbat
  */
+@ToDo({ "clone methods", "addAll methods" })
 public class ArrayUtilsTest {
 
 	@Test

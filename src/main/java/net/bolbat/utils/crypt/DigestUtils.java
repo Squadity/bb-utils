@@ -7,8 +7,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang.ArrayUtils;
 
+import net.bolbat.utils.lang.ArrayUtils;
 import net.bolbat.utils.lang.StringUtils;
 
 /**

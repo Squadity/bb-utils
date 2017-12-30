@@ -9,9 +9,6 @@ import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.commons.lang.mutable.MutableInt;
-import org.apache.commons.lang.mutable.MutableLong;
-import org.apache.commons.lang.mutable.MutableShort;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -139,9 +136,7 @@ public class NumberUtilsTest {
 		Assert.assertEquals(-1, NumberUtils.compare(new AtomicLong(-1), new AtomicInteger(1)));
 
 		// other types
-		Assert.assertEquals(0, NumberUtils.compare(new MutableInt(MAX_VALUE), new MutableInt(MAX_VALUE)));
-		Assert.assertEquals(-1, NumberUtils.compare(new MutableLong(Long.MIN_VALUE), new MutableLong(Long.MAX_VALUE)));
-		Assert.assertEquals(1, NumberUtils.compare(new MutableShort(Short.MAX_VALUE), new MutableShort(Short.MIN_VALUE)));
+		Assert.assertEquals(0, NumberUtils.compare(new IntNumber(MAX_VALUE), new IntNumber(MAX_VALUE)));
 
 		// there can be any other combinations
 	}
@@ -263,6 +258,38 @@ public class NumberUtilsTest {
 		Assert.assertEquals(0, NumberUtils.add(null, null));
 		Assert.assertEquals(valueOf(0), NumberUtils.add(0, null));
 		Assert.assertEquals(valueOf(0), NumberUtils.add(null, valueOf(0)));
+	}
+
+	public static class IntNumber extends Number {
+
+		private static final long serialVersionUID = 751995880574646519L;
+
+		private final int value;
+
+		public IntNumber(final int aValue) {
+			this.value = aValue;
+		}
+
+		@Override
+		public int intValue() {
+			return value;
+		}
+
+		@Override
+		public long longValue() {
+			return value;
+		}
+
+		@Override
+		public float floatValue() {
+			return value;
+		}
+
+		@Override
+		public double doubleValue() {
+			return value;
+		}
+
 	}
 
 }
