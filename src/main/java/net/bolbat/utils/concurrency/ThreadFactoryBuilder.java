@@ -165,14 +165,14 @@ public final class ThreadFactoryBuilder {
 		final UncaughtExceptionHandler aUncaughtExceptionHandler = this.uncaughtExceptionHandler;
 
 		return new ThreadFactory() {
-			private final AtomicLong threadsCount = isNotEmpty(aNameFormat) ? new AtomicLong(1) : null;
+			private final AtomicLong threadsCount = new AtomicLong();
 
 			@Override
 			public Thread newThread(final Runnable r) {
 				final Thread result = aDefaultThreadFactory.newThread(r);
 
 				if (isNotEmpty(aNameFormat))
-					result.setName(String.format(aNameFormat, ArrayUtils.concat(aNameFormatArgs, threadsCount.getAndIncrement())));
+					result.setName(String.format(aNameFormat, ArrayUtils.concat(aNameFormatArgs, threadsCount.incrementAndGet())));
 
 				if (aDaemon != null)
 					result.setDaemon(aDaemon);
