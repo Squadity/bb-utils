@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.bolbat.test.utils.CommonTester;
 import net.bolbat.utils.crypt.CipherUtils.Algorithm;
-import net.bolbat.utils.test.CommonTester;
 
 /**
  * {@link CipherUtils} test.

@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import net.bolbat.utils.test.CommonTester;
+import net.bolbat.test.utils.CommonTester;
 
 /**
  * {@link Slicer} utility test.
