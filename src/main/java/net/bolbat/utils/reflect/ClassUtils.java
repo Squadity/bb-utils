@@ -295,7 +295,7 @@ public final class ClassUtils {
 	 * @param unwrapIfProxy
 	 *            if <code>true</code> try to unwrap if instance if a {@link Proxy} by {@code ProxyUtils.unwrapProxy(proxy)}
 	 * @param skipOnError
-	 *            skip execution on any exception
+	 *            skip method execution on any exception
 	 * @param annotations
 	 *            annotations types
 	 */
@@ -370,7 +370,7 @@ public final class ClassUtils {
 				LoggingUtils.debug(LOGGER, "Can't execute method[" + m + "]", e);
 
 				if (skipOnError)
-					return;
+					continue;
 
 				if (e instanceof InvocationTargetException) // unwrapping
 					throw new RuntimeException(((InvocationTargetException) e).getTargetException());
