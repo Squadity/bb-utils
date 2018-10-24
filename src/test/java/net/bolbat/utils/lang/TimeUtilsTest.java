@@ -120,10 +120,15 @@ public class TimeUtilsTest {
 	 *            {@link TimeUtils.Rounding}
 	 */
 	private void checkRound(TimeUtils.TimeUnit timeUnit, TimeUtils.Rounding rounding) {
-		Calendar calendar = Calendar.getInstance();
+		final Calendar calendar = Calendar.getInstance();
+		final Calendar utilCal = Calendar.getInstance();
+		utilCal.setTimeInMillis(calendar.getTimeInMillis());
+
 		roundCalendarManually(calendar, timeUnit, rounding);
-		Calendar utilCal = Calendar.getInstance();
+		Assert.assertNotEquals("Round value should be different", calendar.getTimeInMillis(), utilCal.getTimeInMillis());
+
 		TimeUtils.round(utilCal, timeUnit, rounding);
+
 		Assert.assertEquals("Round value should be same", calendar.getTimeInMillis(), utilCal.getTimeInMillis());
 	}
 
