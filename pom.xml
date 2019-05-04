@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>bb-utils</artifactId>
 	<version>0.3.0-SNAPSHOT</version>
@@ -9,13 +10,28 @@
 	<parent>
 		<groupId>net.bolbat</groupId>
 		<artifactId>bb-parent</artifactId>
-		<version>14-SNAPSHOT</version>
+		<version>15</version>
 	</parent>
 
 	<properties>
-		<bb-test.version>0.1.0-SNAPSHOT</bb-test.version>
-		<cglib_cglib.version>2.2.2</cglib_cglib.version>
+		<bb-logging-bom.version>0.1</bb-logging-bom.version>
+		
+		<!-- Testing dependencies -->
+		<bb-test.version>0.1.0</bb-test.version>
+		<cglib.version>2.2.2</cglib.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>net.bolbat</groupId>
+				<artifactId>bb-logging-bom</artifactId>
+				<version>${bb-logging-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<!-- Common dependencies -->
@@ -35,7 +51,7 @@
 		<dependency> <!-- required for net.bolbat.utils.reflect.proxy.ProxyUtilsTest -->
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>${cglib_cglib.version}</version>
+			<version>${cglib.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -1,6 +1,6 @@
-# Common Utilities
+# Description
 
-Common Development Utilities [documentation](http://confluence.infra.bolbat.net/display/BBUTILS)
+Common Development Utilities
 
 ## License
 
