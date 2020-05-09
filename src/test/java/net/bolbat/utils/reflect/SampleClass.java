@@ -1,7 +1,5 @@
 package net.bolbat.utils.reflect;
 
-import net.bolbat.utils.reflect.Instantiator;
-
 /**
  * Sample class for testing {@link Instantiator} utility.
  * 

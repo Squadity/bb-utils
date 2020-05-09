@@ -1,7 +1,5 @@
 package net.bolbat.utils.reflect;
 
-import net.bolbat.utils.reflect.AnnotationUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 

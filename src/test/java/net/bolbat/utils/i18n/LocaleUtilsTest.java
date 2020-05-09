@@ -2,8 +2,6 @@ package net.bolbat.utils.i18n;
 
 import java.util.Locale;
 
-import net.bolbat.utils.i18n.LocaleUtils;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

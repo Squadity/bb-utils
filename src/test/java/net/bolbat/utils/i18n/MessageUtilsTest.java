@@ -2,9 +2,6 @@ package net.bolbat.utils.i18n;
 
 import java.util.Locale;
 
-import net.bolbat.utils.i18n.LocaleUtils;
-import net.bolbat.utils.i18n.MessageUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 

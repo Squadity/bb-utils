@@ -2,8 +2,6 @@ package net.bolbat.utils.reflect;
 
 import java.lang.reflect.Constructor;
 
-import net.bolbat.utils.reflect.Instantiator;
-
 import org.junit.Assert;
 import org.junit.Test;
 
